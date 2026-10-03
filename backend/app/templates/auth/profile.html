@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}
+Профіль — KnowledgeHub
+{% endblock %}
+
+{% block styles %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='/css/komponenty/formy.css') }}"
+>
+
+{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+
+    <p class="eyebrow">
+        KNOWLEDGEHUB
+    </p>
+
+    <h1>
+        Профіль користувача
+    </h1>
+
+    <p>
+        Ви успішно авторизовані.
+    </p>
+
+    <div class="feature-card">
+
+        <p>
+            <strong>ID:</strong>
+            {{ user.id }}
+        </p>
+
+        <p>
+            <strong>Ім'я:</strong>
+            {{ user.name }}
+        </p>
+
+        <p>
+            <strong>Email:</strong>
+            {{ user.email }}
+        </p>
+
+        <p>
+            <strong>Роль:</strong>
+            {{ user.role }}
+        </p>
+
+    </div>
+
+    <form
+        method="post"
+        action="/logout"
+        style="margin-top: 24px;"
+    >
+
+        <input
+            type="hidden"
+            name="csrf_token"
+            value="{{ csrf_token }}"
+        >
+
+        <button
+            class="form-submit"
+            type="submit"
+        >
+            Вийти
+        </button>
+
+    </form>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,500 @@
+/* =========================================================
+   KNOWLEDGEHUB
+   GLOBAL RESPONSIVE RULES
+   ========================================================= */
+
+
+/* -------------------------
+   GLOBAL SAFETY
+   ------------------------- */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+
+/* -------------------------
+   GLOBAL CONTAINER
+   ------------------------- */
+
+.container {
+    width: min(
+        1180px,
+        calc(100% - 40px)
+    );
+
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/* -------------------------
+   HEADER
+   ------------------------- */
+
+.header-content {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 24px;
+
+    min-width: 0;
+}
+
+.navigation {
+    display: flex;
+    align-items: center;
+
+    gap: 24px;
+
+    min-width: 0;
+}
+
+.navigation a {
+    white-space: nowrap;
+}
+
+
+/* -------------------------
+   FLEX / GRID SAFETY
+   ------------------------- */
+
+.collections-top,
+.documents-toolbar,
+.document-search-form,
+.search-summary,
+.collection-card-footer {
+    min-width: 0;
+}
+
+.document-search-field,
+.document-info,
+.collections-header,
+.collection-detail-header {
+    min-width: 0;
+}
+
+
+/* -------------------------
+   TEXT SAFETY
+   ------------------------- */
+
+h1,
+h2,
+h3,
+p,
+a,
+span,
+strong {
+    overflow-wrap: anywhere;
+}
+
+.collection-detail-header h1,
+.collections-header h1,
+.hero h1 {
+    font-size: clamp(
+        30px,
+        4vw,
+        48px
+    );
+}
+
+
+/* -------------------------
+   INPUTS
+   ------------------------- */
+
+input,
+textarea,
+select,
+button {
+    max-width: 100%;
+}
+
+
+/* -------------------------
+   MODALS
+   ------------------------- */
+
+.collection-modal {
+    max-width: calc(
+        100vw - 32px
+    );
+
+    max-height: calc(
+        100vh - 32px
+    );
+
+    overflow-y: auto;
+}
+
+
+/* -------------------------
+   TOOLTIP SAFETY
+   ------------------------- */
+
+.tooltip-content {
+    max-width: calc(
+        100vw - 32px
+    );
+}
+
+
+/* =========================================================
+   MEDIUM WIDTH
+   HALF-SCREEN / SMALL LAPTOP
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    .container {
+        width: min(
+            100% - 32px,
+            960px
+        );
+    }
+
+
+    /* HEADER */
+
+    .header-content {
+        flex-wrap: wrap;
+    }
+
+    .navigation {
+        flex-wrap: wrap;
+
+        gap: 14px 20px;
+    }
+
+
+    /* SEARCH */
+
+    .document-search-form {
+        display: grid;
+
+        grid-template-columns:
+            minmax(150px, 180px)
+            minmax(0, 1fr);
+
+        align-items: end;
+    }
+
+    .document-search-button {
+        grid-column: 1 / -1;
+
+        width: 100%;
+    }
+
+
+    /* TOOLTIP */
+
+    .tooltip-content {
+        left: 0;
+        right: auto;
+
+        top: calc(100% + 10px);
+        bottom: auto;
+
+        transform: none;
+
+        width: min(
+            340px,
+            calc(100vw - 48px)
+        );
+    }
+
+    .tooltip-content::after {
+        top: auto;
+        bottom: 100%;
+
+        left: 10px;
+
+        transform: none;
+
+        border-color:
+            transparent
+            transparent
+            var(--tekst-osnovnyi)
+            transparent;
+    }
+
+
+    /* COLLECTIONS */
+
+    .collections-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 760px) {
+
+    .container {
+        width: calc(
+            100% - 24px
+        );
+    }
+
+
+    /* HEADER */
+
+    .header-content {
+        align-items: flex-start;
+        flex-direction: column;
+
+        gap: 14px;
+    }
+
+    .navigation {
+        width: 100%;
+
+        gap: 10px 16px;
+    }
+
+
+    /* COLLECTION PAGE */
+
+    .collections-page {
+        padding:
+            42px
+            0;
+    }
+
+    .collections-top {
+        align-items: stretch;
+        flex-direction: column;
+
+        gap: 20px;
+    }
+
+    .new-collection-button {
+        width: 100%;
+    }
+
+
+    /* COLLECTION GRID */
+
+    .collections-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    /* SEARCH */
+
+    .document-search {
+        padding: 20px;
+    }
+
+    .document-search-form {
+        display: flex;
+
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-mode-field {
+        width: 100%;
+    }
+
+    .document-search-button {
+        width: 100%;
+    }
+
+    .search-summary {
+        align-items: flex-start;
+        flex-direction: column;
+
+        gap: 10px;
+    }
+
+
+    /* DOCUMENT TOOLBAR */
+
+    .documents-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+
+        gap: 18px;
+    }
+
+    .documents-toolbar .new-collection-button {
+        width: 100%;
+    }
+
+
+    /* DOCUMENT CARD */
+
+    .document-card {
+        align-items: flex-start;
+    }
+
+
+    /* MODAL ACTIONS */
+
+    .collection-modal-actions {
+        flex-direction: column-reverse;
+    }
+
+    .collection-modal-actions button {
+        width: 100%;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 520px) {
+
+    .container {
+        width: calc(
+            100% - 20px
+        );
+    }
+
+
+    /* HEADER */
+
+    .logo {
+        font-size: 20px;
+    }
+
+    .navigation {
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        width: 100%;
+    }
+
+    .navigation a {
+        white-space: normal;
+    }
+
+
+    /* TITLES */
+
+    .collection-detail-header h1,
+    .collections-header h1,
+    .hero h1 {
+        font-size: 30px;
+    }
+
+
+    /* SEARCH BOX */
+
+    .document-search {
+        padding: 16px;
+    }
+
+
+    /* DOCUMENT CARD */
+
+    .document-card {
+        position: relative;
+
+        display: grid;
+
+        grid-template-columns:
+            auto
+            1fr;
+
+        gap: 14px;
+    }
+
+    .search-position {
+        position: absolute;
+
+        top: 12px;
+        right: 12px;
+    }
+
+    .document-icon {
+        min-width: 54px;
+    }
+
+
+    /* RELEVANCE */
+
+    .relevance-row {
+        align-items: flex-start;
+
+        flex-wrap: wrap;
+    }
+
+
+    /* TOOLTIP */
+
+    .tooltip-content {
+        position: fixed;
+
+        left: 16px;
+        right: 16px;
+
+        top: auto;
+        bottom: 16px;
+
+        width: auto;
+
+        max-width: none;
+
+        transform: none;
+    }
+
+    .tooltip-content::after {
+        display: none;
+    }
+
+
+    /* MODAL */
+
+    .collection-modal {
+        width: calc(
+            100vw - 20px
+        );
+
+        max-width: none;
+    }
+
+    .collection-modal-content {
+        padding: 20px;
+    }
+
+
+    /* EMPTY STATES */
+
+    .empty-state {
+        padding: 28px 18px;
+    }
+
+}

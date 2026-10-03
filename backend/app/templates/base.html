@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% block title %}
+        KnowledgeHub
+        {% endblock %}
+    </title>
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="{{ url_for('static', path='/images/Logo.png') }}?v=4"
+    >
+
+    <link
+        rel="apple-touch-icon"
+        href="{{ url_for('static', path='/images/Logo.png') }}?v=4"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='/css/baza.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='/css/main.css') }}"
+    >
+
+    {% block styles %}
+    {% endblock %}
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='/css/responsive.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+<header class="site-header">
+
+    <div class="container header-content">
+
+        <a
+            class="logo"
+            href="/"
+        >
+            KnowledgeHub
+        </a>
+
+
+        <nav class="navigation">
+
+            <a href="/">
+                Головна
+            </a>
+
+            <a href="/about">
+                Про систему
+            </a>
+
+
+            {% if current_user %}
+
+                <a href="/collections">
+                    Колекції
+                </a>
+
+                <a href="/profile">
+                    Профіль
+                </a>
+
+                {% if current_user.role == "admin" %}
+
+                    <a href="/admin">
+                        Адмін
+                    </a>
+
+                {% endif %}
+
+            {% else %}
+
+                <a href="/register">
+                    Реєстрація
+                </a>
+
+                <a href="/login">
+                    Вхід
+                </a>
+
+            {% endif %}
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+<main class="container">
+
+    {% block content %}
+    {% endblock %}
+
+</main>
+
+
+<footer class="site-footer">
+
+    <div class="container">
+        KnowledgeHub · 2026
+    </div>
+
+</footer>
+
+
+{% block scripts %}
+{% endblock %}
+
+
+</body>
+
+</html>

@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}
+Вхід — KnowledgeHub
+{% endblock %}
+
+{% block styles %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='/css/komponenty/formy.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='/css/komponenty/povidomlennia.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='/css/storinky/reiestratsiia.css') }}"
+>
+
+{% endblock %}
+
+{% block content %}
+
+<section class="register-page">
+
+    <div class="register-card">
+
+        <div class="register-header">
+
+            <p class="eyebrow">
+                KNOWLEDGEHUB
+            </p>
+
+            <h1>
+                Вхід у систему
+            </h1>
+
+            <p>
+                Введіть email та пароль
+                вашого облікового запису.
+            </p>
+
+        </div>
+
+        {% if errors %}
+
+            <div class="message message-error">
+
+                <strong>
+                    Не вдалося виконати вхід.
+                </strong>
+
+                <ul>
+
+                    {% for error in errors %}
+
+                        <li>{{ error }}</li>
+
+                    {% endfor %}
+
+                </ul>
+
+            </div>
+
+        {% endif %}
+
+        <form
+            class="standard-form"
+            method="post"
+            action="/login"
+        >
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token }}"
+            >
+
+            <div class="form-field">
+
+                <label for="email">
+                    Email
+                </label>
+
+                <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autocomplete="email"
+                    required
+                    value="{{ form_data.get('email', '') }}"
+                >
+
+            </div>
+
+            <div class="form-field">
+
+                <label for="password">
+                    Пароль
+                </label>
+
+                <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autocomplete="current-password"
+                    required
+                >
+
+            </div>
+
+            <button
+                class="form-submit"
+                type="submit"
+            >
+                Увійти
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

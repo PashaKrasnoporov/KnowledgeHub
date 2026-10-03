@@ -1,0 +1,899 @@
+﻿{% extends "base.html" %}
+
+{% block title %}
+{{ collection.name }} — KnowledgeHub
+{% endblock %}
+
+
+{% block styles %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='/css/komponenty/formy.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='/css/komponenty/povidomlennia.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='/css/komponenty/file_picker.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='/css/storinky/collections.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='/css/storinky/search.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='/css/storinky/document_links.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='/css/storinky/collection_manage.css') }}"
+>
+
+{% endblock %}
+
+
+{% block content %}
+
+<section class="collections-page">
+
+    <a
+        class="back-link"
+        href="/collections"
+    >
+        ← Назад до колекцій
+    </a>
+
+
+    <div class="collection-detail-top">
+
+        <div class="collection-detail-header">
+
+            <p class="eyebrow">
+                КОЛЕКЦІЯ
+            </p>
+
+            <h1>
+                {{ collection.name }}
+            </h1>
+
+            {% if collection.description %}
+
+                <p>
+                    {{ collection.description }}
+                </p>
+
+            {% else %}
+
+                <p class="collection-empty">
+                    Опис не додано.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="collection-actions">
+
+            <button
+                class="secondary-button"
+                id="open-edit-collection"
+                type="button"
+            >
+                Редагувати
+            </button>
+
+            <button
+                class="danger-button"
+                id="open-delete-collection"
+                type="button"
+            >
+                Видалити
+            </button>
+
+        </div>
+
+    </div>
+
+
+    {% if upload_errors %}
+
+        <div class="message message-error">
+
+            {% for error in upload_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+
+    {% if uploaded %}
+
+        <div class="message message-success">
+
+            <p>
+                Документ успішно завантажено.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+
+    {% if collection_updated %}
+
+        <div class="message message-success">
+
+            <p>
+                Колекцію успішно оновлено.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+
+    <section class="document-search">
+
+        <div class="search-section-heading">
+
+            <h2>
+                Пошук у документах
+            </h2>
+
+            <p>
+                Оберіть спосіб, яким система
+                визначатиме релевантність документів.
+            </p>
+
+        </div>
+
+
+        <form
+            class="document-search-form"
+            method="get"
+            action="/collections/{{ collection.id }}"
+        >
+
+            <div class="search-mode-field">
+
+                <div class="label-with-info">
+
+                    <label
+                        class="document-search-label"
+                        for="search-mode"
+                    >
+                        Режим
+                    </label>
+
+                    <span
+                        class="info-tooltip"
+                        tabindex="0"
+                        aria-label="Інформація про режими пошуку"
+                    >
+
+                        <span class="info-icon">
+                            i
+                        </span>
+
+
+                        <span class="tooltip-content">
+
+                            <strong>
+                                Режими пошуку
+                            </strong>
+
+                            <span>
+                                <b>Lexical</b> — шукає
+                                збіги конкретних слів
+                                і фраз у тексті.
+                            </span>
+
+                            <span>
+                                <b>Semantic</b> — шукає
+                                документи зі схожим
+                                змістом, навіть якщо
+                                використані інші слова.
+                            </span>
+
+                            <span>
+                                <b>Hybrid</b> — поєднує
+                                пошук за словами
+                                та пошук за змістом.
+                            </span>
+
+                        </span>
+
+                    </span>
+
+                </div>
+
+
+                <select
+                    id="search-mode"
+                    class="search-mode-select"
+                    name="mode"
+                >
+
+                    <option
+                        value="hybrid"
+                        {% if search_mode == "hybrid" %}
+                            selected
+                        {% endif %}
+                    >
+                        Hybrid
+                    </option>
+
+                    <option
+                        value="semantic"
+                        {% if search_mode == "semantic" %}
+                            selected
+                        {% endif %}
+                    >
+                        Semantic
+                    </option>
+
+                    <option
+                        value="lexical"
+                        {% if search_mode == "lexical" %}
+                            selected
+                        {% endif %}
+                    >
+                        Lexical
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="document-search-field">
+
+                <label
+                    class="document-search-label"
+                    for="document-search-input"
+                >
+                    Запит
+                </label>
+
+                <input
+                    id="document-search-input"
+                    class="document-search-input"
+                    name="q"
+                    type="search"
+                    maxlength="200"
+                    autocomplete="off"
+                    placeholder="Наприклад: BM25, embeddings, RAG..."
+                    value="{{ search_query }}"
+                >
+
+            </div>
+
+
+            <button
+                class="document-search-button"
+                type="submit"
+            >
+                Знайти
+            </button>
+
+        </form>
+
+
+        <div
+            class="search-mode-help"
+            id="search-mode-help"
+            aria-live="polite"
+        >
+        </div>
+
+
+        {% if search_active %}
+
+            <div class="search-summary">
+
+                <div>
+
+                    Знайдено:
+                    <strong>
+                        {{ search_count }}
+                    </strong>
+
+                    · режим:
+
+                    <strong>
+                        {{ search_mode|capitalize }}
+                    </strong>
+
+                    · запит:
+
+                    <strong>
+                        «{{ search_query }}»
+                    </strong>
+
+                </div>
+
+
+                <a
+                    href="/collections/{{ collection.id }}"
+                >
+                    Очистити пошук
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <div class="documents-toolbar">
+
+        <div>
+
+            <h2>
+
+                {% if search_active %}
+                    Результати пошуку
+                {% else %}
+                    Документи
+                {% endif %}
+
+            </h2>
+
+
+            {% if not search_active %}
+
+                <p>
+                    PDF, DOCX або TXT.
+                    Максимальний розмір — 10 МБ.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <button
+            class="new-collection-button"
+            id="open-upload-modal"
+            type="button"
+        >
+            + Додати документ
+        </button>
+
+    </div>
+
+
+    {% if documents %}
+
+        <div class="documents-list">
+
+            {% for document in documents %}
+
+                <article class="document-card">
+
+                    {% if search_active %}
+
+                        <div class="search-position">
+                            {{ loop.index }}
+                        </div>
+
+                    {% endif %}
+
+
+                    <div class="document-icon">
+
+                        {% if document.original_name.lower().endswith('.pdf') %}
+                            PDF
+                        {% elif document.original_name.lower().endswith('.docx') %}
+                            DOCX
+                        {% else %}
+                            TXT
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="document-info">
+
+                        <h3>
+
+                            <a
+                                class="document-title-link"
+                                href="/collections/{{ collection.id }}/documents/{{ document.id }}"
+                            >
+                                {{ document.original_name }}
+                            </a>
+
+                        </h3>
+
+
+                        <p>
+
+                            {{
+                                "%.2f"|format(
+                                    document.size_bytes
+                                    / 1024
+                                    / 1024
+                                )
+                            }}
+                            МБ
+
+                            ·
+
+                            {{ document.processing_status }}
+
+                        </p>
+
+
+                        {% if search_active %}
+
+                            <div class="relevance-row">
+
+                                <span>
+                                    Оцінка релевантності:
+                                </span>
+
+                                <strong>
+
+                                    {{
+                                        "%.3f"|format(
+                                            search_scores.get(
+                                                document.id,
+                                                0
+                                            )
+                                        )
+                                    }}
+
+                                </strong>
+
+
+                                <span
+                                    class="info-tooltip"
+                                    tabindex="0"
+                                    aria-label="Що означає оцінка релевантності"
+                                >
+
+                                    <span class="info-icon small">
+                                        i
+                                    </span>
+
+
+                                    <span class="tooltip-content">
+
+                                        <strong>
+                                            Оцінка релевантності
+                                        </strong>
+
+
+                                        {% if search_mode == "lexical" %}
+
+                                            <span>
+                                                Значення показує,
+                                                наскільки добре слова
+                                                запиту збігаються
+                                                з текстом документа.
+                                            </span>
+
+                                        {% elif search_mode == "semantic" %}
+
+                                            <span>
+                                                Значення базується
+                                                на семантичній схожості
+                                                між запитом
+                                                і змістом документа.
+                                            </span>
+
+                                        {% else %}
+
+                                            <span>
+                                                Значення об'єднує
+                                                lexical та semantic
+                                                оцінки.
+                                            </span>
+
+                                            <span>
+                                                Поточні ваги:
+                                                {{ (hybrid_lexical_weight * 100)|int }}%
+                                                lexical +
+                                                {{ (hybrid_semantic_weight * 100)|int }}%
+                                                semantic.
+                                            </span>
+
+                                        {% endif %}
+
+
+                                        <span>
+                                            Більше значення означає
+                                            вищу релевантність
+                                            у цьому пошуку.
+                                            Це не відсоток
+                                            і не ймовірність.
+                                        </span>
+
+                                    </span>
+
+                                </span>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </article>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-state">
+
+            {% if search_active %}
+
+                <h3>
+                    Нічого не знайдено
+                </h3>
+
+                <p>
+                    Спробуйте інший запит
+                    або інший режим пошуку.
+                </p>
+
+            {% else %}
+
+                <h3>
+                    Документів поки немає
+                </h3>
+
+                <p>
+                    Додайте перший документ
+                    до цієї колекції.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- ДОДАВАННЯ ДОКУМЕНТА -->
+
+    <dialog
+        class="collection-modal"
+        id="upload-modal"
+    >
+
+        <div class="collection-modal-content">
+
+            <div class="collection-modal-header">
+
+                <div>
+
+                    <p class="eyebrow">
+                        KNOWLEDGEHUB
+                    </p>
+
+                    <h2>
+                        Додати документ
+                    </h2>
+
+                </div>
+
+
+                <button
+                    class="modal-close-button"
+                    id="close-upload-modal"
+                    type="button"
+                    aria-label="Закрити"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <form
+                class="standard-form"
+                method="post"
+                action="/collections/{{ collection.id }}/documents"
+                enctype="multipart/form-data"
+            >
+
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token }}"
+                >
+
+
+                <div class="form-field">
+
+                    <label for="document-file">
+                        Файл
+                    </label>
+
+                    <input
+                        id="document-file"
+                        name="document_file"
+                        type="file"
+                        accept=".pdf,.docx,.txt"
+                        required
+                    >
+
+                    <p class="form-hint">
+                        PDF, DOCX або TXT.
+                        До 10 МБ.
+                    </p>
+
+                </div>
+
+
+                <div class="collection-modal-actions">
+
+                    <button
+                        class="secondary-button"
+                        id="cancel-upload-modal"
+                        type="button"
+                    >
+                        Скасувати
+                    </button>
+
+                    <button
+                        class="form-submit"
+                        type="submit"
+                    >
+                        Завантажити
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </dialog>
+
+
+    <!-- РЕДАГУВАННЯ КОЛЕКЦІЇ -->
+
+    <dialog
+        class="collection-modal"
+        id="edit-collection-modal"
+    >
+
+        <div class="collection-modal-content">
+
+            <div class="collection-modal-header">
+
+                <div>
+
+                    <p class="eyebrow">
+                        КОЛЕКЦІЯ
+                    </p>
+
+                    <h2>
+                        Редагувати
+                    </h2>
+
+                </div>
+
+
+                <button
+                    class="modal-close-button"
+                    id="close-edit-collection"
+                    type="button"
+                    aria-label="Закрити"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <form
+                class="standard-form"
+                method="post"
+                action="/collections/{{ collection.id }}/edit"
+            >
+
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token }}"
+                >
+
+
+                <div class="form-field">
+
+                    <label for="edit-collection-name">
+                        Назва
+                    </label>
+
+                    <input
+                        id="edit-collection-name"
+                        name="name"
+                        type="text"
+                        maxlength="100"
+                        required
+                        value="{{ collection.name }}"
+                    >
+
+                </div>
+
+
+                <div class="form-field">
+
+                    <label for="edit-collection-description">
+                        Опис
+                    </label>
+
+                    <textarea
+                        id="edit-collection-description"
+                        name="description"
+                        maxlength="1000"
+                        rows="5"
+                    >{{ collection.description or '' }}</textarea>
+
+                </div>
+
+
+                <div class="collection-modal-actions">
+
+                    <button
+                        class="secondary-button"
+                        id="cancel-edit-collection"
+                        type="button"
+                    >
+                        Скасувати
+                    </button>
+
+                    <button
+                        class="form-submit"
+                        type="submit"
+                    >
+                        Зберегти
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </dialog>
+
+
+    <!-- ВИДАЛЕННЯ КОЛЕКЦІЇ -->
+
+    <dialog
+        class="collection-modal delete-modal"
+        id="delete-collection-modal"
+    >
+
+        <div class="collection-modal-content">
+
+            <div class="collection-modal-header">
+
+                <div>
+
+                    <p class="eyebrow">
+                        НЕБЕЗПЕЧНА ДІЯ
+                    </p>
+
+                    <h2>
+                        Видалити колекцію?
+                    </h2>
+
+                </div>
+
+
+                <button
+                    class="modal-close-button"
+                    id="close-delete-collection"
+                    type="button"
+                    aria-label="Закрити"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <div class="delete-warning">
+
+                <p>
+                    Колекція
+                    <strong>
+                        «{{ collection.name }}»
+                    </strong>
+                    буде видалена разом
+                    з усіма її документами.
+                </p>
+
+                <p>
+                    Цю дію неможливо скасувати.
+                </p>
+
+            </div>
+
+
+            <form
+                method="post"
+                action="/collections/{{ collection.id }}/delete"
+            >
+
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token }}"
+                >
+
+
+                <div class="collection-modal-actions">
+
+                    <button
+                        class="secondary-button"
+                        id="cancel-delete-collection"
+                        type="button"
+                    >
+                        Скасувати
+                    </button>
+
+                    <button
+                        class="danger-button"
+                        type="submit"
+                    >
+                        Видалити назавжди
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </dialog>
+
+</section>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script
+    src="{{ url_for('static', path='/js/documents.js') }}"
+    defer
+></script>
+
+<script
+    src="{{ url_for('static', path='/js/search_help.js') }}"
+    defer
+></script>
+
+<script
+    src="{{ url_for('static', path='/js/collection_manage.js') }}"
+    defer
+></script>
+
+{% endblock %}

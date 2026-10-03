@@ -1,0 +1,369 @@
+.document-search {
+    margin: 34px 0;
+    padding: 24px;
+
+    background: var(--poverkhna-svitla);
+
+    border: 1px solid var(--mezha);
+    border-radius: 14px;
+}
+
+.search-section-heading {
+    margin-bottom: 22px;
+}
+
+.search-section-heading h2 {
+    margin: 0 0 7px;
+}
+
+.search-section-heading p {
+    margin: 0;
+
+    color: var(--tekst-drugoryadnyi);
+
+    line-height: 1.5;
+}
+
+.document-search-form {
+    display: flex;
+    align-items: flex-end;
+
+    gap: 12px;
+}
+
+.search-mode-field {
+    width: 180px;
+
+    flex-shrink: 0;
+}
+
+.document-search-field {
+    flex: 1;
+}
+
+.document-search-label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.label-with-info {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    margin-bottom: 8px;
+}
+
+.label-with-info .document-search-label {
+    margin-bottom: 0;
+}
+
+.search-mode-select,
+.document-search-input {
+    width: 100%;
+    height: 48px;
+
+    box-sizing: border-box;
+
+    padding: 0 15px;
+
+    border: 1px solid var(--mezha-temna);
+    border-radius: 9px;
+
+    background: var(--poverkhna-svitla);
+    color: var(--tekst-osnovnyi);
+
+    font: inherit;
+
+    outline: none;
+}
+
+.search-mode-select {
+    cursor: pointer;
+}
+
+.search-mode-select:focus,
+.document-search-input:focus {
+    border-color: var(--focus);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(128, 175, 186, 0.15);
+}
+
+.document-search-button {
+    height: 48px;
+
+    padding: 0 24px;
+
+    border: 0;
+    border-radius: 9px;
+
+    background: var(--blakytnyi-pryhlushenyi);
+    color: var(--tekst-svitlyi);
+
+    font: inherit;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.document-search-button:hover {
+    background: var(--hover-osnovnyi);
+}
+
+.search-mode-help {
+    min-height: 21px;
+
+    margin-top: 12px;
+
+    color: var(--tekst-drugoryadnyi);
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.search-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-top: 18px;
+    padding-top: 16px;
+
+    border-top: 1px solid var(--mezha);
+
+    color: var(--tekst-drugoryadnyi);
+
+    font-size: 14px;
+}
+
+.search-summary a {
+    color: var(--akvamarin-temnyi);
+
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.search-summary a:hover {
+    text-decoration: underline;
+}
+
+
+/* INFO TOOLTIP */
+
+.info-tooltip {
+    position: relative;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: help;
+
+    outline: none;
+}
+
+.info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 20px;
+    height: 20px;
+
+    box-sizing: border-box;
+
+    border: 1px solid var(--mezha-temna);
+    border-radius: 50%;
+
+    background: var(--poverkhna);
+
+    color: var(--akvamarin-temnyi);
+
+    font-family: Georgia, serif;
+    font-size: 13px;
+    font-weight: 700;
+    font-style: normal;
+    line-height: 1;
+}
+
+.info-icon.small {
+    width: 18px;
+    height: 18px;
+
+    font-size: 12px;
+}
+
+.info-tooltip:hover .info-icon,
+.info-tooltip:focus .info-icon {
+    border-color: var(--akvamarin-temnyi);
+
+    background: var(--morska-pina);
+}
+
+.tooltip-content {
+    position: absolute;
+    z-index: 100;
+
+    left: 50%;
+    bottom: calc(100% + 12px);
+
+    display: none;
+
+    width: 330px;
+
+    box-sizing: border-box;
+
+    padding: 16px;
+
+    transform: translateX(-50%);
+
+    border: 1px solid var(--mezha);
+    border-radius: 10px;
+
+    background: var(--tekst-osnovnyi);
+    color: var(--tekst-svitlyi);
+
+    box-shadow:
+        0 12px 30px
+        rgba(38, 60, 67, 0.18);
+
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.5;
+
+    cursor: default;
+}
+
+.tooltip-content::after {
+    position: absolute;
+
+    top: 100%;
+    left: 50%;
+
+    width: 0;
+    height: 0;
+
+    transform: translateX(-50%);
+
+    border-width: 7px;
+    border-style: solid;
+
+    border-color:
+        var(--tekst-osnovnyi)
+        transparent
+        transparent
+        transparent;
+
+    content: "";
+}
+
+.tooltip-content strong {
+    display: block;
+
+    margin-bottom: 9px;
+
+    font-size: 14px;
+}
+
+.tooltip-content span {
+    display: block;
+
+    margin-top: 7px;
+}
+
+.info-tooltip:hover .tooltip-content,
+.info-tooltip:focus .tooltip-content,
+.info-tooltip:focus-within .tooltip-content {
+    display: block;
+}
+
+
+/* SEARCH RESULTS */
+
+.search-position {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 28px;
+    height: 28px;
+
+    border-radius: 50%;
+
+    background: var(--poverkhna);
+
+    color: var(--tekst-drugoryadnyi);
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.relevance-row {
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+
+    margin-top: 8px;
+
+    color: var(--tekst-drugoryadnyi);
+
+    font-size: 13px;
+}
+
+.relevance-row strong {
+    color: var(--akvamarin-temnyi);
+}
+
+
+@media (max-width: 700px) {
+
+    .document-search {
+        padding: 20px;
+    }
+
+    .document-search-form {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .search-mode-field {
+        width: 100%;
+    }
+
+    .document-search-button {
+        width: 100%;
+    }
+
+    .search-summary {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .tooltip-content {
+        left: 0;
+
+        width: min(
+            300px,
+            calc(100vw - 50px)
+        );
+
+        transform: none;
+    }
+
+    .tooltip-content::after {
+        left: 10px;
+
+        transform: none;
+    }
+
+}

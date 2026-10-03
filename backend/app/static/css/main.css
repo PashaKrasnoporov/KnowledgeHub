@@ -1,0 +1,282 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+
+    font-family:
+        Inter,
+        "Segoe UI",
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background: var(--fon-osnovnyi);
+    color: var(--tekst-osnovnyi);
+}
+
+.container {
+    width: min(1100px, 92%);
+    margin: 0 auto;
+}
+
+
+/* ========================================
+   Header
+   ======================================== */
+
+.site-header {
+    background: var(--morskyi-hlybokyi);
+
+    border-bottom:
+        1px solid
+        var(--akvamarin-temnyi);
+}
+
+.header-content {
+    min-height: 72px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    color: var(--tekst-svitlyi);
+
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+
+    text-decoration: none;
+}
+
+.navigation {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+.navigation a {
+    color: var(--morska-pina);
+
+    font-size: 15px;
+    font-weight: 500;
+
+    text-decoration: none;
+
+    transition:
+        color 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.navigation a:hover {
+    color: var(--tekst-svitlyi);
+}
+
+
+/* ========================================
+   Основні заголовки
+   ======================================== */
+
+h1,
+h2,
+h3 {
+    color: var(--morskyi-hlybokyi);
+}
+
+h1 {
+    margin: 10px 0 20px;
+
+    font-size: 48px;
+    line-height: 1.1;
+
+    letter-spacing: -0.7px;
+}
+
+h2 {
+    line-height: 1.25;
+}
+
+
+/* ========================================
+   Hero
+   ======================================== */
+
+.hero {
+    padding: 90px 0 60px;
+}
+
+.hero-content {
+    max-width: 760px;
+}
+
+.eyebrow {
+    margin-bottom: 10px;
+
+    color: var(--blakytnyi-pryhlushenyi);
+
+    font-size: 13px;
+    font-weight: 700;
+
+    letter-spacing: 1.7px;
+}
+
+.hero-description {
+    max-width: 700px;
+
+    color: var(--tekst-drugoryadnyi);
+
+    font-size: 19px;
+    line-height: 1.7;
+}
+
+.hero-actions {
+    margin-top: 32px;
+}
+
+
+/* ========================================
+   Кнопки
+   ======================================== */
+
+.button {
+    display: inline-block;
+
+    padding: 12px 20px;
+
+    border-radius: 8px;
+
+    font-weight: 600;
+    text-decoration: none;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.button.primary {
+    background: var(--akvamarin-temnyi);
+    color: var(--tekst-svitlyi);
+}
+
+.button.primary:hover {
+    background: var(--hover-osnovnyi);
+}
+
+
+/* ========================================
+   Картки
+   ======================================== */
+
+.features {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 20px;
+
+    padding-bottom: 80px;
+}
+
+.feature-card {
+    padding: 26px;
+
+    background: var(--poverkhna-svitla);
+
+    border:
+        1px solid
+        var(--mezha);
+
+    border-radius: 12px;
+}
+
+.feature-card h2 {
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+.feature-card p {
+    margin-bottom: 0;
+
+    color: var(--tekst-drugoryadnyi);
+
+    line-height: 1.6;
+}
+
+
+/* ========================================
+   Звичайні сторінки
+   ======================================== */
+
+.page-section {
+    max-width: 760px;
+
+    padding: 70px 0;
+}
+
+.page-section p {
+    color: var(--tekst-drugoryadnyi);
+
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+
+/* ========================================
+   Footer
+   ======================================== */
+
+.site-footer {
+    margin-top: 60px;
+
+    padding: 30px 0;
+
+    background: var(--poverkhna);
+
+    border-top:
+        1px solid
+        var(--mezha);
+
+    color: var(--tekst-drugoryadnyi);
+
+    font-size: 14px;
+}
+
+
+/* ========================================
+   Responsive
+   ======================================== */
+
+@media (max-width: 700px) {
+
+    h1 {
+        font-size: 36px;
+    }
+
+    .features {
+        grid-template-columns: 1fr;
+    }
+
+    .header-content {
+        align-items: flex-start;
+        flex-direction: column;
+
+        gap: 14px;
+
+        padding: 18px 0;
+    }
+
+    .navigation {
+        flex-wrap: wrap;
+
+        gap: 16px;
+    }
+}

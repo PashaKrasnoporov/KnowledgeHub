@@ -1,0 +1,77 @@
+:root {
+    /*
+        Основна палітра KnowledgeHub.
+
+        Напрям:
+        приглушений блакитний,
+        морська піна,
+        холодний аквамарин,
+        матові морські відтінки.
+
+        Без яскравого синього
+        та без зеленого відтінку.
+    */
+
+    --fon-osnovnyi: #F2F5F4;
+    --poverkhna: #E8EFF0;
+    --poverkhna-svitla: #F8F8F5;
+
+    /*
+        Морська палітра
+    */
+
+    --morska-pina: #D5E6E9;
+    --akvamarin: #AACDD4;
+    --blakytnyi-pryhlushenyi: #80AFBA;
+    --akvamarin-temnyi: #5E8F9C;
+    --morskyi-hlybokyi: #3C6675;
+
+    /*
+        Теплі нейтральні акценти
+    */
+
+    --piskovyi: #C8BBAA;
+    --siryi-teplyi: #9C9B91;
+
+    /*
+        Текст
+    */
+
+    --tekst-osnovnyi: #263C43;
+    --tekst-drugoryadnyi: #63757A;
+    --tekst-svitlyi: #F4F8F8;
+
+    /*
+        Межі
+    */
+
+    --mezha: #CAD8DA;
+    --mezha-temna: #A6BEC3;
+
+    /*
+        Інтерактивні стани
+    */
+
+    --hover-osnovnyi: #507F8C;
+    --focus: #80AFBA;
+
+    /*
+        Повідомлення про успіх.
+
+        Також без яскравого зеленого.
+    */
+
+    --uspikh-fon: #E5ECE8;
+    --uspikh-mezha: #9AAEA4;
+    --uspikh-tekst: #53645C;
+
+    /*
+        Повідомлення про помилку.
+
+        Приглушений матовий червоний.
+    */
+
+    --pomylka-fon: #F0E3DF;
+    --pomylka-mezha: #B57A70;
+    --pomylka-tekst: #754B45;
+}

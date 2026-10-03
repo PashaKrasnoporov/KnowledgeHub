@@ -1,0 +1,138 @@
+/* =========================================================
+   KNOWLEDGEHUB
+   FILE PICKER
+   ========================================================= */
+
+input[type="file"] {
+    width: 100%;
+    min-height: 54px;
+
+    padding: 7px;
+
+    box-sizing: border-box;
+
+    border: 1px solid var(--mezha-temna);
+    border-radius: 10px;
+
+    background: var(--poverkhna-svitla);
+    color: var(--tekst-drugoryadnyi);
+
+    font: inherit;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+
+input[type="file"]:hover {
+    border-color: var(--akvamarin-temnyi);
+}
+
+
+input[type="file"]:focus,
+input[type="file"]:focus-visible {
+    outline: none;
+
+    border-color: var(--focus);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(128, 175, 186, 0.15);
+}
+
+
+/* Chrome / Edge / Firefox */
+
+input[type="file"]::file-selector-button {
+    min-height: 38px;
+
+    margin-right: 14px;
+
+    padding: 8px 16px;
+
+    border: 0;
+    border-radius: 7px;
+
+    background:
+        var(--blakytnyi-pryhlushenyi);
+
+    color:
+        var(--tekst-svitlyi);
+
+    font: inherit;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.1s ease;
+}
+
+
+input[type="file"]::file-selector-button:hover {
+    background:
+        var(--hover-osnovnyi);
+}
+
+
+input[type="file"]::file-selector-button:active {
+    transform: translateY(1px);
+}
+
+
+/* Старий Chromium/WebKit fallback */
+
+input[type="file"]::-webkit-file-upload-button {
+    min-height: 38px;
+
+    margin-right: 14px;
+
+    padding: 8px 16px;
+
+    border: 0;
+    border-radius: 7px;
+
+    background:
+        var(--blakytnyi-pryhlushenyi);
+
+    color:
+        var(--tekst-svitlyi);
+
+    font: inherit;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+/* Mobile */
+
+@media (max-width: 520px) {
+
+    input[type="file"] {
+        min-height: 58px;
+
+        padding: 6px;
+
+        font-size: 14px;
+    }
+
+    input[type="file"]::file-selector-button {
+        display: block;
+
+        width: 100%;
+
+        margin:
+            0
+            0
+            7px;
+
+        text-align: center;
+    }
+
+}

@@ -1,0 +1,108 @@
+.collection-detail-top {
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 32px;
+
+    margin-bottom: 32px;
+}
+
+.collection-detail-top
+.collection-detail-header {
+    margin-bottom: 0;
+}
+
+
+.collection-actions {
+    display: flex;
+
+    gap: 10px;
+
+    flex-shrink: 0;
+}
+
+
+.danger-button {
+    padding: 12px 18px;
+
+    border: 1px solid
+        var(--pomylka-mezha);
+
+    border-radius: 8px;
+
+    background:
+        var(--pomylka-fon);
+
+    color:
+        var(--pomylka-tekst);
+
+    font: inherit;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.danger-button:hover {
+    filter: brightness(0.97);
+}
+
+
+.delete-warning {
+    padding: 18px;
+
+    border: 1px solid
+        var(--pomylka-mezha);
+
+    border-radius: 10px;
+
+    background:
+        var(--pomylka-fon);
+
+    color:
+        var(--pomylka-tekst);
+
+    line-height: 1.6;
+}
+
+.delete-warning p {
+    margin:
+        0
+        0
+        10px;
+}
+
+.delete-warning p:last-child {
+    margin-bottom: 0;
+}
+
+
+@media (max-width: 760px) {
+
+    .collection-detail-top {
+        flex-direction: column;
+    }
+
+    .collection-actions {
+        width: 100%;
+    }
+
+    .collection-actions button {
+        flex: 1;
+    }
+
+}
+
+
+@media (max-width: 520px) {
+
+    .collection-actions {
+        flex-direction: column;
+    }
+
+    .collection-actions button {
+        width: 100%;
+    }
+
+}

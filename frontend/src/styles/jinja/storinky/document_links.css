@@ -1,0 +1,16 @@
+.document-title-link {
+    color: var(--tekst-osnovnyi);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.document-title-link:hover {
+    color: var(--akvamarin-temnyi);
+    text-decoration: underline;
+}
+
+.document-title-link:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+    border-radius: 3px;
+}

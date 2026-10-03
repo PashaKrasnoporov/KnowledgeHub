@@ -1,0 +1,81 @@
+.register-page {
+    display: flex;
+    justify-content: center;
+
+    padding: 70px 0 90px;
+}
+
+.register-card {
+    width: min(100%, 520px);
+
+    padding: 38px;
+
+    background: var(--poverkhna-svitla);
+
+    border:
+        1px solid
+        var(--mezha);
+
+    border-radius: 14px;
+}
+
+.register-header {
+    margin-bottom: 30px;
+}
+
+.register-header h1 {
+    margin: 8px 0 14px;
+
+    color: var(--morskyi-hlybokyi);
+
+    font-size: 32px;
+    line-height: 1.2;
+
+    letter-spacing: -0.4px;
+}
+
+.register-header > p:last-child {
+    margin-bottom: 0;
+
+    color: var(--tekst-drugoryadnyi);
+
+    line-height: 1.6;
+}
+
+.register-card .eyebrow {
+    color: var(--blakytnyi-pryhlushenyi);
+}
+
+
+/* Невеликий матовий акцент */
+
+.register-card::before {
+    display: block;
+
+    width: 52px;
+    height: 4px;
+
+    margin-bottom: 26px;
+
+    background: var(--akvamarin);
+
+    border-radius: 4px;
+
+    content: "";
+}
+
+
+@media (max-width: 600px) {
+
+    .register-page {
+        padding: 40px 0 60px;
+    }
+
+    .register-card {
+        padding: 26px 20px;
+    }
+
+    .register-header h1 {
+        font-size: 28px;
+    }
+}

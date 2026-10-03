@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+
+{% block title %}
+Адміністрування — KnowledgeHub
+{% endblock %}
+
+{% block styles %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='/css/storinky/admin.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='/css/komponenty/povidomlennia.css') }}"
+>
+
+{% endblock %}
+
+
+{% block content %}
+
+<section class="admin-page">
+
+    <header class="admin-header">
+
+        <p class="eyebrow">
+            ADMIN
+        </p>
+
+        <h1>
+            Панель адміністратора
+        </h1>
+
+        <p>
+            Керування користувачами KnowledgeHub.
+        </p>
+
+    </header>
+
+
+    {% if message == "updated" %}
+
+        <div class="message message-success">
+
+            <p>
+                Статус користувача успішно оновлено.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+
+    {% if error == "self_deactivate" %}
+
+        <div class="message message-error">
+
+            <p>
+                Адміністратор не може деактивувати
+                власний обліковий запис.
+            </p>
+
+        </div>
+
+    {% elif error == "server" %}
+
+        <div class="message message-error">
+
+            <p>
+                Не вдалося виконати адміністративну дію.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+
+    <div class="admin-table-wrapper">
+
+        <table class="admin-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        ID
+                    </th>
+
+                    <th>
+                        Користувач
+                    </th>
+
+                    <th>
+                        Email
+                    </th>
+
+                    <th>
+                        Роль
+                    </th>
+
+                    <th>
+                        Статус
+                    </th>
+
+                    <th>
+                        Дія
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for user in users %}
+
+                    <tr>
+
+                        <td>
+                            {{ user.id }}
+                        </td>
+
+
+                        <td>
+                            {{ user.name }}
+                        </td>
+
+
+                        <td>
+                            {{ user.email }}
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="role-badge
+                                {% if user.role == 'admin' %}
+                                    role-admin
+                                {% endif %}"
+                            >
+                                {{ user.role }}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            {% if user.is_active %}
+
+                                <span class="status-active">
+                                    Активний
+                                </span>
+
+                            {% else %}
+
+                                <span class="status-inactive">
+                                    Неактивний
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if user.id == admin_user.id %}
+
+                                <span class="admin-current-user">
+                                    Поточний адміністратор
+                                </span>
+
+                            {% else %}
+
+                                <form
+                                    method="post"
+                                    action="/admin/users/{{ user.id }}/status"
+                                >
+
+                                    <input
+                                        type="hidden"
+                                        name="csrf_token"
+                                        value="{{ csrf_token }}"
+                                    >
+
+                                    {% if user.is_active %}
+
+                                        <input
+                                            type="hidden"
+                                            name="action"
+                                            value="deactivate"
+                                        >
+
+                                        <button
+                                            class="admin-deactivate-button"
+                                            type="submit"
+                                        >
+                                            Деактивувати
+                                        </button>
+
+                                    {% else %}
+
+                                        <input
+                                            type="hidden"
+                                            name="action"
+                                            value="activate"
+                                        >
+
+                                        <button
+                                            class="admin-activate-button"
+                                            type="submit"
+                                        >
+                                            Активувати
+                                        </button>
+
+                                    {% endif %}
+
+                                </form>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+{% endblock %}

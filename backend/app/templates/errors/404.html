@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}
+404 — Сторінку не знайдено
+{% endblock %}
+
+{% block styles %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='/css/storinky/errors.css') }}"
+>
+
+{% endblock %}
+
+
+{% block content %}
+
+<section class="error-page">
+
+    <div class="error-card">
+
+        <div class="error-code">
+            404
+        </div>
+
+        <p class="eyebrow">
+            KNOWLEDGEHUB
+        </p>
+
+        <h1>
+            Сторінку не знайдено
+        </h1>
+
+        <p class="error-description">
+            Можливо, адресу введено неправильно,
+            сторінку було переміщено або видалено.
+        </p>
+
+        <div class="error-actions">
+
+            {% if current_user %}
+
+                <a
+                    class="error-primary-button"
+                    href="/collections"
+                >
+                    До колекцій
+                </a>
+
+            {% endif %}
+
+            <a
+                class="error-secondary-button"
+                href="/"
+            >
+                На головну
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}
+403 — Доступ заборонено
+{% endblock %}
+
+{% block styles %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='/css/storinky/errors.css') }}"
+>
+
+{% endblock %}
+
+
+{% block content %}
+
+<section class="error-page">
+
+    <div class="error-card">
+
+        <div class="error-code">
+            403
+        </div>
+
+        <p class="eyebrow">
+            KNOWLEDGEHUB
+        </p>
+
+        <h1>
+            Доступ заборонено
+        </h1>
+
+        <p class="error-description">
+            У вас немає дозволу
+            на виконання цієї дії
+            або перегляд цього ресурсу.
+        </p>
+
+        <div class="error-actions">
+
+            {% if current_user %}
+
+                <a
+                    class="error-primary-button"
+                    href="/collections"
+                >
+                    До колекцій
+                </a>
+
+            {% endif %}
+
+            <a
+                class="error-secondary-button"
+                href="/"
+            >
+                На головну
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

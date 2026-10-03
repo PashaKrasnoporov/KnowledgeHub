@@ -1,0 +1,301 @@
+{% extends "base.html" %}
+
+{% block title %}
+Колекції — KnowledgeHub
+{% endblock %}
+
+{% block styles %}
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='/css/komponenty/formy.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='/css/komponenty/povidomlennia.css') }}"
+>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', path='/css/storinky/collections.css') }}"
+>
+
+{% endblock %}
+
+
+{% block content %}
+
+<section
+    class="collections-page"
+    data-open-create-modal="{{ 'true' if errors else 'false' }}"
+>
+
+    <div class="collections-top">
+
+        <div class="collections-header">
+
+            <p class="eyebrow">
+                KNOWLEDGEHUB
+            </p>
+
+            <h1>
+                Мої колекції
+            </h1>
+
+            <p>
+                Організовуйте документи
+                в окремі тематичні колекції.
+            </p>
+
+        </div>
+
+        <button
+            class="new-collection-button"
+            id="open-collection-modal"
+            type="button"
+        >
+            + Нова колекція
+        </button>
+
+    </div>
+
+
+    <section class="collections-list">
+
+        {% if collections %}
+
+            <div class="collections-grid">
+
+                {% for collection in collections %}
+
+                    <a
+                        class="collection-card-link"
+                        href="/collections/{{ collection.id }}"
+                    >
+
+                        <article class="collection-card">
+
+                            <div class="collection-card-top">
+
+                                <div>
+
+                                    <p class="collection-label">
+                                        КОЛЕКЦІЯ
+                                    </p>
+
+                                    <h2>
+                                        {{ collection.name }}
+                                    </h2>
+
+                                </div>
+
+                            </div>
+
+                            {% if collection.description %}
+
+                                <p class="collection-description">
+                                    {{ collection.description }}
+                                </p>
+
+                            {% else %}
+
+                                <p
+                                    class="
+                                        collection-description
+                                        collection-empty
+                                    "
+                                >
+                                    Опис не додано.
+                                </p>
+
+                            {% endif %}
+
+                            <div class="collection-card-footer">
+
+                                <span>
+                                    ID: {{ collection.id }}
+                                </span>
+
+                                <span class="collection-open">
+                                    Відкрити →
+                                </span>
+
+                            </div>
+
+                        </article>
+
+                    </a>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <h2>
+                    Колекцій поки немає
+                </h2>
+
+                <p>
+                    Створіть першу колекцію,
+                    щоб почати додавати документи.
+                </p>
+
+                <button
+                    class="new-collection-button"
+                    id="open-collection-modal-empty"
+                    type="button"
+                >
+                    + Створити першу колекцію
+                </button>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <dialog
+        class="collection-modal"
+        id="collection-modal"
+    >
+
+        <div class="collection-modal-content">
+
+            <div class="collection-modal-header">
+
+                <div>
+
+                    <p class="eyebrow">
+                        KNOWLEDGEHUB
+                    </p>
+
+                    <h2>
+                        Нова колекція
+                    </h2>
+
+                </div>
+
+                <button
+                    class="modal-close-button"
+                    id="close-collection-modal"
+                    type="button"
+                    aria-label="Закрити"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            {% if errors %}
+
+                <div class="message message-error">
+
+                    {% for error in errors %}
+
+                        <p>
+                            {{ error }}
+                        </p>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+
+            <form
+                class="standard-form"
+                method="post"
+                action="/collections"
+            >
+
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token }}"
+                >
+
+
+                <div class="form-field">
+
+                    <label for="collection-name">
+                        Назва
+                    </label>
+
+                    <input
+                        id="collection-name"
+                        name="name"
+                        type="text"
+                        maxlength="100"
+                        required
+                        autocomplete="off"
+                        value="{{ form_data.get('name', '') }}"
+                    >
+
+                </div>
+
+
+                <div class="form-field">
+
+                    <label for="collection-description">
+                        Опис
+                    </label>
+
+                    <textarea
+                        id="collection-description"
+                        name="description"
+                        maxlength="1000"
+                        rows="5"
+                    >{{ form_data.get('description', '') }}</textarea>
+
+                    <p class="form-hint">
+                        Необов'язкове поле.
+                    </p>
+
+                </div>
+
+
+                <div class="collection-modal-actions">
+
+                    <button
+                        class="secondary-button"
+                        id="cancel-collection-modal"
+                        type="button"
+                    >
+                        Скасувати
+                    </button>
+
+                    <button
+                        class="form-submit"
+                        type="submit"
+                    >
+                        Створити
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </dialog>
+
+</section>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script
+    src="{{ url_for('static', path='/js/collections.js') }}"
+    defer
+></script>
+
+{% endblock %}
