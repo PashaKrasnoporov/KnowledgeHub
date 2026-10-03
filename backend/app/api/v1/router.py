@@ -6,6 +6,7 @@ from app.api.v1 import (
     collections,
     documents,
     health,
+    research,
     search,
     users,
 )
@@ -43,4 +44,8 @@ api_router.include_router(
 
 api_router.include_router(
     search.router
+)
+
+api_router.include_router(
+    research.router
 )
