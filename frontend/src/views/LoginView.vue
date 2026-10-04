@@ -9,6 +9,10 @@ import {
 } from "vue-router"
 
 import {
+    waitForSystemHealth
+} from "../api/index.js"
+
+import {
     useAuth
 } from "../composables/useAuth.js"
 
@@ -23,12 +27,31 @@ const email = ref("")
 const password = ref("")
 const submitting = ref(false)
 const errors = ref([])
+const startupMessage = ref("")
 
 async function submitLogin() {
     submitting.value = true
     errors.value = []
+    startupMessage.value = ""
 
     try {
+        await waitForSystemHealth({
+            attempts: 16,
+            delayMs: 700,
+
+            onWaiting: (
+                attempt,
+                attempts
+            ) => {
+                startupMessage.value =
+                    `Backend запускається… `
+                    + `${attempt}/${attempts}`
+            }
+        })
+
+        startupMessage.value =
+            "Сервер готовий. Виконується вхід…"
+
         await login(
             email.value,
             password.value
@@ -50,6 +73,7 @@ async function submitLogin() {
     }
     finally {
         submitting.value = false
+        startupMessage.value = ""
     }
 }
 </script>
@@ -69,6 +93,21 @@ async function submitLogin() {
                 <p>
                     Введіть email та пароль
                     вашого облікового запису.
+                </p>
+            </div>
+
+            <div
+                v-if="startupMessage"
+                class="message"
+            >
+                <strong>
+                    {{ startupMessage }}
+                </strong>
+
+                <p>
+                    Після перезапуску локального
+                    backend це може зайняти
+                    кілька секунд.
                 </p>
             </div>
 
@@ -105,6 +144,7 @@ async function submitLogin() {
                         name="email"
                         type="email"
                         autocomplete="email"
+                        :disabled="submitting"
                         required
                     >
                 </div>
@@ -120,6 +160,7 @@ async function submitLogin() {
                         name="password"
                         type="password"
                         autocomplete="current-password"
+                        :disabled="submitting"
                         required
                     >
                 </div>
@@ -131,7 +172,7 @@ async function submitLogin() {
                 >
                     {{
                         submitting
-                            ? "Вхід..."
+                            ? "Очікування сервера…"
                             : "Увійти"
                     }}
                 </button>

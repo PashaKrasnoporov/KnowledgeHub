@@ -124,6 +124,16 @@ def _evidence_confidence(
     )
 
 
+def _source_texts(
+    research: ResearchResponseAPI,
+) -> list[str]:
+    return [
+        source.excerpt
+        for source
+        in research.sources
+    ]
+
+
 def _fallback_response(
     research: ResearchResponseAPI,
     generation_model: str | None,
@@ -205,6 +215,7 @@ def _insufficient_evidence_response(
 
 def _normalize_ukrainian(
     generated: str,
+    research: ResearchResponseAPI,
     token_limit: int,
 ) -> tuple[
     str,
@@ -212,23 +223,25 @@ def _normalize_ukrainian(
     bool,
     list[str],
 ]:
-    current = generated
-    passes = 0
+    sources = _source_texts(
+        research
+    )
 
-    # Ukrainian mode always receives one editorial pass.
     current = generate_local_text(
         messages=(
             build_ukrainian_rewrite_messages(
-                current,
+                generated,
                 strict=False,
             )
         ),
         max_new_tokens=token_limit,
     )
-    passes += 1
+
+    passes = 1
 
     quality = evaluate_ukrainian_quality(
-        current
+        text=current,
+        source_texts=sources,
     )
 
     if (
@@ -241,14 +254,17 @@ def _normalize_ukrainian(
                 build_ukrainian_rewrite_messages(
                     current,
                     strict=True,
+                    issues=quality.issues,
                 )
             ),
             max_new_tokens=token_limit,
         )
+
         passes += 1
 
         quality = evaluate_ukrainian_quality(
-            current
+            text=current,
+            source_texts=sources,
         )
 
     return (
@@ -321,6 +337,7 @@ def generate_grounded_answer(
                 language_quality_issues,
             ) = _normalize_ukrainian(
                 generated=generated,
+                research=research,
                 token_limit=token_limit,
             )
 
@@ -332,8 +349,9 @@ def generate_grounded_answer(
                     ),
                     error=(
                         "Згенерована відповідь не пройшла "
-                        "український мовний контроль навіть "
-                        "після повторного редагування."
+                        "український словниковий і мовний "
+                        "контроль після двох редакторських "
+                        "проходів."
                     ),
                     response_language=(
                         response_language
@@ -492,7 +510,9 @@ def generate_grounded_answer(
             generation_model=(
                 parametry.rag_local_model_name
             ),
-            error=str(error),
+            error=str(
+                error
+            ),
             response_language=(
                 response_language
             ),

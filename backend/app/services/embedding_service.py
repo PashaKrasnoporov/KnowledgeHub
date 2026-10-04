@@ -1,9 +1,6 @@
 from functools import lru_cache
 
 import numpy as np
-from sentence_transformers import (
-    SentenceTransformer,
-)
 
 
 EMBEDDING_MODEL_NAME = (
@@ -16,7 +13,15 @@ CHUNK_OVERLAP_WORDS = 30
 
 
 @lru_cache(maxsize=1)
-def get_embedding_model() -> SentenceTransformer:
+def get_embedding_model():
+    """
+    SentenceTransformer is imported lazily so normal
+    FastAPI startup/login does not import torch.
+    """
+    from sentence_transformers import (
+        SentenceTransformer,
+    )
+
     return SentenceTransformer(
         EMBEDDING_MODEL_NAME
     )

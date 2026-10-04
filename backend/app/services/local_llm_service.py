@@ -1,11 +1,5 @@
 from functools import lru_cache
 
-import torch
-from transformers import (
-    AutoModelForCausalLM,
-    AutoTokenizer,
-)
-
 from app.nalashtuvannia.parametry import (
     parametry,
 )
@@ -17,11 +11,25 @@ class LocalLLMError(RuntimeError):
 
 @lru_cache(maxsize=1)
 def get_local_llm():
-    model_name = (
-        parametry.rag_local_model_name
-    )
+    """
+    Heavy ML imports are deliberately lazy.
 
+    FastAPI can start and serve login/health requests
+    without importing torch/transformers. The model is
+    loaded only on the first local-LLM request.
+    """
     try:
+        import torch
+
+        from transformers import (
+            AutoModelForCausalLM,
+            AutoTokenizer,
+        )
+
+        model_name = (
+            parametry.rag_local_model_name
+        )
+
         tokenizer = (
             AutoTokenizer.from_pretrained(
                 model_name
@@ -104,57 +112,59 @@ def generate_local_text(
     messages: list[dict[str, str]],
     max_new_tokens: int,
 ) -> str:
-    (
-        tokenizer,
-        model,
-        device,
-    ) = get_local_llm()
-
-    prompt = _render_messages(
-        tokenizer,
-        messages,
-    )
-
-    encoded = tokenizer(
-        prompt,
-        return_tensors="pt",
-        truncation=True,
-        max_length=12000,
-    )
-
-    encoded = {
-        key: value.to(
-            device
-        )
-        for key, value
-        in encoded.items()
-    }
-
-    input_length = (
-        encoded[
-            "input_ids"
-        ].shape[1]
-    )
-
-    pad_token_id = (
-        tokenizer.pad_token_id
-    )
-
-    if pad_token_id is None:
-        pad_token_id = (
-            tokenizer.eos_token_id
-        )
-
     try:
+        import torch
+
+        (
+            tokenizer,
+            model,
+            device,
+        ) = get_local_llm()
+
+        prompt = _render_messages(
+            tokenizer,
+            messages,
+        )
+
+        encoded = tokenizer(
+            prompt,
+            return_tensors="pt",
+            truncation=True,
+            max_length=12000,
+        )
+
+        encoded = {
+            key: value.to(
+                device
+            )
+            for key, value
+            in encoded.items()
+        }
+
+        input_length = (
+            encoded[
+                "input_ids"
+            ].shape[1]
+        )
+
+        pad_token_id = (
+            tokenizer.pad_token_id
+        )
+
+        if pad_token_id is None:
+            pad_token_id = (
+                tokenizer.eos_token_id
+            )
+
         with torch.inference_mode():
             output = model.generate(
                 **encoded,
                 max_new_tokens=max_new_tokens,
                 do_sample=True,
-                temperature=0.35,
-                top_p=0.85,
-                top_k=30,
-                repetition_penalty=1.12,
+                temperature=0.25,
+                top_p=0.82,
+                top_k=25,
+                repetition_penalty=1.14,
                 no_repeat_ngram_size=4,
                 pad_token_id=pad_token_id,
                 eos_token_id=(
@@ -162,24 +172,27 @@ def generate_local_text(
                 ),
             )
 
+        generated_tokens = output[
+            0,
+            input_length:,
+        ]
+
+        answer = tokenizer.decode(
+            generated_tokens,
+            skip_special_tokens=True,
+        ).strip()
+
+        if not answer:
+            raise LocalLLMError(
+                "Локальна LLM повернула порожню відповідь."
+            )
+
+        return answer
+
+    except LocalLLMError:
+        raise
+
     except Exception as error:
         raise LocalLLMError(
             "Локальна LLM не змогла сформувати відповідь."
         ) from error
-
-    generated_tokens = output[
-        0,
-        input_length:,
-    ]
-
-    answer = tokenizer.decode(
-        generated_tokens,
-        skip_special_tokens=True,
-    ).strip()
-
-    if not answer:
-        raise LocalLLMError(
-            "Локальна LLM повернула порожню відповідь."
-        )
-
-    return answer

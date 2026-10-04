@@ -46,5 +46,6 @@ export {
 } from "./admin.js"
 
 export {
-    getSystemHealth
+    getSystemHealth,
+    waitForSystemHealth
 } from "./health.js"
