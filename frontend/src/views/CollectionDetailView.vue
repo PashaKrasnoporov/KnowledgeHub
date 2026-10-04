@@ -29,6 +29,11 @@ import {
 const route = useRoute()
 const router = useRouter()
 
+const cloudLite = (
+    import.meta.env.VITE_DEPLOYMENT_PROFILE
+    === "railway-lite"
+)
+
 const collectionId = computed(
     () => Number(
         route.params.collectionId
@@ -43,12 +48,16 @@ const errors = ref([])
 const successMessage = ref("")
 
 const searchMode = ref(
-    typeof route.query.mode === "string"
-        ? route.query.mode
+    cloudLite
+        ? "lexical"
         : (
-            localStorage.getItem(
-                "knowledgehub.searchMode"
-            ) || "hybrid"
+            typeof route.query.mode === "string"
+                ? route.query.mode
+                : (
+                    localStorage.getItem(
+                        "knowledgehub.searchMode"
+                    ) || "hybrid"
+                )
         )
 )
 
@@ -343,8 +352,29 @@ onMounted(
             />
 
             <ResearchPanel
+                v-if="!cloudLite"
                 :collection-id="collectionId"
             />
+
+            <section
+                v-else
+                class="document-search"
+            >
+                <div class="search-section-heading">
+                    <h2>
+                        Дослідницька відповідь
+                    </h2>
+
+                    <p>
+                        У безкоштовному хмарному профілі
+                        важкі ML/LLM-функції вимкнено.
+                        Для лабораторної №4 доступні
+                        автентифікація, колекції,
+                        документи, REST API і
+                        лексичний пошук.
+                    </p>
+                </div>
+            </section>
 
             <DocumentsList
                 :collection-id="collectionId"

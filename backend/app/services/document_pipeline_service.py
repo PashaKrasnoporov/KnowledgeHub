@@ -5,6 +5,9 @@ from pypdf import PdfReader
 
 from app.baza_danykh.sesii import FabrykaSesii
 from app.modeli.document import Document
+from app.nalashtuvannia.parametry import (
+    parametry,
+)
 from app.services.document_index_service import (
     index_document_embeddings,
 )
@@ -173,6 +176,15 @@ def process_and_index_document(
                 session.refresh(
                     document
                 )
+
+            if not parametry.ml_enabled:
+                logger.info(
+                    "ML indexing is disabled. "
+                    "Document ID %s remains available "
+                    "for lexical search.",
+                    document.id,
+                )
+                return
 
             chunk_count = (
                 index_document_embeddings(

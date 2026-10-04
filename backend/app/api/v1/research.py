@@ -16,6 +16,9 @@ from app.baza_danykh.dependencies import (
     get_db_session,
 )
 from app.modeli.user import User
+from app.nalashtuvannia.parametry import (
+    parametry,
+)
 from app.schemas.research import (
     ResearchGenerateRequestAPI,
     ResearchGeneratedResponseAPI,
@@ -37,6 +40,17 @@ from app.services.research_context_service import (
 
 
 router = APIRouter()
+
+
+def _require_ml_enabled() -> None:
+    if not parametry.ml_enabled:
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                "Research and local LLM features are disabled "
+                "in the lightweight Railway deployment."
+            ),
+        )
 
 
 def _milliseconds(
@@ -81,6 +95,8 @@ def api_warmup_research_model(
         get_api_user
     ),
 ):
+    _require_ml_enabled()
+
     started = perf_counter()
     already_loaded = (
         is_local_llm_loaded()
@@ -120,6 +136,8 @@ def api_research_collection(
         get_db_session
     ),
 ):
+    _require_ml_enabled()
+
     collection = _get_collection_or_404(
         collection_id=collection_id,
         user=user,
@@ -152,6 +170,8 @@ def api_generate_research_answer(
         get_db_session
     ),
 ):
+    _require_ml_enabled()
+
     total_started = perf_counter()
 
     collection = _get_collection_or_404(

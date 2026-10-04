@@ -29,6 +29,9 @@ from app.bezpeka.sesii import (
     SESSION_LIFETIME,
 )
 from app.modeli.user import User
+from app.nalashtuvannia.parametry import (
+    parametry,
+)
 from app.schemas.api import (
     CSRFApiResponse,
     UserAPIResponse,
@@ -73,7 +76,7 @@ def set_csrf_cookie(
         max_age=CSRF_COOKIE_MAX_AGE,
         httponly=True,
         samesite="strict",
-        secure=False,
+        secure=parametry.cookie_secure,
         path="/",
     )
 
@@ -90,7 +93,7 @@ def set_session_cookie(
         ),
         httponly=True,
         samesite="lax",
-        secure=False,
+        secure=parametry.cookie_secure,
         path="/",
     )
 

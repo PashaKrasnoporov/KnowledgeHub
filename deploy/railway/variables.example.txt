@@ -1,0 +1,9 @@
+DATABASE_URL=${{Postgres.DATABASE_URL}}
+
+# Already set in Dockerfile:
+# DEPLOYMENT_PROFILE=railway-lite
+# ML_ENABLED=false
+# COOKIE_SECURE=true
+
+# Railway automatically provides PORT.
+# Mount a Railway Volume at /data for persistent uploaded documents.

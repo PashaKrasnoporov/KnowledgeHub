@@ -14,6 +14,9 @@ from app.bezpeka.csrf import (
     generate_csrf_token,
 )
 from app.modeli.user import User
+from app.nalashtuvannia.parametry import (
+    parametry,
+)
 from app.schemas.api import (
     CSRFApiResponse,
     UserAPIResponse,
@@ -61,7 +64,7 @@ def api_csrf_token(
             max_age=CSRF_COOKIE_MAX_AGE,
             httponly=True,
             samesite="strict",
-            secure=False,
+            secure=parametry.cookie_secure,
             path="/",
         )
 

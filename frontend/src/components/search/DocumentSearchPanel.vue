@@ -3,6 +3,12 @@ import {
     computed
 } from "vue"
 
+
+const cloudLite = (
+    import.meta.env.VITE_DEPLOYMENT_PROFILE
+    === "railway-lite"
+)
+
 const props = defineProps({
     mode: {
         type: String,
@@ -39,6 +45,13 @@ const emit = defineEmits([
 
 const modeHelp = computed(
     () => {
+        if (cloudLite) {
+            return (
+                "Railway Lite використовує лексичний "
+                + "пошук без важких ML-моделей."
+            )
+        }
+
         const descriptions = {
             lexical:
                 "Lexical шукає точні збіги слів і фраз у текстах документів.",
@@ -137,11 +150,17 @@ const modeTitle = computed(
                         )
                     "
                 >
-                    <option value="hybrid">
+                    <option
+                        v-if="!cloudLite"
+                        value="hybrid"
+                    >
                         Hybrid
                     </option>
 
-                    <option value="semantic">
+                    <option
+                        v-if="!cloudLite"
+                        value="semantic"
+                    >
                         Semantic
                     </option>
 

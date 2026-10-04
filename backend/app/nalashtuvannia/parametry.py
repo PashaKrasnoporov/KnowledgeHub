@@ -5,11 +5,19 @@ from pydantic_settings import (
 
 
 class Parametry(BaseSettings):
-    db_host: str
-    db_port: int
-    db_name: str
-    db_user: str
-    db_password: str
+    # Local development can keep the five DB_* variables.
+    # Railway can use one DATABASE_URL reference from PostgreSQL.
+    database_url: str | None = None
+
+    db_host: str | None = None
+    db_port: int | None = None
+    db_name: str | None = None
+    db_user: str | None = None
+    db_password: str | None = None
+
+    deployment_profile: str = "local"
+    ml_enabled: bool = True
+    cookie_secure: bool = False
 
     rag_local_model_name: str = (
         "Qwen/Qwen2.5-1.5B-Instruct"

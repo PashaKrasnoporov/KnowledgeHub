@@ -13,6 +13,9 @@ from app.baza_danykh.dependencies import (
     get_db_session,
 )
 from app.modeli.user import User
+from app.nalashtuvannia.parametry import (
+    parametry,
+)
 from app.repositories.document_repository import (
     search_documents_in_collection,
 )
@@ -76,6 +79,18 @@ def api_search_documents(
         raise HTTPException(
             status_code=400,
             detail="Search query cannot be empty.",
+        )
+
+    if (
+        not parametry.ml_enabled
+        and mode != "lexical"
+    ):
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                "Semantic and hybrid search are disabled "
+                "in the lightweight cloud deployment."
+            ),
         )
 
     if mode == "lexical":

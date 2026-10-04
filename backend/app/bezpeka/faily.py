@@ -1,9 +1,33 @@
+import os
 from pathlib import Path
 
 
-UPLOAD_ROOT = Path(
-    "uploads"
-)
+def _build_upload_root() -> Path:
+    explicit = os.getenv(
+        "UPLOAD_ROOT"
+    )
+
+    if explicit:
+        return Path(
+            explicit
+        )
+
+    railway_volume = os.getenv(
+        "RAILWAY_VOLUME_MOUNT_PATH"
+    )
+
+    if railway_volume:
+        return (
+            Path(railway_volume)
+            / "uploads"
+        )
+
+    return Path(
+        "uploads"
+    )
+
+
+UPLOAD_ROOT = _build_upload_root()
 
 
 MAX_FILE_SIZE = (
