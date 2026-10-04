@@ -2,30 +2,28 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-
     gap: 9px;
 }
 
-.research-verified-badge {
+.research-verified-badge,
+.research-source-fallback-badge {
     display: inline-flex;
     align-items: center;
-
     padding: 4px 8px;
-
-    border:
-        1px solid
-        var(--mezha);
-
+    border: 1px solid var(--mezha);
     border-radius: 999px;
-
-    background:
-        var(--morska-pina);
-
-    color:
-        var(--akvamarin-temnyi);
-
     font-size: 11px;
     font-weight: 700;
+}
+
+.research-verified-badge {
+    background: var(--morska-pina);
+    color: var(--akvamarin-temnyi);
+}
+
+.research-source-fallback-badge {
+    background: var(--poverkhna);
+    color: var(--tekst-drugoryadnyi);
 }
 
 .research-metric {
@@ -34,28 +32,26 @@
 
 .research-language-audit {
     margin-top: 14px;
-
-    color:
-        var(--tekst-drugoryadnyi);
-
+    color: var(--tekst-drugoryadnyi);
     font-size: 12px;
 }
 
 .research-language-audit summary {
     cursor: pointer;
-
-    color:
-        var(--akvamarin-temnyi);
-
+    color: var(--akvamarin-temnyi);
     font-weight: 700;
 }
 
-.research-language-audit ul {
-    margin:
-        10px
-        0
-        0;
+.research-language-audit-group {
+    margin-top: 10px;
+}
 
+.research-language-audit-group > strong {
+    color: var(--morskyi-hlybokyi);
+}
+
+.research-language-audit ul {
+    margin: 7px 0 0;
     padding-left: 20px;
 }
 

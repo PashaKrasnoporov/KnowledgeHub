@@ -73,12 +73,23 @@ class ResearchGeneratedResponseAPI(
 
     language_rewrite_used: bool = False
     language_rewrite_passes: int = 0
+
     language_quality_passed: bool = True
-    language_quality_issues: list[str] = []
+    language_quality_score: int = 100
+
+    language_quality_issues: list[str] = Field(
+        default_factory=list
+    )
+
+    language_quality_warnings: list[str] = Field(
+        default_factory=list
+    )
 
     grounded_claims: list[
         GroundedClaimAPI
-    ] = []
+    ] = Field(
+        default_factory=list
+    )
 
     grounding_coverage: float = 0.0
     removed_claims: int = 0

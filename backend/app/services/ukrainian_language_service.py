@@ -1,21 +1,12 @@
 import re
 from dataclasses import dataclass
 
-from wordfreq import (
-    zipf_frequency,
-)
-
-
 RUSSIAN_UNIQUE_LETTERS = re.compile(
     r"[ыЫэЭёЁъЪ]"
 )
 
 CYRILLIC_WORD_PATTERN = re.compile(
     r"[А-Яа-яІіЇїЄєҐґ'-]+"
-)
-
-LATIN_PATTERN = re.compile(
-    r"[A-Za-z]"
 )
 
 RUSSIAN_MARKERS = {
@@ -48,54 +39,50 @@ RUSSIAN_MARKERS = {
     "векторных",
 }
 
-UNNATURAL_PATTERNS = {
-    "пошукуван": "неприродна форма слова «пошук»",
+CRITICAL_UNNATURAL_PATTERNS = {
+    "пошукуван": "неприродна словоформа на основі «пошук»",
     "семана-": "штучна форма «семана-»",
     "семантос": "штучна форма «семантос»",
+    "віддіювання": "неприродна словоформа «віддіювання»",
     "лексичне метод": "порушення узгодження «лексичне метод»",
     "лексичні методі": "порушення узгодження «лексичні методі»",
     "контекста": "росіянізм «контекста»",
     "розуміння контекста": "російська калька",
-    "віддіювання": "неприродна словоформа",
 }
 
-TECHNICAL_WHITELIST = {
+SUSPICIOUS_TECH_PATTERN = re.compile(
+    r"\b(?:"
+    r"семан[а-яіїєґ'-]*(?:вектор|лекс)"
+    r"|лекс[а-яіїєґ'-]*семан"
+    r"|пошукуван[а-яіїєґ'-]*"
+    r"|віддіюван[а-яіїєґ'-]*"
+    r")\b",
+    flags=re.IGNORECASE,
+)
+
+TECHNICAL_PREFIXES = (
     "алгоритм",
-    "алгоритми",
     "вектор",
-    "вектори",
-    "векторний",
-    "векторна",
-    "векторне",
-    "гібридний",
-    "гібридна",
-    "гібридне",
-    "лексичний",
-    "лексична",
-    "лексичне",
-    "релевантний",
-    "релевантна",
-    "релевантне",
-    "семантичний",
-    "семантична",
-    "семантичне",
+    "гібрид",
+    "індекс",
+    "лексич",
+    "лемат",
+    "релевант",
+    "семантич",
     "токен",
-    "токени",
     "фрагмент",
-    "фрагменти",
-    "лематизація",
-    "лематизації",
-}
+    "ембед",
+)
 
 MIN_WORD_LENGTH_FOR_FREQUENCY = 5
-UNKNOWN_WORD_LIMIT = 2
-
-
 @dataclass
 class UkrainianQualityResult:
     passed: bool
-    issues: list[str]
+    score: int
+    hard_issues: list[str]
+    warnings: list[str]
     suspicious_words: list[str]
+    needs_rewrite: bool
 
 
 def _normalized_words(
@@ -133,6 +120,18 @@ def _source_vocabulary(
     return vocabulary
 
 
+def _is_known_technical_word(
+    word: str,
+) -> bool:
+    return any(
+        word.startswith(
+            prefix
+        )
+        for prefix
+        in TECHNICAL_PREFIXES
+    )
+
+
 def _find_suspicious_words(
     text: str,
     source_texts: list[str] | None,
@@ -152,16 +151,16 @@ def _find_suspicious_words(
         ):
             continue
 
-        if word in TECHNICAL_WHITELIST:
-            continue
-
         if word in source_words:
             continue
 
-        if LATIN_PATTERN.search(
+        if _is_known_technical_word(
             word
         ):
             continue
+
+        # Lazy import keeps ordinary FastAPI startup lighter.
+        from wordfreq import zipf_frequency
 
         frequency = zipf_frequency(
             word,
@@ -185,12 +184,13 @@ def evaluate_ukrainian_quality(
     text: str,
     source_texts: list[str] | None = None,
 ) -> UkrainianQualityResult:
-    issues = []
+    hard_issues = []
+    warnings = []
 
     if RUSSIAN_UNIQUE_LETTERS.search(
         text
     ):
-        issues.append(
+        hard_issues.append(
             "наявні російські літери"
         )
 
@@ -205,7 +205,7 @@ def evaluate_ukrainian_quality(
     })
 
     if marker_hits:
-        issues.append(
+        hard_issues.append(
             (
                 "російські мовні форми: "
                 + ", ".join(
@@ -219,11 +219,24 @@ def evaluate_ukrainian_quality(
     for (
         pattern,
         description,
-    ) in UNNATURAL_PATTERNS.items():
+    ) in CRITICAL_UNNATURAL_PATTERNS.items():
         if pattern in lowered:
-            issues.append(
+            hard_issues.append(
                 description
             )
+
+    suspicious_compounds = sorted(
+        set(
+            SUSPICIOUS_TECH_PATTERN.findall(
+                text
+            )
+        )
+    )
+
+    if suspicious_compounds:
+        hard_issues.append(
+            "штучні технічні словоформи"
+        )
 
     suspicious_words = (
         _find_suspicious_words(
@@ -232,24 +245,65 @@ def evaluate_ukrainian_quality(
         )
     )
 
-    if (
-        len(suspicious_words)
-        >= UNKNOWN_WORD_LIMIT
-    ):
-        issues.append(
+    if suspicious_words:
+        warnings.append(
             (
-                "підозрілі або вигадані словоформи: "
+                "рідкісні або невідомі словоформи: "
                 + ", ".join(
                     suspicious_words[:6]
                 )
             )
         )
 
+    score = 100
+
+    score -= min(
+        70,
+        28 * len(
+            hard_issues
+        ),
+    )
+
+    score -= min(
+        24,
+        6 * len(
+            suspicious_words
+        ),
+    )
+
+    score = max(
+        0,
+        min(
+            100,
+            score,
+        ),
+    )
+
+    # wordfreq is only a soft signal. Unknown corpus words
+    # can trigger proofreading and lower the score, but only
+    # critical language errors can reject the final answer.
+    passed = not hard_issues
+
+    needs_rewrite = (
+        bool(
+            hard_issues
+        )
+        or len(
+            suspicious_words
+        ) >= 1
+        or score < 90
+    )
+
     return UkrainianQualityResult(
-        passed=not issues,
-        issues=issues,
+        passed=passed,
+        score=score,
+        hard_issues=hard_issues,
+        warnings=warnings,
         suspicious_words=(
             suspicious_words
+        ),
+        needs_rewrite=(
+            needs_rewrite
         ),
     )
 
@@ -258,14 +312,27 @@ def build_ukrainian_rewrite_messages(
     draft: str,
     strict: bool = False,
     issues: list[str] | None = None,
+    warnings: list[str] | None = None,
 ) -> list[dict[str, str]]:
-    issue_text = ""
+    diagnostics = []
 
     if issues:
-        issue_text = (
+        diagnostics.extend(
+            issues
+        )
+
+    if warnings:
+        diagnostics.extend(
+            warnings
+        )
+
+    diagnostics_text = ""
+
+    if diagnostics:
+        diagnostics_text = (
             "\n\nАвтоматична перевірка виявила:\n- "
             + "\n- ".join(
-                issues
+                diagnostics
             )
         )
 
@@ -276,11 +343,13 @@ def build_ukrainian_rewrite_messages(
 Додатковий строгий контроль:
 - не використовуй «пошукування», «семана-»,
   «семантос», «віддіювання»;
+- не створюй нові складені терміни через дефіс,
+  якщо такого терміна немає у вихідній чернетці;
 - пиши «семантичний пошук»;
 - пиши «лексичний пошук» або «лексичний метод»;
 - перевір узгодження роду, числа та відмінка;
-- не утворюй нові слова, якщо можна використати
-  звичайний український термін;
+- якщо слово виглядає штучно, заміни його
+  звичайним усталеним українським словом;
 - якщо речення звучить як машинний переклад,
   перебудуй його простіше.
 """.strip()
@@ -309,7 +378,7 @@ def build_ukrainian_rewrite_messages(
 9. Поверни лише відредагований текст.
 
 {strict_rules}
-{issue_text}
+{diagnostics_text}
 """.strip()
 
     return [

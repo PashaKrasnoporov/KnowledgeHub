@@ -12,11 +12,8 @@ class LocalLLMError(RuntimeError):
 @lru_cache(maxsize=1)
 def get_local_llm():
     """
-    Heavy ML imports are deliberately lazy.
-
-    FastAPI can start and serve login/health requests
-    without importing torch/transformers. The model is
-    loaded only on the first local-LLM request.
+    Heavy ML imports are lazy so FastAPI can start
+    and serve auth/health routes quickly.
     """
     try:
         import torch
@@ -111,6 +108,7 @@ def _render_messages(
 def generate_local_text(
     messages: list[dict[str, str]],
     max_new_tokens: int,
+    deterministic: bool = False,
 ) -> str:
     try:
         import torch
@@ -156,20 +154,34 @@ def generate_local_text(
                 tokenizer.eos_token_id
             )
 
+        generation_kwargs = {
+            "max_new_tokens": max_new_tokens,
+            "repetition_penalty": 1.12,
+            "no_repeat_ngram_size": 4,
+            "pad_token_id": pad_token_id,
+            "eos_token_id": (
+                tokenizer.eos_token_id
+            ),
+        }
+
+        if deterministic:
+            generation_kwargs[
+                "do_sample"
+            ] = False
+        else:
+            generation_kwargs.update(
+                {
+                    "do_sample": True,
+                    "temperature": 0.25,
+                    "top_p": 0.82,
+                    "top_k": 25,
+                }
+            )
+
         with torch.inference_mode():
             output = model.generate(
                 **encoded,
-                max_new_tokens=max_new_tokens,
-                do_sample=True,
-                temperature=0.25,
-                top_p=0.82,
-                top_k=25,
-                repetition_penalty=1.14,
-                no_repeat_ngram_size=4,
-                pad_token_id=pad_token_id,
-                eos_token_id=(
-                    tokenizer.eos_token_id
-                ),
+                **generation_kwargs,
             )
 
         generated_tokens = output[

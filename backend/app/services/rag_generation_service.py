@@ -10,12 +10,14 @@ from app.schemas.research import (
 from app.services.claim_grounding_service import (
     ground_generated_answer,
 )
+from app.services.extractive_fallback_service import (
+    build_clean_extractive_fallback,
+)
 from app.services.local_llm_service import (
     LocalLLMError,
     generate_local_text,
 )
 from app.services.rag_prompt_service import (
-    build_extractive_fallback,
     build_rag_messages,
 )
 from app.services.ukrainian_language_service import (
@@ -141,17 +143,21 @@ def _fallback_response(
     response_language: str,
     language_rewrite_passes: int,
     language_quality_passed: bool,
+    language_quality_score: int,
     language_quality_issues: list[str],
+    language_quality_warnings: list[str],
     evidence_confidence: float,
 ) -> ResearchGeneratedResponseAPI:
-    fallback = build_extractive_fallback(
+    fallback = build_clean_extractive_fallback(
         research
     )
 
     return ResearchGeneratedResponseAPI(
         **research.model_dump(),
         generated_answer=fallback,
-        generation_provider="fallback",
+        generation_provider=(
+            "source-extractive"
+        ),
         generation_model=generation_model,
         response_language=response_language,
         language_rewrite_used=(
@@ -163,8 +169,14 @@ def _fallback_response(
         language_quality_passed=(
             language_quality_passed
         ),
+        language_quality_score=(
+            language_quality_score
+        ),
         language_quality_issues=(
             language_quality_issues
+        ),
+        language_quality_warnings=(
+            language_quality_warnings
         ),
         grounded_claims=[],
         grounding_coverage=0.0,
@@ -200,7 +212,9 @@ def _insufficient_evidence_response(
         language_rewrite_used=False,
         language_rewrite_passes=0,
         language_quality_passed=True,
+        language_quality_score=100,
         language_quality_issues=[],
+        language_quality_warnings=[],
         grounded_claims=[],
         grounding_coverage=0.0,
         removed_claims=0,
@@ -221,6 +235,8 @@ def _normalize_ukrainian(
     str,
     int,
     bool,
+    int,
+    list[str],
     list[str],
 ]:
     sources = _source_texts(
@@ -235,6 +251,7 @@ def _normalize_ukrainian(
             )
         ),
         max_new_tokens=token_limit,
+        deterministic=True,
     )
 
     passes = 1
@@ -245,7 +262,7 @@ def _normalize_ukrainian(
     )
 
     if (
-        not quality.passed
+        quality.needs_rewrite
         and passes
         < MAX_UKRAINIAN_REWRITE_PASSES
     ):
@@ -254,10 +271,12 @@ def _normalize_ukrainian(
                 build_ukrainian_rewrite_messages(
                     current,
                     strict=True,
-                    issues=quality.issues,
+                    issues=quality.hard_issues,
+                    warnings=quality.warnings,
                 )
             ),
             max_new_tokens=token_limit,
+            deterministic=True,
         )
 
         passes += 1
@@ -271,7 +290,9 @@ def _normalize_ukrainian(
         current,
         passes,
         quality.passed,
-        quality.issues,
+        quality.score,
+        quality.hard_issues,
+        quality.warnings,
     )
 
 
@@ -321,12 +342,15 @@ def generate_grounded_answer(
 
     language_rewrite_passes = 0
     language_quality_passed = True
+    language_quality_score = 100
     language_quality_issues = []
+    language_quality_warnings = []
 
     try:
         generated = generate_local_text(
             messages=messages,
             max_new_tokens=token_limit,
+            deterministic=False,
         )
 
         if response_language == "uk":
@@ -334,7 +358,9 @@ def generate_grounded_answer(
                 generated,
                 language_rewrite_passes,
                 language_quality_passed,
+                language_quality_score,
                 language_quality_issues,
+                language_quality_warnings,
             ) = _normalize_ukrainian(
                 generated=generated,
                 research=research,
@@ -348,8 +374,8 @@ def generate_grounded_answer(
                         parametry.rag_local_model_name
                     ),
                     error=(
-                        "Згенерована відповідь не пройшла "
-                        "український словниковий і мовний "
+                        "Генеративна відповідь не пройшла "
+                        "критичний український мовний "
                         "контроль після двох редакторських "
                         "проходів."
                     ),
@@ -360,8 +386,14 @@ def generate_grounded_answer(
                         language_rewrite_passes
                     ),
                     language_quality_passed=False,
+                    language_quality_score=(
+                        language_quality_score
+                    ),
                     language_quality_issues=(
                         language_quality_issues
+                    ),
+                    language_quality_warnings=(
+                        language_quality_warnings
                     ),
                     evidence_confidence=(
                         confidence
@@ -389,8 +421,14 @@ def generate_grounded_answer(
                 language_quality_passed=(
                     language_quality_passed
                 ),
+                language_quality_score=(
+                    language_quality_score
+                ),
                 language_quality_issues=(
                     language_quality_issues
+                ),
+                language_quality_warnings=(
+                    language_quality_warnings
                 ),
                 evidence_confidence=(
                     confidence
@@ -422,8 +460,14 @@ def generate_grounded_answer(
                 language_quality_passed=(
                     language_quality_passed
                 ),
+                language_quality_score=(
+                    language_quality_score
+                ),
                 language_quality_issues=(
                     language_quality_issues
+                ),
+                language_quality_warnings=(
+                    language_quality_warnings
                 ),
                 evidence_confidence=(
                     confidence
@@ -453,8 +497,14 @@ def generate_grounded_answer(
                 language_quality_passed=(
                     language_quality_passed
                 ),
+                language_quality_score=(
+                    language_quality_score
+                ),
                 language_quality_issues=(
                     language_quality_issues
+                ),
+                language_quality_warnings=(
+                    language_quality_warnings
                 ),
                 evidence_confidence=(
                     confidence
@@ -484,8 +534,14 @@ def generate_grounded_answer(
             language_quality_passed=(
                 language_quality_passed
             ),
+            language_quality_score=(
+                language_quality_score
+            ),
             language_quality_issues=(
                 language_quality_issues
+            ),
+            language_quality_warnings=(
+                language_quality_warnings
             ),
             grounded_claims=(
                 grounding.claims
@@ -522,8 +578,14 @@ def generate_grounded_answer(
             language_quality_passed=(
                 language_quality_passed
             ),
+            language_quality_score=(
+                language_quality_score
+            ),
             language_quality_issues=(
                 language_quality_issues
+            ),
+            language_quality_warnings=(
+                language_quality_warnings
             ),
             evidence_confidence=(
                 confidence

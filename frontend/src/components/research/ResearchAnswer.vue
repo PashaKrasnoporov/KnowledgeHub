@@ -42,12 +42,27 @@ const evidencePercent = computed(
     )
 )
 
+const languageScore = computed(
+    () => Number(
+        props.result.language_quality_score
+        ?? 100
+    )
+)
+
 const verified = computed(
     () => (
         props.generationMode === "local"
         && !props.result.fallback_used
         && !props.result.insufficient_evidence
         && props.result.grounded_claims?.length > 0
+    )
+)
+
+const fallbackLabel = computed(
+    () => (
+        props.result.fallback_used
+            ? "Перевірений витяг із джерел"
+            : ""
     )
 )
 
@@ -99,6 +114,13 @@ async function copyAnswer() {
                     >
                         ✓ Відповідь перевірена
                     </span>
+
+                    <span
+                        v-else-if="result.fallback_used"
+                        class="research-source-fallback-badge"
+                    >
+                        {{ fallbackLabel }}
+                    </span>
                 </div>
 
                 <div
@@ -111,7 +133,7 @@ async function copyAnswer() {
                                 ? "Недостатньо доказів"
                                 : (
                                     result.fallback_used
-                                        ? "Безпечний fallback"
+                                        ? "Source-extractive fallback"
                                         : "Local LLM + auto-grounding"
                                 )
                         }}
@@ -129,7 +151,7 @@ async function copyAnswer() {
                             && result.grounded_claims?.length
                         "
                         class="research-metric"
-                        title="Частка згенерованих тверджень, які KnowledgeHub зміг підтвердити знайденими джерелами."
+                        title="Частка згенерованих тверджень, які підтверджені знайденими джерелами."
                     >
                         Покриття:
                         {{ groundingPercent }}%
@@ -142,7 +164,7 @@ async function copyAnswer() {
                             && generationMode === 'local'
                         "
                         class="research-metric"
-                        title="Оцінка сили релевантних фрагментів, знайдених ще до запуску LLM."
+                        title="Сила релевантних фрагментів, знайдених до запуску LLM."
                     >
                         Доказовість:
                         {{ evidencePercent }}%
@@ -152,18 +174,20 @@ async function copyAnswer() {
                     <span
                         v-if="
                             result.response_language === 'uk'
-                            && result.language_quality_passed
+                            && !result.fallback_used
                         "
                         class="research-metric"
-                        title="Українська відповідь пройшла обов'язковий редакторський етап і мовний контроль."
+                        title="М'яка інтегральна оцінка української мовної якості. Невідоме слово саме по собі більше не блокує відповідь."
                     >
-                        Український контроль ✓
+                        Українська:
+                        {{ languageScore }}/100
                         ⓘ
                     </span>
 
                     <span
                         v-if="
                             result.language_rewrite_passes > 0
+                            && !result.fallback_used
                         "
                     >
                         Редагувань:
@@ -204,7 +228,9 @@ async function copyAnswer() {
             class="research-generation-warning"
         >
             {{ result.generation_error }}
-            Показано безпечну витягувальну відповідь.
+            Нижче показано очищений витяг
+            безпосередньо з першоджерел.
+            Текст завантажених файлів не змінювався.
         </p>
 
         <p
@@ -279,30 +305,6 @@ async function copyAnswer() {
             {{ result.generated_answer }}
         </div>
 
-        <ol
-            v-else-if="result.answer_points?.length"
-            class="research-points"
-        >
-            <li
-                v-for="point in result.answer_points"
-                :key="
-                    `${point.source_number}-${point.text}`
-                "
-            >
-                <span>
-                    {{ point.text }}
-                </span>
-
-                <a
-                    :href="
-                        `#research-source-${point.source_number}`
-                    "
-                >
-                    [{{ point.source_number }}]
-                </a>
-            </li>
-        </ol>
-
         <details
             v-if="
                 !result.fallback_used
@@ -342,9 +344,7 @@ async function copyAnswer() {
                 </div>
 
                 <span
-                    :title="
-                        'Комбінована оцінка semantic similarity, lexical overlap та retrieval prior.'
-                    "
+                    title="Semantic similarity + lexical overlap + retrieval prior."
                 >
                     grounding
                     {{
@@ -358,8 +358,8 @@ async function copyAnswer() {
 
         <details
             v-if="
-                !result.language_quality_passed
-                && result.language_quality_issues?.length
+                result.language_quality_issues?.length
+                || result.language_quality_warnings?.length
             "
             class="research-language-audit"
         >
@@ -367,14 +367,41 @@ async function copyAnswer() {
                 Мовний контроль
             </summary>
 
-            <ul>
-                <li
-                    v-for="issue in result.language_quality_issues"
-                    :key="issue"
-                >
-                    {{ issue }}
-                </li>
-            </ul>
+            <div
+                v-if="result.language_quality_issues?.length"
+                class="research-language-audit-group"
+            >
+                <strong>
+                    Критичні зауваження
+                </strong>
+
+                <ul>
+                    <li
+                        v-for="issue in result.language_quality_issues"
+                        :key="issue"
+                    >
+                        {{ issue }}
+                    </li>
+                </ul>
+            </div>
+
+            <div
+                v-if="result.language_quality_warnings?.length"
+                class="research-language-audit-group"
+            >
+                <strong>
+                    Попередження
+                </strong>
+
+                <ul>
+                    <li
+                        v-for="warning in result.language_quality_warnings"
+                        :key="warning"
+                    >
+                        {{ warning }}
+                    </li>
+                </ul>
+            </div>
         </details>
     </div>
 </template>

@@ -10,8 +10,9 @@ KnowledgeHub — україномовно орієнтована вебплат�
 - Vue 3 + Vue Router + Vite
 - sentence-transformers
 - локальна instruction LLM
+- wordfreq як м'який корпусний сигнал для української
 
-## RAG v1.3
+## RAG v1.5.2
 
 ```text
 Question
@@ -24,28 +25,44 @@ Local LLM draft
   ↓
 Mandatory Ukrainian editorial pass
   ↓
-Ukrainian language quality gate
+Soft corpus / language quality scoring
   ↓
-Optional strict second editorial pass
+Optional strict deterministic rewrite
   ↓
 Claim-level grounding
   ↓
 Automatic citations
   ↓
-Verified answer + sources
+Verified answer
 ```
 
 ### Ukrainian-first
 
 Українська — основна мова генерації.
 
-У режимі `Українська` кожна LLM-відповідь обов'язково проходить окремий редакторський етап. Якщо після нього залишаються явні кальки, російські форми або неприродні словотворення, запускається друге суворіше редагування.
+`wordfreq` більше не використовується як абсолютний словник.
+Рідкісне або невідоме корпусу слово є лише попередженням і не може саме по собі відхилити відповідь.
 
-Якщо текст не проходить мовний контроль після двох спроб, KnowledgeHub не показує його як якісну відповідь і використовує безпечний fallback.
+Критичними залишаються:
+
+- російські мовні форми;
+- очевидні штучні словоформи;
+- відомі кальковані конструкції;
+- неприродні технічні сполуки.
+
+Український результат має інтегральну оцінку якості `/100`.
+
+### Source-preserving fallback
+
+Якщо LLM-відповідь відхилено, KnowledgeHub не переписує першоджерела.
+
+Система вибирає чисті релевантні речення з retrieved chunks, прибираючи лише display-noise на кшталт службових metadata та тестової нумерації.
+
+Оригінальний текст PDF/DOCX/TXT залишається незмінним.
 
 ### Grounding
 
-Після мовного редагування KnowledgeHub:
+Після мовного контролю KnowledgeHub:
 
 1. ділить відповідь на твердження;
 2. створює embeddings тверджень;
@@ -54,27 +71,9 @@ Verified answer + sources
 5. відкидає непідтверджені твердження;
 6. сам додає citations `[1]`, `[2]` тощо.
 
-### Evidence gate
+### Startup
 
-Якщо retrieved evidence слабке, генерація не запускається.
-
-### UX
-
-Research UI містить:
-
-- spinner біля кнопки;
-- індикативну смугу активного процесу;
-- elapsed time;
-- орієнтовний етап обробки;
-- Ctrl+Enter;
-- лічильник символів;
-- копіювання відповіді;
-- clickable citations;
-- `✓ Відповідь перевірена`;
-- підказки для `Покриття` та `Доказовість`;
-- `Український контроль ✓`;
-- кількість редакторських проходів;
-- згортуваний claim audit.
+`torch`, `transformers` і `sentence-transformers` завантажуються ліниво, щоб звичайний login/health/CRUD не чекав ініціалізації ML-стеку.
 
 ## Документація
 
@@ -82,3 +81,5 @@ Research UI містить:
 - `docs/research/claim_grounding.md`
 - `docs/research/ukrainian_rag_v1_2.md`
 - `docs/research/ukrainian_quality_layer_v1_3.md`
+- `docs/research/ukrainian_quality_v1_4.md`
+- `docs/research/rag_v1_5_2.md`

@@ -15,6 +15,9 @@ from app.schemas.research import (
 from app.services.embedding_service import (
     create_query_embedding,
 )
+from app.services.extractive_fallback_service import (
+    prepare_source_sentence,
+)
 
 
 RESEARCH_SEMANTIC_WEIGHT = 0.75
@@ -72,7 +75,8 @@ def _tokenize(
 ) -> list[str]:
     return [
         token.lower()
-        for token in TOKEN_PATTERN.findall(
+        for token
+        in TOKEN_PATTERN.findall(
             text
         )
     ]
@@ -203,18 +207,12 @@ def _sentence_candidates(
     for part in SENTENCE_SPLIT_PATTERN.split(
         text
     ):
-        sentence = " ".join(
-            part.split()
-        ).strip()
+        sentence = prepare_source_sentence(
+            part
+        )
 
-        if len(sentence) < 35:
+        if sentence is None:
             continue
-
-        if len(sentence) > 420:
-            sentence = _excerpt(
-                sentence,
-                max_length=420,
-            )
 
         sentences.append(
             sentence
@@ -238,11 +236,6 @@ def _build_answer_points(
         sentences = _sentence_candidates(
             source.excerpt
         )
-
-        if not sentences:
-            sentences = [
-                source.excerpt
-            ]
 
         for sentence in sentences:
             sentence_tokens = set(
@@ -285,7 +278,11 @@ def _build_answer_points(
     answer_points = []
     seen = set()
 
-    for _, sentence, source_number in candidates:
+    for (
+        _score,
+        sentence,
+        source_number,
+    ) in candidates:
         normalized = sentence.lower()
 
         if normalized in seen:
@@ -302,7 +299,9 @@ def _build_answer_points(
             )
         )
 
-        if len(answer_points) >= max_points:
+        if len(
+            answer_points
+        ) >= max_points:
             break
 
     return answer_points
@@ -404,7 +403,9 @@ def build_research_response(
             document_id
         ] = used + 1
 
-        if len(selected) >= limit:
+        if len(
+            selected
+        ) >= limit:
             break
 
     sources = [
