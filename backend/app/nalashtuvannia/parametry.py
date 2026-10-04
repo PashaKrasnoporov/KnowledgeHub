@@ -1,4 +1,7 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import (
+    BaseSettings,
+    SettingsConfigDict,
+)
 
 
 class Parametry(BaseSettings):
@@ -8,9 +11,15 @@ class Parametry(BaseSettings):
     db_user: str
     db_password: str
 
+    rag_local_model_name: str = (
+        "Qwen/Qwen2.5-0.5B-Instruct"
+    )
+    rag_max_new_tokens: int = 320
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
+        extra="ignore",
     )
 
 

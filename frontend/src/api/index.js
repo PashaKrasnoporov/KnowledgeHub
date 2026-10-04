@@ -36,6 +36,7 @@ export {
 } from "./search.js"
 
 export {
+    generateResearchAnswer,
     researchCollection
 } from "./research.js"
 

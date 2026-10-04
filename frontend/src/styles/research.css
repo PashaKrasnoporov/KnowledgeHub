@@ -1,14 +1,12 @@
 .research-panel {
     margin: 34px 0;
     padding: 24px;
-
     background:
         linear-gradient(
             180deg,
             var(--poverkhna-svitla) 0%,
             var(--poverkhna) 100%
         );
-
     border: 1px solid var(--mezha);
     border-radius: 14px;
 }
@@ -17,9 +15,7 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-
     gap: 24px;
-
     margin-bottom: 22px;
 }
 
@@ -29,11 +25,8 @@
 
 .research-heading p {
     max-width: 760px;
-
     margin: 8px 0 0;
-
     color: var(--tekst-drugoryadnyi);
-
     line-height: 1.55;
 }
 
@@ -41,52 +34,54 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-
     gap: 10px;
 }
 
 .research-badge {
     display: inline-flex;
-
     padding: 5px 9px;
-
     border: 1px solid var(--mezha);
     border-radius: 999px;
-
     background: var(--morska-pina);
     color: var(--akvamarin-temnyi);
-
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.05em;
     text-transform: uppercase;
 }
 
+.research-mode-row {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    align-items: end;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.research-local-note {
+    margin: 0 0 3px;
+    color: var(--tekst-drugoryadnyi);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
 .research-form textarea {
     width: 100%;
     min-height: 92px;
-
     box-sizing: border-box;
-
     padding: 13px 15px;
-
     resize: vertical;
-
     border: 1px solid var(--mezha-temna);
     border-radius: 9px;
-
     background: var(--poverkhna-svitla);
     color: var(--tekst-osnovnyi);
-
     font: inherit;
     line-height: 1.5;
-
     outline: none;
 }
 
 .research-form textarea:focus {
     border-color: var(--focus);
-
     box-shadow:
         0 0 0 3px
         rgba(128, 175, 186, 0.15);
@@ -94,13 +89,8 @@
 
 .research-input-row {
     display: grid;
-
-    grid-template-columns:
-        minmax(0, 1fr)
-        auto;
-
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: end;
-
     gap: 12px;
 }
 
@@ -110,27 +100,21 @@
 
 .research-error {
     margin-top: 14px;
-
     color: #8f3535;
-
     font-size: 14px;
     font-weight: 600;
 }
 
 .research-result {
     display: grid;
-
     gap: 22px;
-
     margin-top: 24px;
 }
 
 .research-answer,
 .research-sources {
     padding: 20px;
-
     background: var(--poverkhna-svitla);
-
     border: 1px solid var(--mezha);
     border-radius: 12px;
 }
@@ -139,9 +123,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     gap: 16px;
-
     margin-bottom: 14px;
 }
 
@@ -151,22 +133,43 @@
 
 .research-result-heading > span {
     color: var(--tekst-drugoryadnyi);
-
     font-size: 13px;
+}
+
+.research-generation-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px 12px;
+    margin-top: 6px;
+    color: var(--tekst-drugoryadnyi);
+    font-size: 12px;
+}
+
+.research-generation-warning {
+    margin: 0 0 14px;
+    padding: 10px 12px;
+    border: 1px solid var(--mezha);
+    border-radius: 8px;
+    background: var(--poverkhna);
+    color: var(--tekst-drugoryadnyi);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.research-generated-answer {
+    white-space: pre-wrap;
+    color: var(--tekst-osnovnyi);
+    line-height: 1.7;
 }
 
 .research-clear-button {
     padding: 7px 10px;
-
     border: 0;
-
     background: transparent;
     color: var(--akvamarin-temnyi);
-
     font: inherit;
     font-size: 13px;
     font-weight: 600;
-
     cursor: pointer;
 }
 
@@ -176,26 +179,20 @@
 
 .research-points {
     display: grid;
-
     gap: 12px;
-
     margin: 0;
     padding-left: 24px;
 }
 
 .research-points li {
     padding-left: 4px;
-
     color: var(--tekst-osnovnyi);
-
     line-height: 1.6;
 }
 
 .research-points a {
     margin-left: 6px;
-
     color: var(--akvamarin-temnyi);
-
     font-weight: 700;
     text-decoration: none;
 }
@@ -206,21 +203,14 @@
 
 .research-source-card {
     display: grid;
-
-    grid-template-columns:
-        34px
-        minmax(0, 1fr);
-
+    grid-template-columns: 34px minmax(0, 1fr);
     gap: 14px;
-
     padding: 16px 0;
-
     border-top: 1px solid var(--mezha);
 }
 
 .research-source-card:first-of-type {
     padding-top: 0;
-
     border-top: 0;
 }
 
@@ -228,15 +218,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-
     width: 30px;
     height: 30px;
-
     border-radius: 50%;
-
     background: var(--morska-pina);
     color: var(--morskyi-hlybokyi);
-
     font-size: 12px;
     font-weight: 700;
 }
@@ -245,13 +231,11 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     gap: 16px;
 }
 
 .research-source-meta a {
     color: var(--morskyi-hlybokyi);
-
     font-weight: 700;
     text-decoration: none;
 }
@@ -262,17 +246,13 @@
 
 .research-source-meta span {
     flex-shrink: 0;
-
     color: var(--tekst-drugoryadnyi);
-
     font-size: 12px;
 }
 
 .research-source-content p {
     margin: 10px 0 12px;
-
     color: var(--tekst-drugoryadnyi);
-
     line-height: 1.6;
 }
 
@@ -280,11 +260,8 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-
     gap: 8px 18px;
-
     color: var(--tekst-drugoryadnyi);
-
     font-size: 12px;
 }
 
@@ -300,11 +277,8 @@
 .research-empty {
     margin-top: 20px;
     padding: 24px;
-
     text-align: center;
-
     background: var(--poverkhna-svitla);
-
     border: 1px dashed var(--mezha-temna);
     border-radius: 12px;
 }
@@ -322,6 +296,10 @@
         flex-direction: column;
     }
 
+    .research-mode-row {
+        grid-template-columns: 1fr;
+    }
+
     .research-input-row {
         grid-template-columns: 1fr;
     }
@@ -333,7 +311,6 @@
     .research-source-meta {
         align-items: flex-start;
         flex-direction: column;
-
         gap: 5px;
     }
 }

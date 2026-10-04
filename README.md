@@ -15,7 +15,7 @@ KnowledgeHub/
 │   │   ├── parsers/          # PDF / DOCX / TXT parsing
 │   │   ├── repositories/     # доступ до даних
 │   │   ├── schemas/          # API / service schemas
-│   │   ├── services/         # бізнес-логіка та пошук
+│   │   ├── services/         # бізнес-логіка, retrieval, RAG
 │   │   ├── routes/           # стабільний Jinja frontend ЛР1
 │   │   ├── templates/        # Jinja templates
 │   │   └── static/           # Jinja static files
@@ -51,7 +51,9 @@ FastAPI + PostgreSQL + SQLAlchemy + Alembic.
 - semantic search;
 - hybrid search;
 - document preview / download;
-- RAG research context endpoint.
+- chunk-level research retrieval;
+- grounded RAG generation through a local LLM;
+- citation validation and extractive fallback.
 
 Jinja2-версія зберігається як стабільна реалізація лабораторної роботи №1 і надалі не є основним frontend.
 
@@ -65,7 +67,7 @@ Frontend розділений на:
 - `components/collections/` — компоненти колекцій;
 - `components/documents/` — список і завантаження документів;
 - `components/search/` — пошуковий інтерфейс;
-- `components/research/` — дослідницький режим;
+- `components/research/` — RAG, відповідь і джерела;
 - `components/common/` — спільні UI-компоненти;
 - `views/` — сторінки маршрутизатора.
 
@@ -77,9 +79,9 @@ KnowledgeHub підтримує три режими:
 - **Semantic** — multilingual sentence embeddings;
 - **Hybrid** — 30% lexical + 70% semantic.
 
-## Дослідницький режим / RAG foundation
+## RAG
 
-Нова функція працює на рівні `document_chunks`.
+Research retrieval працює на рівні `document_chunks`.
 
 Для запитання користувача система:
 
@@ -88,10 +90,21 @@ KnowledgeHub підтримує три режими:
 3. обчислює lexical overlap;
 4. формує hybrid chunk score;
 5. вибирає релевантні фрагменти з обмеженням на дублювання одного документа;
-6. формує витягувальну чернетку відповіді;
-7. повертає джерела, номери фрагментів і окремі оцінки semantic / lexical.
+6. будує evidence-only prompt;
+7. за вибором користувача формує extractive draft або локальну LLM-відповідь;
+8. перевіряє citations `[n]`;
+9. у разі некоректної генерації автоматично повертається до extractive fallback;
+10. повертає відповідь разом із конкретними джерелами.
 
-Цей етап є фундаментом для наступного підключення генеративної LLM: retrieval і source attribution уже відокремлені від майбутнього answer generation.
+Локальний режим за замовчуванням використовує:
+
+```text
+Qwen/Qwen2.5-0.5B-Instruct
+```
+
+API-ключ не потрібний. Модель завантажується ліниво при першому використанні та кешується Hugging Face.
+
+Детальніше: `docs/research/rag_v1.md`.
 
 ## Архітектура
 
@@ -107,18 +120,22 @@ Repositories
 PostgreSQL
 ```
 
-Для semantic / research retrieval:
+RAG pipeline:
 
 ```text
 Question
   ↓
-Embedding
+Query embedding
   ↓
-Document chunks
+Chunk retrieval
   ↓
-Semantic + lexical scoring
+Semantic + lexical ranking
   ↓
-Ranked evidence
+Evidence context
   ↓
-Extractive draft + sources
+Local LLM
+  ↓
+Citation validation
+  ↓
+Grounded answer + sources
 ```

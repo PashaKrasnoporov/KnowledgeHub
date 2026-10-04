@@ -5,8 +5,12 @@ import {
 } from "vue"
 
 import {
+    generateResearchAnswer,
     researchCollection
 } from "../../api/index.js"
+
+import ResearchAnswer from "./ResearchAnswer.vue"
+import ResearchSources from "./ResearchSources.vue"
 
 const props = defineProps({
     collectionId: {
@@ -21,6 +25,12 @@ const question = ref(
     ) || ""
 )
 
+const generationMode = ref(
+    localStorage.getItem(
+        "knowledgehub.researchGenerationMode"
+    ) || "extractive"
+)
+
 const loading = ref(false)
 const error = ref("")
 const result = ref(null)
@@ -30,6 +40,16 @@ watch(
     value => {
         localStorage.setItem(
             "knowledgehub.researchQuestion",
+            value
+        )
+    }
+)
+
+watch(
+    generationMode,
+    value => {
+        localStorage.setItem(
+            "knowledgehub.researchGenerationMode",
             value
         )
     }
@@ -50,17 +70,30 @@ async function runResearch() {
     error.value = ""
 
     try {
-        result.value =
-            await researchCollection(
-                props.collectionId,
-                normalized,
-                5
-            )
+        if (
+            generationMode.value
+            === "local"
+        ) {
+            result.value =
+                await generateResearchAnswer(
+                    props.collectionId,
+                    normalized,
+                    5
+                )
+        }
+        else {
+            result.value =
+                await researchCollection(
+                    props.collectionId,
+                    normalized,
+                    5
+                )
+        }
     }
     catch (requestError) {
         error.value =
             requestError.message
-            || "Не вдалося сформувати дослідницький контекст."
+            || "Не вдалося сформувати дослідницьку відповідь."
     }
     finally {
         loading.value = false
@@ -84,22 +117,23 @@ function clearResearch() {
                     </h2>
 
                     <span class="research-badge">
-                        RAG foundation
+                        RAG v1
                     </span>
                 </div>
 
                 <p>
-                    Поставте запитання до документів.
-                    KnowledgeHub знайде найбільш релевантні
-                    фрагменти та сформує доказову чернетку
-                    з посиланнями на джерела.
+                    KnowledgeHub знаходить релевантні
+                    фрагменти документів і може або
+                    сформувати швидку витягувальну
+                    чернетку, або передати контекст
+                    локальній генеративній моделі.
                 </p>
             </div>
 
             <span
                 class="info-tooltip"
                 tabindex="0"
-                aria-label="Як працює дослідницький режим"
+                aria-label="Як працює RAG"
             >
                 <span class="info-icon">
                     i
@@ -107,19 +141,25 @@ function clearResearch() {
 
                 <span class="tooltip-content">
                     <strong>
-                        Дослідницький режим
+                        RAG v1
                     </strong>
 
                     <span>
-                        Запит порівнюється з окремими
-                        фрагментами документів за змістом
-                        та ключовими словами.
+                        Retrieval знаходить докази
+                        на рівні document chunks.
                     </span>
 
                     <span>
-                        Поточна версія формує
-                        витягувальну чернетку без
-                        зовнішньої генеративної моделі.
+                        Local LLM отримує лише
+                        знайдені фрагменти та повинна
+                        посилатися на них через [1], [2]...
+                    </span>
+
+                    <span>
+                        Якщо LLM не пройде перевірку
+                        citations, система автоматично
+                        повертається до безпечної
+                        extractive-відповіді.
                     </span>
                 </span>
             </span>
@@ -129,6 +169,49 @@ function clearResearch() {
             class="research-form"
             @submit.prevent="runResearch"
         >
+            <div class="research-mode-row">
+                <div>
+                    <label
+                        class="document-search-label"
+                        for="research-mode"
+                    >
+                        Режим відповіді
+                    </label>
+
+                    <select
+                        id="research-mode"
+                        v-model="generationMode"
+                        class="search-mode-select"
+                    >
+                        <option value="extractive">
+                            Швидка чернетка
+                        </option>
+
+                        <option value="local">
+                            Локальна LLM
+                        </option>
+                    </select>
+                </div>
+
+                <p
+                    v-if="generationMode === 'local'"
+                    class="research-local-note"
+                >
+                    Перший запуск може завантажити
+                    модель із Hugging Face і тривати
+                    довше. API-ключ не потрібний.
+                </p>
+
+                <p
+                    v-else
+                    class="research-local-note"
+                >
+                    Працює без генеративної моделі:
+                    швидко відбирає релевантні речення
+                    з джерел.
+                </p>
+            </div>
+
             <label
                 class="document-search-label"
                 for="research-question"
@@ -152,7 +235,11 @@ function clearResearch() {
                 >
                     {{
                         loading
-                            ? "Аналіз..."
+                            ? (
+                                generationMode === "local"
+                                    ? "Генерація..."
+                                    : "Аналіз..."
+                            )
                             : "Сформувати"
                     }}
                 </button>
@@ -171,137 +258,16 @@ function clearResearch() {
                 v-if="result.sources.length"
                 class="research-result"
             >
-                <div class="research-answer">
-                    <div class="research-result-heading">
-                        <h3>
-                            Чернетка відповіді
-                        </h3>
+                <ResearchAnswer
+                    :result="result"
+                    :generation-mode="generationMode"
+                    @clear="clearResearch"
+                />
 
-                        <button
-                            class="research-clear-button"
-                            type="button"
-                            @click="clearResearch"
-                        >
-                            Очистити
-                        </button>
-                    </div>
-
-                    <ol
-                        v-if="result.answer_points.length"
-                        class="research-points"
-                    >
-                        <li
-                            v-for="point in result.answer_points"
-                            :key="
-                                `${point.source_number}-${point.text}`
-                            "
-                        >
-                            <span>
-                                {{ point.text }}
-                            </span>
-
-                            <a
-                                :href="
-                                    `#research-source-${point.source_number}`
-                                "
-                            >
-                                [{{ point.source_number }}]
-                            </a>
-                        </li>
-                    </ol>
-
-                    <p
-                        v-else
-                        class="research-empty-copy"
-                    >
-                        Релевантні фрагменти знайдено,
-                        але коротку чернетку сформувати
-                        не вдалося. Перегляньте джерела нижче.
-                    </p>
-                </div>
-
-                <div class="research-sources">
-                    <div class="research-result-heading">
-                        <h3>
-                            Джерела
-                        </h3>
-
-                        <span>
-                            {{ result.count }} фрагм.
-                        </span>
-                    </div>
-
-                    <article
-                        v-for="source in result.sources"
-                        :id="
-                            `research-source-${source.source_number}`
-                        "
-                        :key="
-                            `${source.document_id}-${source.chunk_index}`
-                        "
-                        class="research-source-card"
-                    >
-                        <div class="research-source-number">
-                            {{ source.source_number }}
-                        </div>
-
-                        <div class="research-source-content">
-                            <div class="research-source-meta">
-                                <RouterLink
-                                    :to="{
-                                        name: 'document',
-                                        params: {
-                                            collectionId,
-                                            documentId: source.document_id
-                                        }
-                                    }"
-                                >
-                                    {{ source.original_name }}
-                                </RouterLink>
-
-                                <span>
-                                    фрагмент
-                                    {{ source.chunk_index + 1 }}
-                                </span>
-                            </div>
-
-                            <p>
-                                {{ source.excerpt }}
-                            </p>
-
-                            <div class="research-score-row">
-                                <span>
-                                    Загальна:
-                                    <strong>
-                                        {{
-                                            Number(
-                                                source.score
-                                            ).toFixed(3)
-                                        }}
-                                    </strong>
-                                </span>
-
-                                <span>
-                                    Semantic:
-                                    {{
-                                        Number(
-                                            source.semantic_score
-                                        ).toFixed(3)
-                                    }}
-                                </span>
-
-                                <span>
-                                    Lexical:
-                                    {{
-                                        Number(
-                                            source.lexical_score
-                                        ).toFixed(3)
-                                    }}
-                                </span>
-                            </div>
-                        </div>
-                    </article>
-                </div>
+                <ResearchSources
+                    :collection-id="collectionId"
+                    :sources="result.sources"
+                />
             </div>
 
             <div
@@ -309,12 +275,13 @@ function clearResearch() {
                 class="research-empty"
             >
                 <h3>
-                    Контекст не знайдено
+                    Доказів не знайдено
                 </h3>
 
                 <p>
-                    Спробуйте переформулювати запитання
-                    або додайте більше опрацьованих документів.
+                    Для цього запитання в поточній
+                    колекції не знайдено достатньо
+                    релевантних фрагментів.
                 </p>
             </div>
         </template>
