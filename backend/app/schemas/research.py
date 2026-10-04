@@ -70,7 +70,11 @@ class ResearchGeneratedResponseAPI(
     generation_model: str | None = None
 
     response_language: str = "uk"
-    language_retry_used: bool = False
+
+    language_rewrite_used: bool = False
+    language_rewrite_passes: int = 0
+    language_quality_passed: bool = True
+    language_quality_issues: list[str] = []
 
     grounded_claims: list[
         GroundedClaimAPI

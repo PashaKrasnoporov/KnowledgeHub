@@ -20,7 +20,7 @@ from app.services.rag_prompt_service import (
 )
 from app.services.ukrainian_language_service import (
     build_ukrainian_rewrite_messages,
-    needs_ukrainian_rewrite,
+    evaluate_ukrainian_quality,
 )
 
 
@@ -30,6 +30,7 @@ WORD_PATTERN = re.compile(
 
 MIN_ACCEPTED_GROUNDING_COVERAGE = 0.50
 MIN_EVIDENCE_CONFIDENCE = 0.30
+MAX_UKRAINIAN_REWRITE_PASSES = 2
 
 
 def _has_degenerate_repetition(
@@ -128,7 +129,9 @@ def _fallback_response(
     generation_model: str | None,
     error: str | None,
     response_language: str,
-    language_retry_used: bool,
+    language_rewrite_passes: int,
+    language_quality_passed: bool,
+    language_quality_issues: list[str],
     evidence_confidence: float,
 ) -> ResearchGeneratedResponseAPI:
     fallback = build_extractive_fallback(
@@ -141,8 +144,17 @@ def _fallback_response(
         generation_provider="fallback",
         generation_model=generation_model,
         response_language=response_language,
-        language_retry_used=(
-            language_retry_used
+        language_rewrite_used=(
+            language_rewrite_passes > 0
+        ),
+        language_rewrite_passes=(
+            language_rewrite_passes
+        ),
+        language_quality_passed=(
+            language_quality_passed
+        ),
+        language_quality_issues=(
+            language_quality_issues
         ),
         grounded_claims=[],
         grounding_coverage=0.0,
@@ -175,7 +187,10 @@ def _insufficient_evidence_response(
         generation_provider="evidence-gate",
         generation_model=None,
         response_language=response_language,
-        language_retry_used=False,
+        language_rewrite_used=False,
+        language_rewrite_passes=0,
+        language_quality_passed=True,
+        language_quality_issues=[],
         grounded_claims=[],
         grounding_coverage=0.0,
         removed_claims=0,
@@ -185,6 +200,62 @@ def _insufficient_evidence_response(
         insufficient_evidence=True,
         fallback_used=False,
         generation_error=None,
+    )
+
+
+def _normalize_ukrainian(
+    generated: str,
+    token_limit: int,
+) -> tuple[
+    str,
+    int,
+    bool,
+    list[str],
+]:
+    current = generated
+    passes = 0
+
+    # Ukrainian mode always receives one editorial pass.
+    current = generate_local_text(
+        messages=(
+            build_ukrainian_rewrite_messages(
+                current,
+                strict=False,
+            )
+        ),
+        max_new_tokens=token_limit,
+    )
+    passes += 1
+
+    quality = evaluate_ukrainian_quality(
+        current
+    )
+
+    if (
+        not quality.passed
+        and passes
+        < MAX_UKRAINIAN_REWRITE_PASSES
+    ):
+        current = generate_local_text(
+            messages=(
+                build_ukrainian_rewrite_messages(
+                    current,
+                    strict=True,
+                )
+            ),
+            max_new_tokens=token_limit,
+        )
+        passes += 1
+
+        quality = evaluate_ukrainian_quality(
+            current
+        )
+
+    return (
+        current,
+        passes,
+        quality.passed,
+        quality.issues,
     )
 
 
@@ -232,7 +303,9 @@ def generate_grounded_answer(
         ),
     )
 
-    language_retry_used = False
+    language_rewrite_passes = 0
+    language_quality_passed = True
+    language_quality_issues = []
 
     try:
         generated = generate_local_text(
@@ -240,22 +313,42 @@ def generate_grounded_answer(
             max_new_tokens=token_limit,
         )
 
-        if (
-            response_language == "uk"
-            and needs_ukrainian_rewrite(
-                generated
+        if response_language == "uk":
+            (
+                generated,
+                language_rewrite_passes,
+                language_quality_passed,
+                language_quality_issues,
+            ) = _normalize_ukrainian(
+                generated=generated,
+                token_limit=token_limit,
             )
-        ):
-            language_retry_used = True
 
-            generated = generate_local_text(
-                messages=(
-                    build_ukrainian_rewrite_messages(
-                        generated
-                    )
-                ),
-                max_new_tokens=token_limit,
-            )
+            if not language_quality_passed:
+                return _fallback_response(
+                    research=research,
+                    generation_model=(
+                        parametry.rag_local_model_name
+                    ),
+                    error=(
+                        "Згенерована відповідь не пройшла "
+                        "український мовний контроль навіть "
+                        "після повторного редагування."
+                    ),
+                    response_language=(
+                        response_language
+                    ),
+                    language_rewrite_passes=(
+                        language_rewrite_passes
+                    ),
+                    language_quality_passed=False,
+                    language_quality_issues=(
+                        language_quality_issues
+                    ),
+                    evidence_confidence=(
+                        confidence
+                    ),
+                )
 
         if _has_degenerate_repetition(
             generated
@@ -272,8 +365,14 @@ def generate_grounded_answer(
                 response_language=(
                     response_language
                 ),
-                language_retry_used=(
-                    language_retry_used
+                language_rewrite_passes=(
+                    language_rewrite_passes
+                ),
+                language_quality_passed=(
+                    language_quality_passed
+                ),
+                language_quality_issues=(
+                    language_quality_issues
                 ),
                 evidence_confidence=(
                     confidence
@@ -299,8 +398,14 @@ def generate_grounded_answer(
                 response_language=(
                     response_language
                 ),
-                language_retry_used=(
-                    language_retry_used
+                language_rewrite_passes=(
+                    language_rewrite_passes
+                ),
+                language_quality_passed=(
+                    language_quality_passed
+                ),
+                language_quality_issues=(
+                    language_quality_issues
                 ),
                 evidence_confidence=(
                     confidence
@@ -324,8 +429,14 @@ def generate_grounded_answer(
                 response_language=(
                     response_language
                 ),
-                language_retry_used=(
-                    language_retry_used
+                language_rewrite_passes=(
+                    language_rewrite_passes
+                ),
+                language_quality_passed=(
+                    language_quality_passed
+                ),
+                language_quality_issues=(
+                    language_quality_issues
                 ),
                 evidence_confidence=(
                     confidence
@@ -346,8 +457,17 @@ def generate_grounded_answer(
             response_language=(
                 response_language
             ),
-            language_retry_used=(
-                language_retry_used
+            language_rewrite_used=(
+                language_rewrite_passes > 0
+            ),
+            language_rewrite_passes=(
+                language_rewrite_passes
+            ),
+            language_quality_passed=(
+                language_quality_passed
+            ),
+            language_quality_issues=(
+                language_quality_issues
             ),
             grounded_claims=(
                 grounding.claims
@@ -372,14 +492,18 @@ def generate_grounded_answer(
             generation_model=(
                 parametry.rag_local_model_name
             ),
-            error=str(
-                error
-            ),
+            error=str(error),
             response_language=(
                 response_language
             ),
-            language_retry_used=(
-                language_retry_used
+            language_rewrite_passes=(
+                language_rewrite_passes
+            ),
+            language_quality_passed=(
+                language_quality_passed
+            ),
+            language_quality_issues=(
+                language_quality_issues
             ),
             evidence_confidence=(
                 confidence

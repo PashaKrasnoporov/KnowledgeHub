@@ -176,20 +176,20 @@ onBeforeUnmount(
                     </h2>
 
                     <span class="research-badge">
-                        RAG v1.2
+                        RAG v1.3
                     </span>
 
                     <span class="research-language-badge">
-                        Українська — пріоритет
+                        Ukrainian Quality Layer
                     </span>
                 </div>
 
                 <p>
-                    KnowledgeHub знаходить докази
-                    у документах, формує відповідь
-                    і автоматично перевіряє кожне
-                    твердження. Українська мова
-                    використовується за замовчуванням.
+                    KnowledgeHub знаходить докази,
+                    формує відповідь, обов'язково
+                    редагує українську версію та
+                    перевіряє кожне твердження
+                    перед показом користувачу.
                 </p>
             </div>
 
@@ -204,24 +204,23 @@ onBeforeUnmount(
 
                 <span class="tooltip-content">
                     <strong>
-                        RAG v1.2
+                        RAG v1.3
                     </strong>
 
                     <span>
-                        Retrieval знаходить докази
-                        на рівні document chunks.
+                        Український режим має
+                        обов'язковий editorial pass.
                     </span>
 
                     <span>
-                        LLM генерує текст,
-                        а KnowledgeHub окремо
-                        перевіряє твердження.
+                        Якщо текст все одно містить
+                        явні кальки або неприродні форми,
+                        запускається строгий другий pass.
                     </span>
 
                     <span>
-                        Якщо evidence слабке,
-                        система не запускає
-                        генерацію і не вигадує відповідь.
+                        Після цього твердження
+                        перевіряються за джерелами.
                     </span>
                 </span>
             </span>
@@ -287,7 +286,7 @@ onBeforeUnmount(
                         generationMode === "local"
                             ? (
                                 responseLanguage === "uk"
-                                    ? "Модель повинна відповідати нормативною українською; за потреби система виконує мовну нормалізацію."
+                                    ? "Українська проходить обов'язкове редакторське опрацювання та мовний контроль."
                                     : "Мова визначається за формулюванням запитання."
                             )
                             : "Швидкий режим без генеративної моделі."
@@ -315,7 +314,7 @@ onBeforeUnmount(
                     rows="3"
                     maxlength="500"
                     :disabled="loading"
-                    placeholder="Наприклад: Як у документах пояснюється роль embeddings у RAG?"
+                    placeholder="Наприклад: Чим семантичний пошук відрізняється від лексичного?"
                     @keydown.ctrl.enter.prevent="runResearch"
                 ></textarea>
 
@@ -350,8 +349,8 @@ onBeforeUnmount(
                 <span
                     v-if="generationMode === 'local'"
                 >
-                    Відповідь перевіряється
-                    на рівні окремих тверджень.
+                    Генерація → мовне редагування →
+                    grounding → citations
                 </span>
             </div>
         </form>
@@ -361,6 +360,9 @@ onBeforeUnmount(
             :elapsed-seconds="elapsedSeconds"
             :local-mode="
                 generationMode === 'local'
+            "
+            :ukrainian-mode="
+                responseLanguage === 'uk'
             "
         />
 

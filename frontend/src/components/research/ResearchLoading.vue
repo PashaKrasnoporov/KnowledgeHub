@@ -1,5 +1,9 @@
 <script setup>
-defineProps({
+import {
+    computed
+} from "vue"
+
+const props = defineProps({
     elapsedSeconds: {
         type: Number,
         default: 0
@@ -8,8 +12,38 @@ defineProps({
     localMode: {
         type: Boolean,
         default: false
+    },
+
+    ukrainianMode: {
+        type: Boolean,
+        default: false
     }
 })
+
+const phase = computed(
+    () => {
+        if (!props.localMode) {
+            return "Пошук релевантних фрагментів"
+        }
+
+        if (props.elapsedSeconds < 4) {
+            return "Пошук доказів у документах"
+        }
+
+        if (props.elapsedSeconds < 12) {
+            return "Формування чернетки відповіді"
+        }
+
+        if (
+            props.ukrainianMode
+            && props.elapsedSeconds < 24
+        ) {
+            return "Українське мовне редагування"
+        }
+
+        return "Перевірка тверджень і джерел"
+    }
+)
 </script>
 
 <template>
@@ -28,17 +62,14 @@ defineProps({
                 <strong>
                     {{
                         localMode
-                            ? "Формується LLM-відповідь"
+                            ? "Формується перевірена відповідь"
                             : "Аналізуються документи"
                     }}
                 </strong>
 
                 <span>
-                    {{
-                        localMode
-                            ? "Пошук доказів, генерація та перевірка тверджень."
-                            : "Пошук релевантних фрагментів."
-                    }}
+                    Орієнтовний етап:
+                    {{ phase }}
                 </span>
             </div>
 
@@ -57,8 +88,9 @@ defineProps({
         </div>
 
         <p>
-            Це індикатор активного процесу,
-            а не точний відсоток виконання.
+            Смуга показує активний процес.
+            Точний відсоток не відображається,
+            поки backend не передає поетапний прогрес.
         </p>
     </div>
 </template>

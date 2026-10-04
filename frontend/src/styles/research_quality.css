@@ -1,0 +1,67 @@
+.research-answer-title-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    gap: 9px;
+}
+
+.research-verified-badge {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 4px 8px;
+
+    border:
+        1px solid
+        var(--mezha);
+
+    border-radius: 999px;
+
+    background:
+        var(--morska-pina);
+
+    color:
+        var(--akvamarin-temnyi);
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.research-metric {
+    cursor: help;
+}
+
+.research-language-audit {
+    margin-top: 14px;
+
+    color:
+        var(--tekst-drugoryadnyi);
+
+    font-size: 12px;
+}
+
+.research-language-audit summary {
+    cursor: pointer;
+
+    color:
+        var(--akvamarin-temnyi);
+
+    font-weight: 700;
+}
+
+.research-language-audit ul {
+    margin:
+        10px
+        0
+        0;
+
+    padding-left: 20px;
+}
+
+@media (max-width: 700px) {
+    .research-answer-title-row {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

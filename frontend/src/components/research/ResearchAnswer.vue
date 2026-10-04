@@ -42,6 +42,15 @@ const evidencePercent = computed(
     )
 )
 
+const verified = computed(
+    () => (
+        props.generationMode === "local"
+        && !props.result.fallback_used
+        && !props.result.insufficient_evidence
+        && props.result.grounded_claims?.length > 0
+    )
+)
+
 async function copyAnswer() {
     const text =
         props.result.generated_answer
@@ -75,13 +84,22 @@ async function copyAnswer() {
     <div class="research-answer">
         <div class="research-result-heading">
             <div>
-                <h3>
-                    {{
-                        generationMode === "local"
-                            ? "LLM-відповідь"
-                            : "Чернетка відповіді"
-                    }}
-                </h3>
+                <div class="research-answer-title-row">
+                    <h3>
+                        {{
+                            generationMode === "local"
+                                ? "LLM-відповідь"
+                                : "Чернетка відповіді"
+                        }}
+                    </h3>
+
+                    <span
+                        v-if="verified"
+                        class="research-verified-badge"
+                    >
+                        ✓ Відповідь перевірена
+                    </span>
+                </div>
 
                 <div
                     v-if="result.generation_provider"
@@ -110,20 +128,12 @@ async function copyAnswer() {
                             !result.fallback_used
                             && result.grounded_claims?.length
                         "
-                    >
-                        Підтверджено:
-                        {{ result.grounded_claims.length }}
-                        твердж.
-                    </span>
-
-                    <span
-                        v-if="
-                            !result.fallback_used
-                            && result.grounded_claims?.length
-                        "
+                        class="research-metric"
+                        title="Частка згенерованих тверджень, які KnowledgeHub зміг підтвердити знайденими джерелами."
                     >
                         Покриття:
                         {{ groundingPercent }}%
+                        ⓘ
                     </span>
 
                     <span
@@ -131,15 +141,33 @@ async function copyAnswer() {
                             result.evidence_confidence !== undefined
                             && generationMode === 'local'
                         "
+                        class="research-metric"
+                        title="Оцінка сили релевантних фрагментів, знайдених ще до запуску LLM."
                     >
                         Доказовість:
                         {{ evidencePercent }}%
+                        ⓘ
                     </span>
 
                     <span
-                        v-if="result.language_retry_used"
+                        v-if="
+                            result.response_language === 'uk'
+                            && result.language_quality_passed
+                        "
+                        class="research-metric"
+                        title="Українська відповідь пройшла обов'язковий редакторський етап і мовний контроль."
                     >
-                        Українську нормалізовано
+                        Український контроль ✓
+                        ⓘ
+                    </span>
+
+                    <span
+                        v-if="
+                            result.language_rewrite_passes > 0
+                        "
+                    >
+                        Редагувань:
+                        {{ result.language_rewrite_passes }}
                     </span>
                 </div>
             </div>
@@ -176,7 +204,7 @@ async function copyAnswer() {
             class="research-generation-warning"
         >
             {{ result.generation_error }}
-            Показано перевірену витягувальну відповідь.
+            Показано безпечну витягувальну відповідь.
         </p>
 
         <p
@@ -184,7 +212,7 @@ async function copyAnswer() {
             class="research-generation-warning"
         >
             Система навмисно не запускає генерацію,
-            коли retrieved evidence недостатньо надійне.
+            коли знайдені докази недостатньо надійні.
         </p>
 
         <p
@@ -224,6 +252,9 @@ async function copyAnswer() {
                     <a
                         :href="
                             `#research-source-${claim.source_number}`
+                        "
+                        :title="
+                            `Перейти до джерела ${claim.source_number}`
                         "
                     >
                         [{{ claim.source_number }}]
@@ -281,6 +312,7 @@ async function copyAnswer() {
         >
             <summary>
                 Перевірка тверджень
+                ({{ result.grounded_claims.length }})
             </summary>
 
             <div
@@ -309,7 +341,11 @@ async function copyAnswer() {
                     </a>
                 </div>
 
-                <span>
+                <span
+                    :title="
+                        'Комбінована оцінка semantic similarity, lexical overlap та retrieval prior.'
+                    "
+                >
                     grounding
                     {{
                         Number(
@@ -320,16 +356,25 @@ async function copyAnswer() {
             </div>
         </details>
 
-        <p
+        <details
             v-if="
-                !result.generated_answer
-                && !result.answer_points?.length
+                !result.language_quality_passed
+                && result.language_quality_issues?.length
             "
-            class="research-empty-copy"
+            class="research-language-audit"
         >
-            Релевантні фрагменти знайдено,
-            але відповідь сформувати не вдалося.
-            Перегляньте джерела нижче.
-        </p>
+            <summary>
+                Мовний контроль
+            </summary>
+
+            <ul>
+                <li
+                    v-for="issue in result.language_quality_issues"
+                    :key="issue"
+                >
+                    {{ issue }}
+                </li>
+            </ul>
+        </details>
     </div>
 </template>
