@@ -1,6 +1,7 @@
 <script setup>
 import {
-    computed
+    computed,
+    ref
 } from "vue"
 
 const props = defineProps({
@@ -19,6 +20,8 @@ defineEmits([
     "clear"
 ])
 
+const copied = ref(false)
+
 const groundingPercent = computed(
     () => Math.round(
         Number(
@@ -28,6 +31,44 @@ const groundingPercent = computed(
         * 100
     )
 )
+
+const evidencePercent = computed(
+    () => Math.round(
+        Number(
+            props.result.evidence_confidence
+            || 0
+        )
+        * 100
+    )
+)
+
+async function copyAnswer() {
+    const text =
+        props.result.generated_answer
+        || ""
+
+    if (!text) {
+        return
+    }
+
+    try {
+        await navigator.clipboard.writeText(
+            text
+        )
+
+        copied.value = true
+
+        window.setTimeout(
+            () => {
+                copied.value = false
+            },
+            1800
+        )
+    }
+    catch {
+        copied.value = false
+    }
+}
 </script>
 
 <template>
@@ -48,9 +89,13 @@ const groundingPercent = computed(
                 >
                     <span>
                         {{
-                            result.fallback_used
-                                ? "Безпечний fallback"
-                                : "Local LLM + auto-grounding"
+                            result.insufficient_evidence
+                                ? "Недостатньо доказів"
+                                : (
+                                    result.fallback_used
+                                        ? "Безпечний fallback"
+                                        : "Local LLM + auto-grounding"
+                                )
                         }}
                     </span>
 
@@ -80,16 +125,47 @@ const groundingPercent = computed(
                         Покриття:
                         {{ groundingPercent }}%
                     </span>
+
+                    <span
+                        v-if="
+                            result.evidence_confidence !== undefined
+                            && generationMode === 'local'
+                        "
+                    >
+                        Доказовість:
+                        {{ evidencePercent }}%
+                    </span>
+
+                    <span
+                        v-if="result.language_retry_used"
+                    >
+                        Українську нормалізовано
+                    </span>
                 </div>
             </div>
 
-            <button
-                class="research-clear-button"
-                type="button"
-                @click="$emit('clear')"
-            >
-                Очистити
-            </button>
+            <div class="research-answer-actions">
+                <button
+                    v-if="result.generated_answer"
+                    class="research-clear-button"
+                    type="button"
+                    @click="copyAnswer"
+                >
+                    {{
+                        copied
+                            ? "Скопійовано"
+                            : "Копіювати"
+                    }}
+                </button>
+
+                <button
+                    class="research-clear-button"
+                    type="button"
+                    @click="$emit('clear')"
+                >
+                    Очистити
+                </button>
+            </div>
         </div>
 
         <p
@@ -101,6 +177,14 @@ const groundingPercent = computed(
         >
             {{ result.generation_error }}
             Показано перевірену витягувальну відповідь.
+        </p>
+
+        <p
+            v-else-if="result.insufficient_evidence"
+            class="research-generation-warning"
+        >
+            Система навмисно не запускає генерацію,
+            коли retrieved evidence недостатньо надійне.
         </p>
 
         <p
@@ -117,7 +201,48 @@ const groundingPercent = computed(
         </p>
 
         <div
-            v-if="result.generated_answer"
+            v-if="
+                !result.fallback_used
+                && result.grounded_claims?.length
+            "
+            class="research-grounded-answer"
+        >
+            <p>
+                <template
+                    v-for="(
+                        claim,
+                        index
+                    ) in result.grounded_claims"
+                    :key="
+                        `${index}-${claim.source_number}`
+                    "
+                >
+                    <span>
+                        {{ claim.text }}
+                    </span>
+
+                    <a
+                        :href="
+                            `#research-source-${claim.source_number}`
+                        "
+                    >
+                        [{{ claim.source_number }}]
+                    </a>
+
+                    <span
+                        v-if="
+                            index
+                            < result.grounded_claims.length - 1
+                        "
+                    >
+                        &nbsp;
+                    </span>
+                </template>
+            </p>
+        </div>
+
+        <div
+            v-else-if="result.generated_answer"
             class="research-generated-answer"
         >
             {{ result.generated_answer }}
@@ -147,16 +272,16 @@ const groundingPercent = computed(
             </li>
         </ol>
 
-        <div
+        <details
             v-if="
                 !result.fallback_used
                 && result.grounded_claims?.length
             "
             class="research-claim-audit"
         >
-            <h4>
+            <summary>
                 Перевірка тверджень
-            </h4>
+            </summary>
 
             <div
                 v-for="(
@@ -193,7 +318,7 @@ const groundingPercent = computed(
                     }}
                 </span>
             </div>
-        </div>
+        </details>
 
         <p
             v-if="

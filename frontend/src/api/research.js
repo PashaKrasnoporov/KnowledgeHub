@@ -28,7 +28,8 @@ export function researchCollection(
 export async function generateResearchAnswer(
     collectionId,
     question,
-    limit = 5
+    limit = 5,
+    responseLanguage = "uk"
 ) {
     const csrfToken =
         await getCsrfToken()
@@ -49,7 +50,9 @@ export async function generateResearchAnswer(
 
             body: JSON.stringify({
                 question,
-                limit
+                limit,
+                response_language:
+                    responseLanguage
             })
         }
     )

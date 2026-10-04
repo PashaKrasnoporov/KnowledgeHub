@@ -1,126 +1,28 @@
 # KnowledgeHub
 
-KnowledgeHub — вебплатформа для керування дослідницькими документами, повнотекстового, семантичного та гібридного пошуку, а також побудови доказової бази для RAG.
+KnowledgeHub — україномовно орієнтована вебплатформа для керування дослідницькими документами, повнотекстового, семантичного та гібридного пошуку, а також grounded RAG.
 
-## Структура
+## Основний стек
 
-```text
-KnowledgeHub/
-├── backend/
-│   ├── app/
-│   │   ├── api/              # REST API
-│   │   ├── baza_danykh/      # підключення до PostgreSQL
-│   │   ├── bezpeka/          # сесії, CSRF, паролі, файли
-│   │   ├── modeli/           # SQLAlchemy models
-│   │   ├── parsers/          # PDF / DOCX / TXT parsing
-│   │   ├── repositories/     # доступ до даних
-│   │   ├── schemas/          # API / service schemas
-│   │   ├── services/         # бізнес-логіка, retrieval, RAG
-│   │   ├── routes/           # стабільний Jinja frontend ЛР1
-│   │   ├── templates/        # Jinja templates
-│   │   └── static/           # Jinja static files
-│   ├── migrations/
-│   └── scripts/
-├── frontend/
-│   └── src/
-│       ├── api/              # модульний API client
-│       ├── components/       # reusable Vue components
-│       ├── composables/
-│       ├── router/
-│       ├── styles/
-│       └── views/
-└── docs/
-```
-
-## Backend
-
-FastAPI + PostgreSQL + SQLAlchemy + Alembic.
-
-Реалізовано:
-
-- registration / login / logout;
-- server-side sessions;
-- Argon2 password hashing;
-- CSRF protection;
-- user ownership checks;
-- administrator role;
-- collections CRUD;
-- PDF / DOCX / TXT upload and parsing;
-- persistent document chunks and embeddings;
-- lexical search;
-- semantic search;
-- hybrid search;
-- document preview / download;
-- chunk-level research retrieval;
-- grounded RAG generation through a local LLM;
-- citation validation and extractive fallback.
-
-Jinja2-версія зберігається як стабільна реалізація лабораторної роботи №1 і надалі не є основним frontend.
-
-## Frontend
-
-Основний frontend — Vue 3 + Vue Router + Vite.
-
-Frontend розділений на:
-
-- `api/` — окремі модулі auth, collections, documents, search, research, admin;
-- `components/collections/` — компоненти колекцій;
-- `components/documents/` — список і завантаження документів;
-- `components/search/` — пошуковий інтерфейс;
-- `components/research/` — RAG, відповідь і джерела;
-- `components/common/` — спільні UI-компоненти;
-- `views/` — сторінки маршрутизатора.
+- FastAPI
+- PostgreSQL
+- SQLAlchemy + Alembic
+- Vue 3 + Vue Router + Vite
+- sentence-transformers
+- локальна instruction LLM
 
 ## Пошук
 
-KnowledgeHub підтримує три режими:
+KnowledgeHub підтримує:
 
 - **Lexical** — PostgreSQL Full Text Search;
 - **Semantic** — multilingual sentence embeddings;
-- **Hybrid** — 30% lexical + 70% semantic.
+- **Hybrid** — lexical + semantic retrieval;
+- **Research retrieval** — ранжування на рівні `document_chunks`.
 
-## RAG
+## RAG v1.2
 
-Research retrieval працює на рівні `document_chunks`.
-
-Для запитання користувача система:
-
-1. створює embedding запиту;
-2. обчислює semantic similarity для фрагментів;
-3. обчислює lexical overlap;
-4. формує hybrid chunk score;
-5. вибирає релевантні фрагменти з обмеженням на дублювання одного документа;
-6. будує evidence-only prompt;
-7. за вибором користувача формує extractive draft або локальну LLM-відповідь;
-8. перевіряє citations `[n]`;
-9. у разі некоректної генерації автоматично повертається до extractive fallback;
-10. повертає відповідь разом із конкретними джерелами.
-
-Локальний режим за замовчуванням використовує:
-
-```text
-Qwen/Qwen2.5-0.5B-Instruct
-```
-
-API-ключ не потрібний. Модель завантажується ліниво при першому використанні та кешується Hugging Face.
-
-Детальніше: `docs/research/rag_v1.md`.
-
-## Архітектура
-
-```text
-Vue
-  ↓ REST API
-FastAPI
-  ↓
-Services
-  ↓
-Repositories
-  ↓
-PostgreSQL
-```
-
-RAG pipeline:
+Основний RAG-процес:
 
 ```text
 Question
@@ -131,11 +33,73 @@ Chunk retrieval
   ↓
 Semantic + lexical ranking
   ↓
-Evidence context
+Evidence confidence gate
   ↓
 Local LLM
   ↓
-Citation validation
+Ukrainian language quality check
+  ↓
+Optional Ukrainian rewrite
+  ↓
+Claim-level grounding
+  ↓
+Automatic citations
   ↓
 Grounded answer + sources
 ```
+
+### Ukrainian-first
+
+За замовчуванням генерація виконується українською мовою, навіть якщо частина доказових джерел іншомовна.
+
+Англійські технічні терміни можуть зберігатися в природній професійній формі, але пояснення формулюються українською.
+
+### Local LLM
+
+Поточна модель:
+
+```text
+Qwen/Qwen2.5-1.5B-Instruct
+```
+
+API-ключ не потрібний.
+
+### Claim-level grounding
+
+LLM не створює citations самостійно.
+
+KnowledgeHub:
+
+1. ділить generated answer на твердження;
+2. створює embeddings тверджень;
+3. порівнює їх із retrieved sources;
+4. додає lexical overlap та retrieval prior;
+5. відкидає непідтверджені твердження;
+6. сам додає `[1]`, `[2]` тощо.
+
+### Evidence gate
+
+Якщо retrieved evidence надто слабке, KnowledgeHub не запускає LLM і прямо повідомляє, що доказів недостатньо. Це знижує ризик hallucinations.
+
+## Vue UX
+
+Research UI містить:
+
+- режим швидкої чернетки;
+- режим локальної LLM;
+- українську мову як default;
+- індикатор активної генерації;
+- elapsed time;
+- Ctrl+Enter;
+- character counter;
+- copy answer;
+- clickable citations;
+- grounding coverage;
+- evidence confidence;
+- claim audit.
+
+## Документація
+
+- `docs/research/rag_v1.md`
+- `docs/research/claim_grounding.md`
+- `docs/research/ukrainian_rag_v1_2.md`

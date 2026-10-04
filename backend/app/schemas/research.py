@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic import (
     BaseModel,
     Field,
@@ -46,6 +48,11 @@ class ResearchGenerateRequestAPI(BaseModel):
         le=512,
     )
 
+    response_language: Literal[
+        "uk",
+        "auto",
+    ] = "uk"
+
 
 class GroundedClaimAPI(BaseModel):
     text: str
@@ -62,12 +69,18 @@ class ResearchGeneratedResponseAPI(
     generation_provider: str
     generation_model: str | None = None
 
+    response_language: str = "uk"
+    language_retry_used: bool = False
+
     grounded_claims: list[
         GroundedClaimAPI
     ] = []
 
     grounding_coverage: float = 0.0
     removed_claims: int = 0
+
+    evidence_confidence: float = 0.0
+    insufficient_evidence: bool = False
 
     fallback_used: bool = False
     generation_error: str | None = None

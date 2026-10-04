@@ -1,5 +1,6 @@
 <script setup>
 import {
+    onBeforeUnmount,
     ref,
     watch
 } from "vue"
@@ -10,6 +11,7 @@ import {
 } from "../../api/index.js"
 
 import ResearchAnswer from "./ResearchAnswer.vue"
+import ResearchLoading from "./ResearchLoading.vue"
 import ResearchSources from "./ResearchSources.vue"
 
 const props = defineProps({
@@ -31,9 +33,18 @@ const generationMode = ref(
     ) || "extractive"
 )
 
+const responseLanguage = ref(
+    localStorage.getItem(
+        "knowledgehub.researchLanguage"
+    ) || "uk"
+)
+
 const loading = ref(false)
+const elapsedSeconds = ref(0)
 const error = ref("")
 const result = ref(null)
+
+let elapsedTimer = null
 
 watch(
     question,
@@ -55,7 +66,44 @@ watch(
     }
 )
 
+watch(
+    responseLanguage,
+    value => {
+        localStorage.setItem(
+            "knowledgehub.researchLanguage",
+            value
+        )
+    }
+)
+
+function startLoadingTimer() {
+    stopLoadingTimer()
+
+    elapsedSeconds.value = 0
+
+    elapsedTimer = window.setInterval(
+        () => {
+            elapsedSeconds.value += 1
+        },
+        1000
+    )
+}
+
+function stopLoadingTimer() {
+    if (elapsedTimer !== null) {
+        window.clearInterval(
+            elapsedTimer
+        )
+
+        elapsedTimer = null
+    }
+}
+
 async function runResearch() {
+    if (loading.value) {
+        return
+    }
+
     const normalized =
         question.value.trim()
 
@@ -68,6 +116,9 @@ async function runResearch() {
 
     loading.value = true
     error.value = ""
+    result.value = null
+
+    startLoadingTimer()
 
     try {
         if (
@@ -78,7 +129,8 @@ async function runResearch() {
                 await generateResearchAnswer(
                     props.collectionId,
                     normalized,
-                    5
+                    5,
+                    responseLanguage.value
                 )
         }
         else {
@@ -97,6 +149,7 @@ async function runResearch() {
     }
     finally {
         loading.value = false
+        stopLoadingTimer()
     }
 }
 
@@ -105,6 +158,12 @@ function clearResearch() {
     error.value = ""
     question.value = ""
 }
+
+onBeforeUnmount(
+    () => {
+        stopLoadingTimer()
+    }
+)
 </script>
 
 <template>
@@ -117,17 +176,20 @@ function clearResearch() {
                     </h2>
 
                     <span class="research-badge">
-                        RAG v1.1
+                        RAG v1.2
+                    </span>
+
+                    <span class="research-language-badge">
+                        Українська — пріоритет
                     </span>
                 </div>
 
                 <p>
-                    KnowledgeHub знаходить релевантні
-                    фрагменти документів. У режимі
-                    локальної LLM модель формує текст,
-                    а система сама перевіряє кожне
-                    твердження і прив'язує його
-                    до найближчого джерела.
+                    KnowledgeHub знаходить докази
+                    у документах, формує відповідь
+                    і автоматично перевіряє кожне
+                    твердження. Українська мова
+                    використовується за замовчуванням.
                 </p>
             </div>
 
@@ -142,7 +204,7 @@ function clearResearch() {
 
                 <span class="tooltip-content">
                     <strong>
-                        RAG v1.1
+                        RAG v1.2
                     </strong>
 
                     <span>
@@ -151,16 +213,15 @@ function clearResearch() {
                     </span>
 
                     <span>
-                        LLM більше не відповідає
-                        за citations. Вона генерує
-                        лише змістовний текст.
+                        LLM генерує текст,
+                        а KnowledgeHub окремо
+                        перевіряє твердження.
                     </span>
 
                     <span>
-                        KnowledgeHub окремо порівнює
-                        кожне твердження з джерелами
-                        за embeddings і lexical overlap,
-                        після чого сам додає [1], [2]...
+                        Якщо evidence слабке,
+                        система не запускає
+                        генерацію і не вигадує відповідь.
                     </span>
                 </span>
             </span>
@@ -170,7 +231,7 @@ function clearResearch() {
             class="research-form"
             @submit.prevent="runResearch"
         >
-            <div class="research-mode-row">
+            <div class="research-settings-grid">
                 <div>
                     <label
                         class="document-search-label"
@@ -183,6 +244,7 @@ function clearResearch() {
                         id="research-mode"
                         v-model="generationMode"
                         class="search-mode-select"
+                        :disabled="loading"
                     >
                         <option value="extractive">
                             Швидка чернетка
@@ -194,31 +256,57 @@ function clearResearch() {
                     </select>
                 </div>
 
-                <p
+                <div
                     v-if="generationMode === 'local'"
-                    class="research-local-note"
                 >
-                    LLM формує текст без citations.
-                    KnowledgeHub автоматично перевіряє
-                    твердження і додає джерела.
-                </p>
+                    <label
+                        class="document-search-label"
+                        for="research-language"
+                    >
+                        Мова відповіді
+                    </label>
 
-                <p
-                    v-else
-                    class="research-local-note"
-                >
-                    Працює без генеративної моделі:
-                    швидко відбирає релевантні речення
-                    з джерел.
+                    <select
+                        id="research-language"
+                        v-model="responseLanguage"
+                        class="search-mode-select"
+                        :disabled="loading"
+                    >
+                        <option value="uk">
+                            Українська
+                        </option>
+
+                        <option value="auto">
+                            Автоматично
+                        </option>
+                    </select>
+                </div>
+
+                <p class="research-local-note">
+                    {{
+                        generationMode === "local"
+                            ? (
+                                responseLanguage === "uk"
+                                    ? "Модель повинна відповідати нормативною українською; за потреби система виконує мовну нормалізацію."
+                                    : "Мова визначається за формулюванням запитання."
+                            )
+                            : "Швидкий режим без генеративної моделі."
+                    }}
                 </p>
             </div>
 
-            <label
-                class="document-search-label"
-                for="research-question"
-            >
-                Запитання
-            </label>
+            <div class="research-question-heading">
+                <label
+                    class="document-search-label"
+                    for="research-question"
+                >
+                    Запитання
+                </label>
+
+                <span>
+                    {{ question.length }}/500
+                </span>
+            </div>
 
             <div class="research-input-row">
                 <textarea
@@ -226,14 +314,22 @@ function clearResearch() {
                     v-model="question"
                     rows="3"
                     maxlength="500"
+                    :disabled="loading"
                     placeholder="Наприклад: Як у документах пояснюється роль embeddings у RAG?"
+                    @keydown.ctrl.enter.prevent="runResearch"
                 ></textarea>
 
                 <button
-                    class="document-search-button"
+                    class="document-search-button research-submit-button"
                     type="submit"
                     :disabled="loading"
                 >
+                    <span
+                        v-if="loading"
+                        class="research-button-spinner"
+                        aria-hidden="true"
+                    ></span>
+
                     {{
                         loading
                             ? (
@@ -245,7 +341,28 @@ function clearResearch() {
                     }}
                 </button>
             </div>
+
+            <div class="research-form-hint">
+                <span>
+                    Ctrl + Enter — сформувати
+                </span>
+
+                <span
+                    v-if="generationMode === 'local'"
+                >
+                    Відповідь перевіряється
+                    на рівні окремих тверджень.
+                </span>
+            </div>
         </form>
+
+        <ResearchLoading
+            v-if="loading"
+            :elapsed-seconds="elapsedSeconds"
+            :local-mode="
+                generationMode === 'local'
+            "
+        />
 
         <div
             v-if="error"
@@ -256,7 +373,10 @@ function clearResearch() {
 
         <template v-if="result">
             <div
-                v-if="result.sources.length"
+                v-if="
+                    result.sources.length
+                    || result.generated_answer
+                "
                 class="research-result"
             >
                 <ResearchAnswer
@@ -266,6 +386,7 @@ function clearResearch() {
                 />
 
                 <ResearchSources
+                    v-if="result.sources.length"
                     :collection-id="collectionId"
                     :sources="result.sources"
                 />

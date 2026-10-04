@@ -123,5 +123,10 @@ def api_generate_research_answer(
 
     return generate_grounded_answer(
         research=research,
-        max_new_tokens=payload.max_new_tokens,
+        max_new_tokens=(
+            payload.max_new_tokens
+        ),
+        response_language=(
+            payload.response_language
+        ),
     )
