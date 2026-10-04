@@ -1,0 +1,248 @@
+/* =========================================================
+   KnowledgeHub v1.6
+   Performance indicators + adaptive readability
+   ========================================================= */
+
+.research-model-state {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    min-height: 48px;
+
+    color: var(--tekst-drugoryadnyi);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.research-model-dot {
+    width: 9px;
+    height: 9px;
+    flex: 0 0 auto;
+
+    border-radius: 50%;
+    background: var(--mezha-temna);
+}
+
+.research-model-dot.is-warming {
+    background: var(--blakytnyi-pryhlushenyi);
+    box-shadow:
+        0 0 0 4px
+        rgba(128, 175, 186, 0.16);
+}
+
+.research-model-dot.is-ready {
+    background: var(--akvamarin-temnyi);
+}
+
+.research-performance-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+
+    margin-top: 9px;
+}
+
+.research-performance-chip {
+    display: inline-flex;
+    align-items: center;
+
+    min-height: 26px;
+    padding: 4px 8px;
+
+    border: 1px solid var(--mezha);
+    border-radius: 999px;
+
+    background: var(--poverkhna);
+    color: var(--tekst-drugoryadnyi);
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.research-performance-chip.is-warning {
+    border-color: var(--piskovyi);
+}
+
+/* ---------------------------------------------------------
+   Medium windows: keep the interface readable instead of
+   merely squeezing the desktop layout into a smaller width.
+   --------------------------------------------------------- */
+
+@media (max-width: 1100px) and (min-width: 521px) {
+    .container {
+        width: calc(100% - 28px);
+    }
+
+    .site-header .container {
+        width: calc(100% - 32px);
+    }
+
+    .logo {
+        font-size: 23px;
+    }
+
+    .navigation a {
+        font-size: 15.5px;
+    }
+
+    .collections-page {
+        padding-top: 52px;
+        padding-bottom: 56px;
+    }
+
+    .research-panel,
+    .document-search {
+        padding: clamp(22px, 2.5vw, 28px);
+    }
+
+    .research-heading h2,
+    .documents-toolbar h2,
+    .search-section-heading h2 {
+        font-size: clamp(22px, 2.7vw, 27px);
+    }
+
+    .research-heading p,
+    .research-generated-answer,
+    .research-grounded-answer p,
+    .research-source-content p,
+    .document-info p,
+    .search-section-heading p {
+        font-size: clamp(14.5px, 1.55vw, 16px);
+        line-height: 1.65;
+    }
+
+    .research-answer,
+    .research-sources {
+        padding: clamp(20px, 2.3vw, 26px);
+    }
+
+    .document-search-label,
+    .research-claim-audit summary {
+        font-size: 15px;
+    }
+
+    .search-mode-select,
+    .document-search-input,
+    .research-form textarea,
+    .document-search-button,
+    .new-collection-button,
+    .secondary-button {
+        font-size: 15px;
+    }
+
+    .search-mode-select,
+    .document-search-input,
+    .document-search-button {
+        min-height: 50px;
+    }
+
+    .research-form textarea {
+        min-height: 104px;
+    }
+
+    .research-generation-meta,
+    .research-score-row,
+    .research-form-hint,
+    .research-source-meta span,
+    .research-language-audit,
+    .research-model-state {
+        font-size: 13px;
+    }
+
+    .research-badge,
+    .research-language-badge,
+    .research-verified-badge,
+    .research-source-fallback-badge {
+        font-size: 11.5px;
+    }
+
+    .document-card {
+        padding: 20px 22px;
+    }
+
+    .document-info h3 {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 760px) {
+    body {
+        font-size: 16px;
+    }
+
+    .container {
+        width: calc(100% - 20px);
+    }
+
+    .research-panel {
+        padding: 18px;
+    }
+
+    .research-heading h2 {
+        font-size: 24px;
+    }
+
+    .research-heading p,
+    .research-generated-answer,
+    .research-grounded-answer p,
+    .research-source-content p {
+        font-size: 15.5px;
+    }
+
+    .research-result-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .research-answer-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .research-clear-button {
+        min-height: 42px;
+        padding: 8px 12px;
+    }
+
+    .research-source-card {
+        grid-template-columns: 38px minmax(0, 1fr);
+    }
+
+    .research-source-number {
+        width: 34px;
+        height: 34px;
+    }
+}
+
+@media (max-width: 520px) {
+    .research-panel,
+    .document-search,
+    .research-answer,
+    .research-sources {
+        border-radius: 11px;
+    }
+
+    .research-panel,
+    .document-search {
+        padding: 16px;
+    }
+
+    .research-answer,
+    .research-sources {
+        padding: 17px;
+    }
+
+    .research-title-row {
+        align-items: flex-start;
+    }
+
+    .research-performance-meta {
+        gap: 6px;
+    }
+
+    .research-performance-chip {
+        font-size: 11.5px;
+    }
+}

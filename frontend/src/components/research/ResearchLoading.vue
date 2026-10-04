@@ -1,9 +1,5 @@
 <script setup>
-import {
-    computed
-} from "vue"
-
-const props = defineProps({
+defineProps({
     elapsedSeconds: {
         type: Number,
         default: 0
@@ -14,36 +10,11 @@ const props = defineProps({
         default: false
     },
 
-    ukrainianMode: {
-        type: Boolean,
-        default: false
+    modelState: {
+        type: String,
+        default: "idle"
     }
 })
-
-const phase = computed(
-    () => {
-        if (!props.localMode) {
-            return "Пошук релевантних фрагментів"
-        }
-
-        if (props.elapsedSeconds < 4) {
-            return "Пошук доказів у документах"
-        }
-
-        if (props.elapsedSeconds < 12) {
-            return "Формування чернетки відповіді"
-        }
-
-        if (
-            props.ukrainianMode
-            && props.elapsedSeconds < 24
-        ) {
-            return "Українське мовне редагування"
-        }
-
-        return "Перевірка тверджень і джерел"
-    }
-)
 </script>
 
 <template>
@@ -67,9 +38,16 @@ const phase = computed(
                     }}
                 </strong>
 
-                <span>
-                    Орієнтовний етап:
-                    {{ phase }}
+                <span v-if="localMode && modelState === 'warming'">
+                    Локальна модель ще готується у фоні.
+                </span>
+
+                <span v-else-if="localMode">
+                    Швидкий pipeline: retrieval → generation → grounding.
+                </span>
+
+                <span v-else>
+                    Виконується пошук релевантних фрагментів.
                 </span>
             </div>
 
@@ -88,9 +66,9 @@ const phase = computed(
         </div>
 
         <p>
-            Смуга показує активний процес.
-            Точний відсоток не відображається,
-            поки backend не передає поетапний прогрес.
+            Показується реальний час очікування.
+            Точний відсоток не імітується, оскільки
+            backend поки не передає streaming-прогрес.
         </p>
     </div>
 </template>

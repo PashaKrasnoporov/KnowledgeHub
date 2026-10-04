@@ -1,4 +1,5 @@
 import re
+from time import perf_counter
 
 from app.nalashtuvannia.parametry import (
     parametry,
@@ -32,7 +33,19 @@ WORD_PATTERN = re.compile(
 
 MIN_ACCEPTED_GROUNDING_COVERAGE = 0.50
 MIN_EVIDENCE_CONFIDENCE = 0.30
-MAX_UKRAINIAN_REWRITE_PASSES = 2
+MAX_UKRAINIAN_REWRITE_PASSES = 1
+MIN_SCORE_FOR_WARNING_REWRITE = 76
+MIN_SUSPICIOUS_WORDS_FOR_REWRITE = 3
+
+
+def _milliseconds(
+    started_at: float,
+) -> float:
+    return round(
+        (perf_counter() - started_at)
+        * 1000,
+        1,
+    )
 
 
 def _has_degenerate_repetition(
@@ -147,6 +160,7 @@ def _fallback_response(
     language_quality_issues: list[str],
     language_quality_warnings: list[str],
     evidence_confidence: float,
+    timings_ms: dict[str, float] | None = None,
 ) -> ResearchGeneratedResponseAPI:
     fallback = build_clean_extractive_fallback(
         research
@@ -187,6 +201,9 @@ def _fallback_response(
         insufficient_evidence=False,
         fallback_used=True,
         generation_error=error,
+        timings_ms=(
+            timings_ms or {}
+        ),
     )
 
 
@@ -227,7 +244,7 @@ def _insufficient_evidence_response(
     )
 
 
-def _normalize_ukrainian(
+def _check_ukrainian_and_rewrite_if_needed(
     generated: str,
     research: ResearchResponseAPI,
     token_limit: int,
@@ -238,61 +255,78 @@ def _normalize_ukrainian(
     int,
     list[str],
     list[str],
+    float,
 ]:
+    started = perf_counter()
     sources = _source_texts(
         research
     )
 
-    current = generate_local_text(
-        messages=(
-            build_ukrainian_rewrite_messages(
-                generated,
-                strict=False,
-            )
-        ),
-        max_new_tokens=token_limit,
-        deterministic=True,
-    )
-
-    passes = 1
-
     quality = evaluate_ukrainian_quality(
-        text=current,
+        text=generated,
         source_texts=sources,
     )
 
-    if (
-        quality.needs_rewrite
-        and passes
-        < MAX_UKRAINIAN_REWRITE_PASSES
-    ):
-        current = generate_local_text(
-            messages=(
-                build_ukrainian_rewrite_messages(
-                    current,
-                    strict=True,
-                    issues=quality.hard_issues,
-                    warnings=quality.warnings,
-                )
+    should_rewrite = (
+        bool(
+            quality.hard_issues
+        )
+        or (
+            quality.score
+            < MIN_SCORE_FOR_WARNING_REWRITE
+            and len(
+                quality.suspicious_words
+            )
+            >= MIN_SUSPICIOUS_WORDS_FOR_REWRITE
+        )
+    )
+
+    if not should_rewrite:
+        return (
+            generated,
+            0,
+            quality.passed,
+            quality.score,
+            quality.hard_issues,
+            quality.warnings,
+            _milliseconds(
+                started
             ),
-            max_new_tokens=token_limit,
-            deterministic=True,
         )
 
-        passes += 1
+    rewrite_token_limit = min(
+        140,
+        token_limit,
+    )
 
-        quality = evaluate_ukrainian_quality(
-            text=current,
-            source_texts=sources,
-        )
+    rewritten = generate_local_text(
+        messages=(
+            build_ukrainian_rewrite_messages(
+                generated,
+                strict=True,
+                issues=quality.hard_issues,
+                warnings=quality.warnings,
+            )
+        ),
+        max_new_tokens=rewrite_token_limit,
+        deterministic=True,
+    )
+
+    final_quality = evaluate_ukrainian_quality(
+        text=rewritten,
+        source_texts=sources,
+    )
 
     return (
-        current,
-        passes,
-        quality.passed,
-        quality.score,
-        quality.hard_issues,
-        quality.warnings,
+        rewritten,
+        MAX_UKRAINIAN_REWRITE_PASSES,
+        final_quality.passed,
+        final_quality.score,
+        final_quality.hard_issues,
+        final_quality.warnings,
+        _milliseconds(
+            started
+        ),
     )
 
 
@@ -301,6 +335,9 @@ def generate_grounded_answer(
     max_new_tokens: int | None = None,
     response_language: str = "uk",
 ) -> ResearchGeneratedResponseAPI:
+    pipeline_started = perf_counter()
+    timings_ms: dict[str, float] = {}
+
     confidence = _evidence_confidence(
         research
     )
@@ -310,7 +347,7 @@ def generate_grounded_answer(
         or confidence
         < MIN_EVIDENCE_CONFIDENCE
     ):
-        return _insufficient_evidence_response(
+        response = _insufficient_evidence_response(
             research=research,
             response_language=(
                 response_language
@@ -319,6 +356,12 @@ def generate_grounded_answer(
                 confidence
             ),
         )
+        response.timings_ms[
+            "generation_pipeline"
+        ] = _milliseconds(
+            pipeline_started
+        )
+        return response
 
     token_limit = (
         max_new_tokens
@@ -326,9 +369,9 @@ def generate_grounded_answer(
     )
 
     token_limit = max(
-        80,
+        64,
         min(
-            512,
+            320,
             token_limit,
         ),
     )
@@ -347,10 +390,18 @@ def generate_grounded_answer(
     language_quality_warnings = []
 
     try:
+        generation_started = perf_counter()
+
         generated = generate_local_text(
             messages=messages,
             max_new_tokens=token_limit,
-            deterministic=False,
+            deterministic=True,
+        )
+
+        timings_ms[
+            "llm_generation"
+        ] = _milliseconds(
+            generation_started
         )
 
         if response_language == "uk":
@@ -361,13 +412,24 @@ def generate_grounded_answer(
                 language_quality_score,
                 language_quality_issues,
                 language_quality_warnings,
-            ) = _normalize_ukrainian(
+                language_ms,
+            ) = _check_ukrainian_and_rewrite_if_needed(
                 generated=generated,
                 research=research,
                 token_limit=token_limit,
             )
 
+            timings_ms[
+                "language_check"
+            ] = language_ms
+
             if not language_quality_passed:
+                timings_ms[
+                    "generation_pipeline"
+                ] = _milliseconds(
+                    pipeline_started
+                )
+
                 return _fallback_response(
                     research=research,
                     generation_model=(
@@ -375,9 +437,7 @@ def generate_grounded_answer(
                     ),
                     error=(
                         "Генеративна відповідь не пройшла "
-                        "критичний український мовний "
-                        "контроль після двох редакторських "
-                        "проходів."
+                        "критичний український мовний контроль."
                     ),
                     response_language=(
                         response_language
@@ -398,11 +458,20 @@ def generate_grounded_answer(
                     evidence_confidence=(
                         confidence
                     ),
+                    timings_ms=(
+                        timings_ms
+                    ),
                 )
 
         if _has_degenerate_repetition(
             generated
         ):
+            timings_ms[
+                "generation_pipeline"
+            ] = _milliseconds(
+                pipeline_started
+            )
+
             return _fallback_response(
                 research=research,
                 generation_model=(
@@ -433,14 +502,31 @@ def generate_grounded_answer(
                 evidence_confidence=(
                     confidence
                 ),
+                timings_ms=(
+                    timings_ms
+                ),
             )
+
+        grounding_started = perf_counter()
 
         grounding = ground_generated_answer(
             generated_text=generated,
             research=research,
         )
 
+        timings_ms[
+            "claim_grounding"
+        ] = _milliseconds(
+            grounding_started
+        )
+
         if not grounding.claims:
+            timings_ms[
+                "generation_pipeline"
+            ] = _milliseconds(
+                pipeline_started
+            )
+
             return _fallback_response(
                 research=research,
                 generation_model=(
@@ -472,12 +558,21 @@ def generate_grounded_answer(
                 evidence_confidence=(
                     confidence
                 ),
+                timings_ms=(
+                    timings_ms
+                ),
             )
 
         if (
             grounding.coverage
             < MIN_ACCEPTED_GROUNDING_COVERAGE
         ):
+            timings_ms[
+                "generation_pipeline"
+            ] = _milliseconds(
+                pipeline_started
+            )
+
             return _fallback_response(
                 research=research,
                 generation_model=(
@@ -509,7 +604,16 @@ def generate_grounded_answer(
                 evidence_confidence=(
                     confidence
                 ),
+                timings_ms=(
+                    timings_ms
+                ),
             )
+
+        timings_ms[
+            "generation_pipeline"
+        ] = _milliseconds(
+            pipeline_started
+        )
 
         return ResearchGeneratedResponseAPI(
             **research.model_dump(),
@@ -517,7 +621,7 @@ def generate_grounded_answer(
                 grounding.answer
             ),
             generation_provider=(
-                "local-transformers"
+                "local-transformers-fast"
             ),
             generation_model=(
                 parametry.rag_local_model_name
@@ -558,9 +662,18 @@ def generate_grounded_answer(
             insufficient_evidence=False,
             fallback_used=False,
             generation_error=None,
+            timings_ms=(
+                timings_ms
+            ),
         )
 
     except LocalLLMError as error:
+        timings_ms[
+            "generation_pipeline"
+        ] = _milliseconds(
+            pipeline_started
+        )
+
         return _fallback_response(
             research=research,
             generation_model=(
@@ -589,5 +702,8 @@ def generate_grounded_answer(
             ),
             evidence_confidence=(
                 confidence
+            ),
+            timings_ms=(
+                timings_ms
             ),
         )

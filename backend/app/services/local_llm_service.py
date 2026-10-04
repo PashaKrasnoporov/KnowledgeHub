@@ -1,4 +1,4 @@
-from functools import lru_cache
+from threading import Lock
 
 from app.nalashtuvannia.parametry import (
     parametry,
@@ -9,68 +9,98 @@ class LocalLLMError(RuntimeError):
     pass
 
 
-@lru_cache(maxsize=1)
+_MODEL_BUNDLE = None
+_MODEL_LOCK = Lock()
+
+
+def is_local_llm_loaded() -> bool:
+    return _MODEL_BUNDLE is not None
+
+
 def get_local_llm():
     """
-    Heavy ML imports are lazy so FastAPI can start
-    and serve auth/health routes quickly.
+    Load the model once, lazily and thread-safely.
+
+    This avoids duplicate 3 GB model loads when a background warmup
+    and an answer request happen at nearly the same time.
     """
-    try:
-        import torch
+    global _MODEL_BUNDLE
 
-        from transformers import (
-            AutoModelForCausalLM,
-            AutoTokenizer,
-        )
+    if _MODEL_BUNDLE is not None:
+        return _MODEL_BUNDLE
 
-        model_name = (
-            parametry.rag_local_model_name
-        )
+    with _MODEL_LOCK:
+        if _MODEL_BUNDLE is not None:
+            return _MODEL_BUNDLE
 
-        tokenizer = (
-            AutoTokenizer.from_pretrained(
-                model_name
+        try:
+            import torch
+
+            from transformers import (
+                AutoModelForCausalLM,
+                AutoTokenizer,
             )
-        )
 
-        model_kwargs = {}
-
-        if torch.cuda.is_available():
-            model_kwargs[
-                "torch_dtype"
-            ] = torch.float16
-
-        model = (
-            AutoModelForCausalLM.from_pretrained(
-                model_name,
-                **model_kwargs,
+            model_name = (
+                parametry.rag_local_model_name
             )
-        )
 
-        device = torch.device(
-            "cuda"
-            if torch.cuda.is_available()
-            else "cpu"
-        )
+            tokenizer = (
+                AutoTokenizer.from_pretrained(
+                    model_name
+                )
+            )
 
-        model.to(
-            device
-        )
+            model_kwargs = {}
 
-        model.eval()
+            if torch.cuda.is_available():
+                model_kwargs[
+                    "torch_dtype"
+                ] = torch.float16
 
-        return (
-            tokenizer,
-            model,
-            device,
-        )
+            model = (
+                AutoModelForCausalLM.from_pretrained(
+                    model_name,
+                    **model_kwargs,
+                )
+            )
 
-    except Exception as error:
-        raise LocalLLMError(
-            "Не вдалося завантажити локальну LLM. "
-            "Перевірте доступ до Hugging Face, "
-            "вільне місце на диску та пам'ять."
-        ) from error
+            device = torch.device(
+                "cuda"
+                if torch.cuda.is_available()
+                else "cpu"
+            )
+
+            model.to(
+                device
+            )
+
+            model.eval()
+
+            _MODEL_BUNDLE = (
+                tokenizer,
+                model,
+                device,
+            )
+
+            return _MODEL_BUNDLE
+
+        except Exception as error:
+            raise LocalLLMError(
+                "Не вдалося завантажити локальну LLM. "
+                "Перевірте доступ до Hugging Face, "
+                "вільне місце на диску та пам'ять."
+            ) from error
+
+
+def warmup_local_llm() -> dict[str, str]:
+    _, _, device = get_local_llm()
+
+    return {
+        "status": "ready",
+        "model": parametry.rag_local_model_name,
+        "device": str(device),
+    }
 
 
 def _render_messages(
@@ -108,7 +138,7 @@ def _render_messages(
 def generate_local_text(
     messages: list[dict[str, str]],
     max_new_tokens: int,
-    deterministic: bool = False,
+    deterministic: bool = True,
 ) -> str:
     try:
         import torch
@@ -128,7 +158,7 @@ def generate_local_text(
             prompt,
             return_tensors="pt",
             truncation=True,
-            max_length=12000,
+            max_length=6144,
         )
 
         encoded = {
@@ -156,12 +186,13 @@ def generate_local_text(
 
         generation_kwargs = {
             "max_new_tokens": max_new_tokens,
-            "repetition_penalty": 1.12,
+            "repetition_penalty": 1.10,
             "no_repeat_ngram_size": 4,
             "pad_token_id": pad_token_id,
             "eos_token_id": (
                 tokenizer.eos_token_id
             ),
+            "use_cache": True,
         }
 
         if deterministic:
@@ -172,9 +203,9 @@ def generate_local_text(
             generation_kwargs.update(
                 {
                     "do_sample": True,
-                    "temperature": 0.25,
-                    "top_p": 0.82,
-                    "top_k": 25,
+                    "temperature": 0.20,
+                    "top_p": 0.80,
+                    "top_k": 20,
                 }
             )
 

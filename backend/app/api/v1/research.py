@@ -1,3 +1,5 @@
+from time import perf_counter
+
 from fastapi import (
     APIRouter,
     Depends,
@@ -22,6 +24,10 @@ from app.schemas.research import (
 from app.services.collection_service import (
     get_user_collection,
 )
+from app.services.local_llm_service import (
+    is_local_llm_loaded,
+    warmup_local_llm,
+)
 from app.services.rag_generation_service import (
     generate_grounded_answer,
 )
@@ -31,6 +37,16 @@ from app.services.research_context_service import (
 
 
 router = APIRouter()
+
+
+def _milliseconds(
+    started_at: float,
+) -> float:
+    return round(
+        (perf_counter() - started_at)
+        * 1000,
+        1,
+    )
 
 
 def _get_collection_or_404(
@@ -51,6 +67,34 @@ def _get_collection_or_404(
         )
 
     return collection
+
+
+@router.post(
+    "/research/warmup",
+    summary="Warm up the local RAG model",
+)
+def api_warmup_research_model(
+    _csrf: None = Depends(
+        require_api_csrf
+    ),
+    _user: User = Depends(
+        get_api_user
+    ),
+):
+    started = perf_counter()
+    already_loaded = (
+        is_local_llm_loaded()
+    )
+
+    status = warmup_local_llm()
+
+    return {
+        **status,
+        "already_loaded": already_loaded,
+        "elapsed_ms": _milliseconds(
+            started
+        ),
+    }
 
 
 @router.get(
@@ -108,11 +152,15 @@ def api_generate_research_answer(
         get_db_session
     ),
 ):
+    total_started = perf_counter()
+
     collection = _get_collection_or_404(
         collection_id=collection_id,
         user=user,
         session=session,
     )
+
+    retrieval_started = perf_counter()
 
     research = build_research_response(
         session=session,
@@ -121,7 +169,15 @@ def api_generate_research_answer(
         limit=payload.limit,
     )
 
-    return generate_grounded_answer(
+    retrieval_ms = _milliseconds(
+        retrieval_started
+    )
+
+    model_cold_start = not (
+        is_local_llm_loaded()
+    )
+
+    response = generate_grounded_answer(
         research=research,
         max_new_tokens=(
             payload.max_new_tokens
@@ -130,3 +186,17 @@ def api_generate_research_answer(
             payload.response_language
         ),
     )
+
+    response.model_cold_start = (
+        model_cold_start
+    )
+
+    response.timings_ms = {
+        "retrieval": retrieval_ms,
+        **response.timings_ms,
+        "total": _milliseconds(
+            total_started
+        ),
+    }
+
+    return response

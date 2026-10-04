@@ -37,7 +37,8 @@ export {
 
 export {
     generateResearchAnswer,
-    researchCollection
+    researchCollection,
+    warmupResearchModel
 } from "./research.js"
 
 export {

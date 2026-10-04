@@ -1,13 +1,15 @@
 <script setup>
 import {
     onBeforeUnmount,
+    onMounted,
     ref,
     watch
 } from "vue"
 
 import {
     generateResearchAnswer,
-    researchCollection
+    researchCollection,
+    warmupResearchModel
 } from "../../api/index.js"
 
 import ResearchAnswer from "./ResearchAnswer.vue"
@@ -43,8 +45,10 @@ const loading = ref(false)
 const elapsedSeconds = ref(0)
 const error = ref("")
 const result = ref(null)
+const modelState = ref("idle")
 
 let elapsedTimer = null
+let warmupTimer = null
 
 watch(
     question,
@@ -63,6 +67,10 @@ watch(
             "knowledgehub.researchGenerationMode",
             value
         )
+
+        if (value === "local") {
+            scheduleWarmup()
+        }
     }
 )
 
@@ -99,6 +107,43 @@ function stopLoadingTimer() {
     }
 }
 
+async function warmupModel() {
+    if (
+        generationMode.value !== "local"
+        || modelState.value === "warming"
+        || modelState.value === "ready"
+    ) {
+        return
+    }
+
+    modelState.value = "warming"
+
+    try {
+        await warmupResearchModel()
+        modelState.value = "ready"
+    }
+    catch {
+        // Warmup is only an optimization. Generation still works
+        // and will load the model on demand if this request fails.
+        modelState.value = "idle"
+    }
+}
+
+function scheduleWarmup() {
+    if (warmupTimer !== null) {
+        window.clearTimeout(
+            warmupTimer
+        )
+    }
+
+    warmupTimer = window.setTimeout(
+        () => {
+            warmupModel()
+        },
+        700
+    )
+}
+
 async function runResearch() {
     if (loading.value) {
         return
@@ -129,9 +174,11 @@ async function runResearch() {
                 await generateResearchAnswer(
                     props.collectionId,
                     normalized,
-                    5,
+                    4,
                     responseLanguage.value
                 )
+
+            modelState.value = "ready"
         }
         else {
             result.value =
@@ -159,9 +206,26 @@ function clearResearch() {
     question.value = ""
 }
 
+onMounted(
+    () => {
+        if (
+            generationMode.value
+            === "local"
+        ) {
+            scheduleWarmup()
+        }
+    }
+)
+
 onBeforeUnmount(
     () => {
         stopLoadingTimer()
+
+        if (warmupTimer !== null) {
+            window.clearTimeout(
+                warmupTimer
+            )
+        }
     }
 )
 </script>
@@ -176,19 +240,19 @@ onBeforeUnmount(
                     </h2>
 
                     <span class="research-badge">
-                        RAG v1.5.2
+                        RAG v1.6
                     </span>
 
                     <span class="research-language-badge">
-                        Ukrainian-first
+                        Fast Ukrainian RAG
                     </span>
                 </div>
 
                 <p>
-                    KnowledgeHub знаходить докази,
-                    формує українську відповідь,
-                    перевіряє мовну якість і кожне
-                    твердження перед показом.
+                    KnowledgeHub використовує короткий
+                    одно-прохідний pipeline, повторно
+                    застосовує збережені embeddings і
+                    перевіряє твердження перед показом.
                 </p>
             </div>
 
@@ -203,25 +267,22 @@ onBeforeUnmount(
 
                 <span class="tooltip-content">
                     <strong>
-                        RAG v1.5.2
+                        RAG v1.6
                     </strong>
 
                     <span>
-                        wordfreq використовується
-                        як м'який мовний сигнал,
-                        а не як абсолютний словник.
+                        Джерельні embeddings повторно
+                        не обчислюються під час grounding.
                     </span>
 
                     <span>
-                        Критичні росіянізми та штучні
-                        конструкції залишаються
-                        причиною повторного редагування.
+                        Українське редагування запускається
+                        лише за реальної критичної проблеми.
                     </span>
 
                     <span>
-                        Якщо генерація відхилена,
-                        показується очищений витяг
-                        без зміни самих джерел.
+                        Локальна LLM прогрівається у фоні,
+                        коли обрано режим Local LLM.
                     </span>
                 </span>
             </span>
@@ -282,14 +343,32 @@ onBeforeUnmount(
                     </select>
                 </div>
 
+                <div
+                    v-if="generationMode === 'local'"
+                    class="research-model-state"
+                >
+                    <span
+                        :class="[
+                            'research-model-dot',
+                            `is-${modelState}`
+                        ]"
+                    ></span>
+
+                    {{
+                        modelState === "ready"
+                            ? "Модель готова"
+                            : (
+                                modelState === "warming"
+                                    ? "Модель готується у фоні…"
+                                    : "Модель завантажиться автоматично"
+                            )
+                    }}
+                </div>
+
                 <p class="research-local-note">
                     {{
                         generationMode === "local"
-                            ? (
-                                responseLanguage === "uk"
-                                    ? "Українська проходить редакторський, мовний і claim-level контроль."
-                                    : "Мова визначається за формулюванням запитання."
-                            )
+                            ? "За нормальної української відповіді додатковий rewrite не запускається."
                             : "Швидкий витягувальний режим без LLM."
                     }}
                 </p>
@@ -350,8 +429,7 @@ onBeforeUnmount(
                 <span
                     v-if="generationMode === 'local'"
                 >
-                    retrieval → generation → UA quality →
-                    grounding → citations
+                    vectorized retrieval → 1× generation → grounding
                 </span>
             </div>
         </form>
@@ -362,9 +440,7 @@ onBeforeUnmount(
             :local-mode="
                 generationMode === 'local'
             "
-            :ukrainian-mode="
-                responseLanguage === 'uk'
-            "
+            :model-state="modelState"
         />
 
         <div

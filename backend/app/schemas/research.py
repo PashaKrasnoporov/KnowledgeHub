@@ -16,6 +16,14 @@ class ResearchSourceAPI(BaseModel):
     semantic_score: float
     lexical_score: float
 
+    # Internal-only data reused during claim grounding.
+    # It is never serialized to the browser.
+    embedding: list[float] = Field(
+        default_factory=list,
+        exclude=True,
+        repr=False,
+    )
+
 
 class ResearchAnswerPointAPI(BaseModel):
     text: str
@@ -37,15 +45,15 @@ class ResearchGenerateRequestAPI(BaseModel):
     )
 
     limit: int = Field(
-        default=5,
+        default=4,
         ge=1,
         le=8,
     )
 
     max_new_tokens: int | None = Field(
         default=None,
-        ge=80,
-        le=512,
+        ge=64,
+        le=320,
     )
 
     response_language: Literal[
@@ -99,3 +107,9 @@ class ResearchGeneratedResponseAPI(
 
     fallback_used: bool = False
     generation_error: str | None = None
+
+    # Server-side timing, visible to the user for real performance checks.
+    timings_ms: dict[str, float] = Field(
+        default_factory=dict
+    )
+    model_cold_start: bool = False

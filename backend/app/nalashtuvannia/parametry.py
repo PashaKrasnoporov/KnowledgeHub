@@ -14,7 +14,10 @@ class Parametry(BaseSettings):
     rag_local_model_name: str = (
         "Qwen/Qwen2.5-1.5B-Instruct"
     )
-    rag_max_new_tokens: int = 320
+
+    # The answer is intentionally short: 2–3 grounded sentences.
+    # Lowering the token budget reduces CPU generation latency sharply.
+    rag_max_new_tokens: int = 160
 
     model_config = SettingsConfigDict(
         env_file=".env",

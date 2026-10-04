@@ -25,6 +25,7 @@ import "./styles/research.css"
 import "./styles/claim_grounding.css"
 import "./styles/research_ux.css"
 import "./styles/research_quality.css"
+import "./styles/performance_responsive.css"
 
 createApp(
     App

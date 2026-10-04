@@ -108,7 +108,7 @@ def _split_claims(
         ]
 
     return candidates[
-        :8
+        :6
     ]
 
 
@@ -180,6 +180,29 @@ def _format_claim(
     )
 
 
+def _source_embedding_matrix(
+    research: ResearchResponseAPI,
+) -> np.ndarray:
+    stored = [
+        source.embedding
+        for source in research.sources
+    ]
+
+    if all(stored):
+        return np.asarray(
+            stored,
+            dtype=np.float32,
+        )
+
+    # Compatibility fallback for older/internal callers.
+    return create_text_embeddings(
+        [
+            source.excerpt
+            for source in research.sources
+        ]
+    )
+
+
 def ground_generated_answer(
     generated_text: str,
     research: ResearchResponseAPI,
@@ -200,23 +223,22 @@ def ground_generated_answer(
             removed_claims=len(claims),
         )
 
-    source_texts = [
-        source.excerpt
-        for source
-        in research.sources
-    ]
-
-    embeddings = create_text_embeddings(
-        claims + source_texts
+    # Only new claims are embedded. Retrieved source embeddings are reused
+    # from PostgreSQL instead of being recomputed for every answer.
+    claim_embeddings = create_text_embeddings(
+        claims
     )
 
-    claim_embeddings = embeddings[
-        :len(claims)
-    ]
+    source_embeddings = _source_embedding_matrix(
+        research
+    )
 
-    source_embeddings = embeddings[
-        len(claims):
-    ]
+    semantic_matrix = np.clip(
+        claim_embeddings
+        @ source_embeddings.T,
+        0.0,
+        1.0,
+    )
 
     grounded_claims = []
 
@@ -234,30 +256,16 @@ def ground_generated_answer(
         ) in enumerate(
             research.sources
         ):
-            semantic_raw = float(
-                np.dot(
-                    claim_embeddings[
-                        claim_index
-                    ],
-                    source_embeddings[
-                        source_index
-                    ],
-                )
+            semantic_score = float(
+                semantic_matrix[
+                    claim_index,
+                    source_index,
+                ]
             )
 
-            semantic_score = max(
-                0.0,
-                min(
-                    1.0,
-                    semantic_raw,
-                ),
-            )
-
-            lexical_score = (
-                _lexical_score(
-                    claim,
-                    source.excerpt,
-                )
+            lexical_score = _lexical_score(
+                claim,
+                source.excerpt,
             )
 
             grounding_score = (
@@ -271,12 +279,9 @@ def ground_generated_answer(
 
             candidate = {
                 "source": source,
-                "grounding_score":
-                    grounding_score,
-                "semantic_score":
-                    semantic_score,
-                "lexical_score":
-                    lexical_score,
+                "grounding_score": grounding_score,
+                "semantic_score": semantic_score,
+                "lexical_score": lexical_score,
             }
 
             if (

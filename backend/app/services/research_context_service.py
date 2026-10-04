@@ -33,40 +33,12 @@ SENTENCE_SPLIT_PATTERN = re.compile(
 )
 
 STOP_WORDS = {
-    "the",
-    "and",
-    "for",
-    "with",
-    "that",
-    "this",
-    "from",
-    "what",
-    "how",
-    "which",
-    "are",
-    "was",
-    "were",
-    "have",
-    "has",
-    "про",
-    "для",
-    "що",
-    "як",
-    "який",
-    "яка",
-    "які",
-    "це",
-    "та",
-    "і",
-    "або",
-    "до",
-    "від",
-    "на",
-    "у",
-    "в",
-    "з",
-    "із",
-    "за",
+    "the", "and", "for", "with", "that", "this",
+    "from", "what", "how", "which", "are", "was",
+    "were", "have", "has",
+    "про", "для", "що", "як", "який", "яка", "які",
+    "це", "та", "і", "або", "до", "від", "на", "у",
+    "в", "з", "із", "за",
 }
 
 
@@ -148,34 +120,9 @@ def _lexical_score(
     )
 
 
-def _semantic_score(
-    chunk_embedding: list[float],
-    query_embedding: np.ndarray,
-) -> float:
-    embedding = np.asarray(
-        chunk_embedding,
-        dtype=np.float32,
-    )
-
-    raw_score = float(
-        np.dot(
-            embedding,
-            query_embedding,
-        )
-    )
-
-    return max(
-        0.0,
-        min(
-            1.0,
-            raw_score,
-        ),
-    )
-
-
 def _excerpt(
     text: str,
-    max_length: int = 700,
+    max_length: int = 620,
 ) -> str:
     normalized = " ".join(
         text.split()
@@ -311,7 +258,7 @@ def build_research_response(
     session: Session,
     collection: Collection,
     question: str,
-    limit: int = 5,
+    limit: int = 4,
 ) -> ResearchResponseAPI:
     normalized_question = " ".join(
         question.strip().split()
@@ -340,16 +287,41 @@ def build_research_response(
             sources=[],
         )
 
-    query_embedding = create_query_embedding(
-        normalized_question
+    query_embedding = np.asarray(
+        create_query_embedding(
+            normalized_question
+        ),
+        dtype=np.float32,
+    )
+
+    # One vectorized matrix multiplication instead of one np.dot call
+    # per chunk. This matters when collections grow to thousands of chunks.
+    embedding_matrix = np.asarray(
+        [
+            chunk.embedding
+            for chunk, _document in rows
+        ],
+        dtype=np.float32,
+    )
+
+    semantic_scores = np.clip(
+        embedding_matrix @ query_embedding,
+        0.0,
+        1.0,
     )
 
     ranked = []
 
-    for chunk, document in rows:
-        semantic_score = _semantic_score(
-            chunk.embedding,
-            query_embedding,
+    for (
+        (chunk, document),
+        semantic_score_raw,
+    ) in zip(
+        rows,
+        semantic_scores,
+        strict=True,
+    ):
+        semantic_score = float(
+            semantic_score_raw
         )
 
         lexical_score = _lexical_score(
@@ -447,6 +419,12 @@ def build_research_response(
                 ),
                 6,
             ),
+            embedding=[
+                float(value)
+                for value in item[
+                    "chunk"
+                ].embedding
+            ],
         )
         for index, item
         in enumerate(

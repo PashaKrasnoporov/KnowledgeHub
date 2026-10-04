@@ -49,6 +49,24 @@ const languageScore = computed(
     )
 )
 
+const totalSeconds = computed(
+    () => (
+        Number(
+            props.result.timings_ms?.total
+            || 0
+        ) / 1000
+    ).toFixed(1)
+)
+
+const generationSeconds = computed(
+    () => (
+        Number(
+            props.result.timings_ms?.llm_generation
+            || 0
+        ) / 1000
+    ).toFixed(1)
+)
+
 const verified = computed(
     () => (
         props.generationMode === "local"
@@ -134,7 +152,7 @@ async function copyAnswer() {
                                 : (
                                     result.fallback_used
                                         ? "Source-extractive fallback"
-                                        : "Local LLM + auto-grounding"
+                                        : "Fast local LLM + grounding"
                                 )
                         }}
                     </span>
@@ -177,7 +195,7 @@ async function copyAnswer() {
                             && !result.fallback_used
                         "
                         class="research-metric"
-                        title="М'яка інтегральна оцінка української мовної якості. Невідоме слово саме по собі більше не блокує відповідь."
+                        title="М'яка інтегральна оцінка української мовної якості."
                     >
                         Українська:
                         {{ languageScore }}/100
@@ -190,8 +208,54 @@ async function copyAnswer() {
                             && !result.fallback_used
                         "
                     >
-                        Редагувань:
+                        Rewrite:
                         {{ result.language_rewrite_passes }}
+                    </span>
+                </div>
+
+                <div
+                    v-if="result.timings_ms?.total"
+                    class="research-performance-meta"
+                >
+                    <span
+                        class="research-performance-chip"
+                        title="Повний серверний час: retrieval + генерація + перевірки."
+                    >
+                        Загалом {{ totalSeconds }} с
+                    </span>
+
+                    <span
+                        v-if="result.timings_ms?.llm_generation"
+                        class="research-performance-chip"
+                        title="Час безпосередньої генерації локальною LLM."
+                    >
+                        LLM {{ generationSeconds }} с
+                    </span>
+
+                    <span
+                        v-if="result.timings_ms?.retrieval !== undefined"
+                        class="research-performance-chip"
+                        title="Час пошуку релевантних chunks."
+                    >
+                        Retrieval
+                        {{ Math.round(result.timings_ms.retrieval) }} мс
+                    </span>
+
+                    <span
+                        v-if="result.timings_ms?.claim_grounding !== undefined"
+                        class="research-performance-chip"
+                        title="Час перевірки тверджень і автоматичного підбору citations."
+                    >
+                        Grounding
+                        {{ Math.round(result.timings_ms.claim_grounding) }} мс
+                    </span>
+
+                    <span
+                        v-if="result.model_cold_start"
+                        class="research-performance-chip is-warning"
+                        title="Цей запит включав перше завантаження LLM після запуску backend."
+                    >
+                        Cold start
                     </span>
                 </div>
             </div>
@@ -343,9 +407,7 @@ async function copyAnswer() {
                     </a>
                 </div>
 
-                <span
-                    title="Semantic similarity + lexical overlap + retrieval prior."
-                >
+                <span>
                     grounding
                     {{
                         Number(
