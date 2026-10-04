@@ -40,6 +40,9 @@ RUSSIAN_MARKERS = {
 }
 
 CRITICAL_UNNATURAL_PATTERNS = {
+    "семанто-вектор": "штучна форма «семанто-вектор…»",
+    "векторійност": "штучна форма на основі «вектор»",
+    "зміжн": "неприродна словоформа «зміжн…»",
     "пошукуван": "неприродна словоформа на основі «пошук»",
     "семана-": "штучна форма «семана-»",
     "семантос": "штучна форма «семантос»",
@@ -279,20 +282,17 @@ def evaluate_ukrainian_quality(
         ),
     )
 
-    # wordfreq is only a soft signal. Unknown corpus words
-    # can trigger proofreading and lower the score, but only
-    # critical language errors can reject the final answer.
-    passed = not hard_issues
-
-    needs_rewrite = (
-        bool(
-            hard_issues
-        )
-        or len(
+    # wordfreq remains a soft signal: one or two rare words are allowed.
+    # Several unknown forms are not safe to label as verified Ukrainian.
+    passed = (
+        not hard_issues
+        and len(
             suspicious_words
-        ) >= 1
-        or score < 90
+        ) <= 2
+        and score >= 85
     )
+
+    needs_rewrite = not passed
 
     return UkrainianQualityResult(
         passed=passed,

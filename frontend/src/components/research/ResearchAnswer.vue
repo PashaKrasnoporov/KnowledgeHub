@@ -72,6 +72,8 @@ const verified = computed(
         props.generationMode === "local"
         && !props.result.fallback_used
         && !props.result.insufficient_evidence
+        && props.result.language_quality_passed === true
+        && languageScore.value >= 85
         && props.result.grounded_claims?.length > 0
     )
 )
@@ -152,7 +154,7 @@ async function copyAnswer() {
                                 : (
                                     result.fallback_used
                                         ? "Source-extractive fallback"
-                                        : "Fast local LLM + grounding"
+                                        : "Experimental local LLM + grounding"
                                 )
                         }}
                     </span>

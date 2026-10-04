@@ -29,6 +29,23 @@ const question = ref(
     ) || ""
 )
 
+const stableModeVersion = "1.7"
+
+if (
+    localStorage.getItem(
+        "knowledgehub.researchStableModeVersion"
+    ) !== stableModeVersion
+) {
+    localStorage.setItem(
+        "knowledgehub.researchGenerationMode",
+        "extractive"
+    )
+    localStorage.setItem(
+        "knowledgehub.researchStableModeVersion",
+        stableModeVersion
+    )
+}
+
 const generationMode = ref(
     localStorage.getItem(
         "knowledgehub.researchGenerationMode"
@@ -174,7 +191,7 @@ async function runResearch() {
                 await generateResearchAnswer(
                     props.collectionId,
                     normalized,
-                    4,
+                    3,
                     responseLanguage.value
                 )
 
@@ -185,7 +202,7 @@ async function runResearch() {
                 await researchCollection(
                     props.collectionId,
                     normalized,
-                    5
+                    3
                 )
         }
     }
@@ -240,19 +257,19 @@ onBeforeUnmount(
                     </h2>
 
                     <span class="research-badge">
-                        RAG v1.6
+                        RAG v1.7 Stable
                     </span>
 
                     <span class="research-language-badge">
-                        Fast Ukrainian RAG
+                        Stable Ukrainian RAG
                     </span>
                 </div>
 
                 <p>
-                    KnowledgeHub використовує короткий
-                    одно-прохідний pipeline, повторно
-                    застосовує збережені embeddings і
-                    перевіряє твердження перед показом.
+                    Стабільний режим відповідає швидко
+                    без генеративної моделі. Локальна LLM
+                    залишається окремим експериментальним
+                    режимом для подальшої оптимізації.
                 </p>
             </div>
 
@@ -267,7 +284,7 @@ onBeforeUnmount(
 
                 <span class="tooltip-content">
                     <strong>
-                        RAG v1.6
+                        RAG v1.7 Stable
                     </strong>
 
                     <span>
@@ -308,11 +325,11 @@ onBeforeUnmount(
                         :disabled="loading"
                     >
                         <option value="extractive">
-                            Швидка чернетка
+                            Швидка перевірена відповідь
                         </option>
 
                         <option value="local">
-                            Локальна LLM
+                            Локальна LLM (експериментально)
                         </option>
                     </select>
                 </div>
@@ -368,8 +385,8 @@ onBeforeUnmount(
                 <p class="research-local-note">
                     {{
                         generationMode === "local"
-                            ? "За нормальної української відповіді додатковий rewrite не запускається."
-                            : "Швидкий витягувальний режим без LLM."
+                            ? "Експериментальний режим: на CPU генерація може бути повільною; використовуйте його лише для окремих тестів."
+                            : "Рекомендований стабільний режим: швидка відповідь без LLM, сформована лише з retrieved evidence."
                     }}
                 </p>
             </div>

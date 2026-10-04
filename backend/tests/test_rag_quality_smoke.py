@@ -33,6 +33,14 @@ def test_ukrainian_quality():
     assert not bad.passed
     assert bad.hard_issues
 
+    v16_bad = evaluate_ukrainian_quality(
+        "Семанто-векторне пошукування відряджується "
+        "через зміжних форм і векторійності."
+    )
+
+    assert not v16_bad.passed
+    assert v16_bad.hard_issues
+
     good = evaluate_ukrainian_quality(
         "Семантичний пошук знаходить "
         "релевантні фрагменти за "
