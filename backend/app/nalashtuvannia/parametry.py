@@ -12,7 +12,7 @@ class Parametry(BaseSettings):
     db_password: str
 
     rag_local_model_name: str = (
-        "Qwen/Qwen2.5-0.5B-Instruct"
+        "Qwen/Qwen2.5-1.5B-Instruct"
     )
     rag_max_new_tokens: int = 320
 

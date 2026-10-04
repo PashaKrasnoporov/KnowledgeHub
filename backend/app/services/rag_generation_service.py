@@ -21,15 +21,73 @@ CITATION_PATTERN = re.compile(
     r"\[(\d+)\]"
 )
 
+WORD_PATTERN = re.compile(
+    r"[0-9A-Za-zА-Яа-яІіЇїЄєҐґ'-]{2,}"
+)
+
 
 def _citation_numbers(
     text: str,
-) -> set[int]:
-    return {
+) -> list[int]:
+    return [
         int(value)
         for value
-        in CITATION_PATTERN.findall(text)
-    }
+        in CITATION_PATTERN.findall(
+            text
+        )
+    ]
+
+
+def _text_without_citations(
+    text: str,
+) -> str:
+    return CITATION_PATTERN.sub(
+        " ",
+        text,
+    ).strip()
+
+
+def _has_degenerate_repetition(
+    answer: str,
+) -> bool:
+    citations = _citation_numbers(
+        answer
+    )
+
+    if len(citations) >= 8:
+        most_common = max(
+            citations.count(value)
+            for value
+            in set(citations)
+        )
+
+        if (
+            most_common
+            / len(citations)
+            >= 0.70
+        ):
+            return True
+
+    words = [
+        word.lower()
+        for word
+        in WORD_PATTERN.findall(
+            _text_without_citations(
+                answer
+            )
+        )
+    ]
+
+    if len(words) >= 20:
+        unique_ratio = (
+            len(set(words))
+            / len(words)
+        )
+
+        if unique_ratio < 0.18:
+            return True
+
+    return False
 
 
 def _answer_is_grounded(
@@ -45,12 +103,43 @@ def _answer_is_grounded(
         in research.sources
     }
 
-    citations = _citation_numbers(answer)
+    citations = _citation_numbers(
+        answer
+    )
 
     if not citations:
         return False
 
-    return citations.issubset(allowed)
+    if not set(citations).issubset(
+        allowed
+    ):
+        return False
+
+    substantive_text = (
+        _text_without_citations(
+            answer
+        )
+    )
+
+    words = WORD_PATTERN.findall(
+        substantive_text
+    )
+
+    if len(words) < 12:
+        return False
+
+    if len(substantive_text) < 80:
+        return False
+
+    if len(citations) > 12:
+        return False
+
+    if _has_degenerate_repetition(
+        answer
+    ):
+        return False
+
+    return True
 
 
 def generate_grounded_answer(
@@ -58,8 +147,10 @@ def generate_grounded_answer(
     max_new_tokens: int | None = None,
 ) -> ResearchGeneratedResponseAPI:
     if not research.sources:
-        fallback = build_extractive_fallback(
-            research
+        fallback = (
+            build_extractive_fallback(
+                research
+            )
         )
 
         return ResearchGeneratedResponseAPI(
@@ -78,7 +169,10 @@ def generate_grounded_answer(
 
     token_limit = max(
         80,
-        min(512, token_limit),
+        min(
+            512,
+            token_limit,
+        ),
     )
 
     messages = build_rag_messages(
@@ -95,8 +189,10 @@ def generate_grounded_answer(
             generated,
             research,
         ):
-            fallback = build_extractive_fallback(
-                research
+            fallback = (
+                build_extractive_fallback(
+                    research
+                )
             )
 
             return ResearchGeneratedResponseAPI(
@@ -108,8 +204,10 @@ def generate_grounded_answer(
                 ),
                 fallback_used=True,
                 generation_error=(
-                    "LLM-відповідь не пройшла "
-                    "перевірку посилань на джерела."
+                    "LLM-відповідь відхилено: "
+                    "виявлено недостатньо змістовного "
+                    "тексту, некоректні citations "
+                    "або циклічне повторення."
                 ),
             )
 
@@ -125,8 +223,10 @@ def generate_grounded_answer(
         )
 
     except LocalLLMError as error:
-        fallback = build_extractive_fallback(
-            research
+        fallback = (
+            build_extractive_fallback(
+                research
+            )
         )
 
         return ResearchGeneratedResponseAPI(
@@ -137,5 +237,7 @@ def generate_grounded_answer(
                 parametry.rag_local_model_name
             ),
             fallback_used=True,
-            generation_error=str(error),
+            generation_error=str(
+                error
+            ),
         )
