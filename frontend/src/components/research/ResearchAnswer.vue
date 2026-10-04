@@ -1,5 +1,9 @@
 <script setup>
-defineProps({
+import {
+    computed
+} from "vue"
+
+const props = defineProps({
     result: {
         type: Object,
         required: true
@@ -14,6 +18,16 @@ defineProps({
 defineEmits([
     "clear"
 ])
+
+const groundingPercent = computed(
+    () => Math.round(
+        Number(
+            props.result.grounding_coverage
+            || 0
+        )
+        * 100
+    )
+)
 </script>
 
 <template>
@@ -36,7 +50,7 @@ defineEmits([
                         {{
                             result.fallback_used
                                 ? "Безпечний fallback"
-                                : "Local LLM"
+                                : "Local LLM + auto-grounding"
                         }}
                     </span>
 
@@ -44,6 +58,27 @@ defineEmits([
                         v-if="result.generation_model"
                     >
                         {{ result.generation_model }}
+                    </span>
+
+                    <span
+                        v-if="
+                            !result.fallback_used
+                            && result.grounded_claims?.length
+                        "
+                    >
+                        Підтверджено:
+                        {{ result.grounded_claims.length }}
+                        твердж.
+                    </span>
+
+                    <span
+                        v-if="
+                            !result.fallback_used
+                            && result.grounded_claims?.length
+                        "
+                    >
+                        Покриття:
+                        {{ groundingPercent }}%
                     </span>
                 </div>
             </div>
@@ -58,11 +93,27 @@ defineEmits([
         </div>
 
         <p
-            v-if="result.generation_error"
+            v-if="
+                result.fallback_used
+                && result.generation_error
+            "
             class="research-generation-warning"
         >
             {{ result.generation_error }}
             Показано перевірену витягувальну відповідь.
+        </p>
+
+        <p
+            v-else-if="
+                !result.fallback_used
+                && result.removed_claims > 0
+            "
+            class="research-grounding-note"
+        >
+            KnowledgeHub автоматично вилучив
+            {{ result.removed_claims }}
+            непідтверджене твердження
+            з початкової LLM-відповіді.
         </p>
 
         <div
@@ -96,8 +147,59 @@ defineEmits([
             </li>
         </ol>
 
+        <div
+            v-if="
+                !result.fallback_used
+                && result.grounded_claims?.length
+            "
+            class="research-claim-audit"
+        >
+            <h4>
+                Перевірка тверджень
+            </h4>
+
+            <div
+                v-for="(
+                    claim,
+                    index
+                ) in result.grounded_claims"
+                :key="
+                    `${index}-${claim.source_number}`
+                "
+                class="research-claim-row"
+            >
+                <div>
+                    <strong>
+                        {{ index + 1 }}.
+                    </strong>
+
+                    {{ claim.text }}
+
+                    <a
+                        :href="
+                            `#research-source-${claim.source_number}`
+                        "
+                    >
+                        [{{ claim.source_number }}]
+                    </a>
+                </div>
+
+                <span>
+                    grounding
+                    {{
+                        Number(
+                            claim.grounding_score
+                        ).toFixed(3)
+                    }}
+                </span>
+            </div>
+        </div>
+
         <p
-            v-else
+            v-if="
+                !result.generated_answer
+                && !result.answer_points?.length
+            "
             class="research-empty-copy"
         >
             Релевантні фрагменти знайдено,

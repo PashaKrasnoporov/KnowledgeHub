@@ -19,8 +19,10 @@ import "./styles/jinja/storinky/document_view.css"
 import "./styles/jinja/storinky/document_manage.css"
 import "./styles/jinja/storinky/admin.css"
 import "./styles/jinja/storinky/errors.css"
-import "./styles/research.css"
 import "./styles/jinja/responsive.css"
+
+import "./styles/research.css"
+import "./styles/claim_grounding.css"
 
 createApp(
     App

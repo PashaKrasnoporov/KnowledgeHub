@@ -117,16 +117,17 @@ function clearResearch() {
                     </h2>
 
                     <span class="research-badge">
-                        RAG v1
+                        RAG v1.1
                     </span>
                 </div>
 
                 <p>
                     KnowledgeHub знаходить релевантні
-                    фрагменти документів і може або
-                    сформувати швидку витягувальну
-                    чернетку, або передати контекст
-                    локальній генеративній моделі.
+                    фрагменти документів. У режимі
+                    локальної LLM модель формує текст,
+                    а система сама перевіряє кожне
+                    твердження і прив'язує його
+                    до найближчого джерела.
                 </p>
             </div>
 
@@ -141,7 +142,7 @@ function clearResearch() {
 
                 <span class="tooltip-content">
                     <strong>
-                        RAG v1
+                        RAG v1.1
                     </strong>
 
                     <span>
@@ -150,16 +151,16 @@ function clearResearch() {
                     </span>
 
                     <span>
-                        Local LLM отримує лише
-                        знайдені фрагменти та повинна
-                        посилатися на них через [1], [2]...
+                        LLM більше не відповідає
+                        за citations. Вона генерує
+                        лише змістовний текст.
                     </span>
 
                     <span>
-                        Якщо LLM не пройде перевірку
-                        citations, система автоматично
-                        повертається до безпечної
-                        extractive-відповіді.
+                        KnowledgeHub окремо порівнює
+                        кожне твердження з джерелами
+                        за embeddings і lexical overlap,
+                        після чого сам додає [1], [2]...
                     </span>
                 </span>
             </span>
@@ -197,9 +198,9 @@ function clearResearch() {
                     v-if="generationMode === 'local'"
                     class="research-local-note"
                 >
-                    Перший запуск може завантажити
-                    модель із Hugging Face і тривати
-                    довше. API-ключ не потрібний.
+                    LLM формує текст без citations.
+                    KnowledgeHub автоматично перевіряє
+                    твердження і додає джерела.
                 </p>
 
                 <p

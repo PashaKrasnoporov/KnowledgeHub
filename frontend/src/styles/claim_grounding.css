@@ -1,0 +1,78 @@
+.research-grounding-note {
+    margin: 0 0 14px;
+    padding: 10px 12px;
+
+    border: 1px solid var(--mezha);
+    border-radius: 8px;
+
+    background: var(--morska-pina);
+    color: var(--tekst-drugoryadnyi);
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.research-claim-audit {
+    margin-top: 20px;
+    padding-top: 18px;
+
+    border-top: 1px solid var(--mezha);
+}
+
+.research-claim-audit h4 {
+    margin: 0 0 12px;
+
+    color: var(--morskyi-hlybokyi);
+}
+
+.research-claim-row {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        auto;
+
+    gap: 16px;
+
+    padding: 10px 0;
+
+    border-top:
+        1px dashed
+        var(--mezha);
+
+    color: var(--tekst-drugoryadnyi);
+
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.research-claim-row:first-of-type {
+    border-top: 0;
+}
+
+.research-claim-row a {
+    color: var(--akvamarin-temnyi);
+
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.research-claim-row a:hover {
+    text-decoration: underline;
+}
+
+.research-claim-row > span {
+    white-space: nowrap;
+
+    color: var(--akvamarin-temnyi);
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+@media (max-width: 700px) {
+    .research-claim-row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+}

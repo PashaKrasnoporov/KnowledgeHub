@@ -33,16 +33,26 @@ class ResearchGenerateRequestAPI(BaseModel):
         min_length=3,
         max_length=500,
     )
+
     limit: int = Field(
         default=5,
         ge=1,
         le=8,
     )
+
     max_new_tokens: int | None = Field(
         default=None,
         ge=80,
         le=512,
     )
+
+
+class GroundedClaimAPI(BaseModel):
+    text: str
+    source_number: int
+    grounding_score: float
+    semantic_score: float
+    lexical_score: float
 
 
 class ResearchGeneratedResponseAPI(
@@ -51,5 +61,13 @@ class ResearchGeneratedResponseAPI(
     generated_answer: str
     generation_provider: str
     generation_model: str | None = None
+
+    grounded_claims: list[
+        GroundedClaimAPI
+    ] = []
+
+    grounding_coverage: float = 0.0
+    removed_claims: int = 0
+
     fallback_used: bool = False
     generation_error: str | None = None
