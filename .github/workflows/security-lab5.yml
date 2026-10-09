@@ -5,8 +5,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - ".github/workflows/security-lab5.yml"
 
 permissions:
   contents: read
@@ -99,3 +97,4 @@ jobs:
           echo "- npm audit" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "Target: https://knowledgehub-production-6644.up.railway.app" >> "$GITHUB_STEP_SUMMARY"
+
