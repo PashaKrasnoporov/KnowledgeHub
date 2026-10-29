@@ -1,0 +1,191 @@
+Section 1. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 2. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 3. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 4. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 5. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 6. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 7. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 8. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 9. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 10. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 11. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 12. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 13. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 14. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 15. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 16. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 17. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 18. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 19. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 20. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 21. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 22. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 23. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 24. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 25. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 26. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 27. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 28. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 29. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 30. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 31. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 32. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 33. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 34. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 35. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 36. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 37. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 38. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 39. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 40. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 41. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 42. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 43. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 44. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 45. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 46. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 47. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 48. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 49. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 50. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 51. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 52. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 53. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 54. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 55. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 56. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 57. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 58. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 59. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 60. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 61. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 62. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 63. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 64. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 65. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 66. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 67. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 68. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 69. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 70. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 71. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 72. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 73. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 74. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 75. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 76. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 77. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 78. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 79. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+Section 80. Database operations include session lookup, collection retrieval and document metadata queries. PostgreSQL stores structured application data. Performance depends on query complexity, indexes, data volume, connection handling and network latency. The performance experiment should separate database-backed operations from a lightweight health endpoint. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.

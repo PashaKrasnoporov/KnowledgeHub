@@ -1,0 +1,191 @@
+Section 1. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 2. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 3. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 4. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 5. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 6. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 7. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 8. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 9. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 10. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 11. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 12. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 13. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 14. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 15. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 16. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 17. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 18. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 19. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 20. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 21. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 22. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 23. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 24. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 25. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 26. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 27. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 28. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 29. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 30. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 31. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 32. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 33. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 34. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 35. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 36. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 37. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 38. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 39. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 40. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 41. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 42. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 43. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 44. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 45. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 46. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 47. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 48. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 49. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 50. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 51. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 52. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 53. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 54. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 55. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 56. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 57. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 58. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 59. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 60. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 61. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 62. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 63. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 64. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 65. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 66. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 67. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 68. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 69. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 70. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 71. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 72. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 73. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 74. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 75. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 76. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 77. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 78. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 79. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+Section 80. Performance testing evaluates latency, throughput, percentiles and stability. The KnowledgeHub performance experiment compares localhost and cloud deployment. A performance benchmark must identify the exact endpoint, workload, number of virtual users, duration, repeated runs and the interpretation of each metric. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.

@@ -1,0 +1,191 @@
+Section 1. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 2. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 3. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 4. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 5. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 6. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 7. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 8. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 9. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 10. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 11. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 12. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 13. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 14. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 15. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 16. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 17. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 18. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 19. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 20. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 21. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 22. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 23. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 24. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 25. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 26. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 27. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 28. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 29. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 30. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 31. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 32. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 33. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 34. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 35. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 36. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 37. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 38. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 39. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 40. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 41. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 42. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 43. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 44. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 45. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 46. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 47. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 48. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 49. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 50. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 51. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 52. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 53. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 54. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 55. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 56. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 57. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 58. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 59. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 60. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 61. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 62. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 63. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 64. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 65. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 66. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 67. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 68. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 69. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 70. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 71. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 72. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 73. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 74. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 75. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 76. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 77. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 78. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 79. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+Section 80. Deployment environment influences performance through network distance, TLS, container resources, database placement and platform overhead. Localhost removes most external network latency, while Railway represents a public cloud deployment. Performance results should therefore be interpreted as measurements of a specific endpoint in a specific environment. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.

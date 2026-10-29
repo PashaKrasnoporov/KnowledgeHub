@@ -1,0 +1,191 @@
+Section 1. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 2. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 3. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 4. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 5. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 6. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 7. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 8. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 9. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 10. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 11. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 12. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 13. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 14. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 15. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 16. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 17. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 18. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 19. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 20. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 21. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 22. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 23. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 24. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 25. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 26. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 27. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 28. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 29. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 30. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 31. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 32. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 33. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 34. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 35. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 36. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 37. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 38. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 39. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 40. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 41. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 42. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 43. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 44. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 45. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 46. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 47. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 48. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 49. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 50. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 51. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 52. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 53. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 54. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 55. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 56. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 57. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 58. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 59. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 60. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 61. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 62. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 63. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 64. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 65. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 66. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 67. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 68. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 69. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 70. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 71. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 72. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 73. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 74. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 75. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
+
+Section 76. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 77. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 78. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 79. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+Section 80. KnowledgeHub supports lexical document search with PostgreSQL full text search. A lexical search query performs ownership checks, database operations and relevance ranking. Performance measurements for search should identify the query mode, collection, result limit and test dataset. Search performance is expected to differ from a simple health request. 
+
+The repeated keyword performance is included intentionally so that the same lexical search query can be executed against an identical test dataset in both environments.
