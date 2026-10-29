@@ -53,3 +53,6 @@ backend/data/
 
 .DS_Store
 Thumbs.db
+
+# Lab 4 generated performance results
+lab4/performance/results/
