@@ -1,6 +1,7 @@
 <script setup>
 import {
-    computed
+    computed,
+    ref
 } from "vue"
 
 const props = defineProps({
@@ -43,6 +44,117 @@ const props = defineProps({
 defineEmits([
     "upload"
 ])
+
+const typeFilter = ref("all")
+const statusFilter = ref("all")
+const sortMode = ref("default")
+
+const displayedDocuments = computed(
+    () => {
+        let result =
+            props.documents.filter(
+                document => {
+                    const typeMatches =
+                        typeFilter.value === "all"
+                        || documentType(document).toLowerCase()
+                            === typeFilter.value
+
+                    const statusMatches =
+                        statusFilter.value === "all"
+                        || document.processing_status
+                            === statusFilter.value
+
+                    return (
+                        typeMatches
+                        && statusMatches
+                    )
+                }
+            )
+
+        result = [
+            ...result
+        ]
+
+        if (
+            sortMode.value === "default"
+            && props.searchActive
+        ) {
+            return result
+        }
+
+        const mode =
+            sortMode.value === "default"
+                ? "created-desc"
+                : sortMode.value
+
+        result.sort(
+            (a, b) => {
+                if (mode === "name-asc") {
+                    return a.original_name.localeCompare(
+                        b.original_name,
+                        "uk-UA"
+                    )
+                }
+
+                if (mode === "name-desc") {
+                    return b.original_name.localeCompare(
+                        a.original_name,
+                        "uk-UA"
+                    )
+                }
+
+                if (mode === "size-asc") {
+                    return (
+                        Number(a.size_bytes || 0)
+                        - Number(b.size_bytes || 0)
+                    )
+                }
+
+                if (mode === "size-desc") {
+                    return (
+                        Number(b.size_bytes || 0)
+                        - Number(a.size_bytes || 0)
+                    )
+                }
+
+                const aDate =
+                    new Date(
+                        a.created_at || 0
+                    ).getTime()
+
+                const bDate =
+                    new Date(
+                        b.created_at || 0
+                    ).getTime()
+
+                if (mode === "created-asc") {
+                    return aDate - bDate
+                }
+
+                return bDate - aDate
+            }
+        )
+
+        return result
+    }
+)
+
+
+const filtersActive = computed(
+    () => (
+        typeFilter.value !== "all"
+        || statusFilter.value !== "all"
+        || sortMode.value !== "default"
+    )
+)
+
+
+function resetFilters() {
+    typeFilter.value = "all"
+    statusFilter.value = "all"
+    sortMode.value = "default"
+}
+
 
 const relevanceDescription = computed(
     () => {
@@ -238,12 +350,135 @@ function documentType(
         </button>
     </div>
 
-    <div
+    <section
         v-if="documents.length"
+        class="documents-filter-toolbar"
+        aria-label="Фільтрування і сортування документів"
+    >
+        <div class="document-filter-control">
+            <label for="document-type-filter">
+                Формат
+            </label>
+
+            <select
+                id="document-type-filter"
+                v-model="typeFilter"
+            >
+                <option value="all">
+                    Усі формати
+                </option>
+
+                <option value="pdf">
+                    PDF
+                </option>
+
+                <option value="docx">
+                    DOCX
+                </option>
+
+                <option value="txt">
+                    TXT
+                </option>
+            </select>
+        </div>
+
+        <div class="document-filter-control">
+            <label for="document-status-filter">
+                Статус
+            </label>
+
+            <select
+                id="document-status-filter"
+                v-model="statusFilter"
+            >
+                <option value="all">
+                    Усі статуси
+                </option>
+
+                <option value="ready">
+                    Готові
+                </option>
+
+                <option value="pending">
+                    Обробляються
+                </option>
+
+                <option value="error">
+                    Помилка
+                </option>
+            </select>
+        </div>
+
+        <div class="document-filter-control document-sort-control">
+            <label for="document-sort">
+                Сортування
+            </label>
+
+            <select
+                id="document-sort"
+                v-model="sortMode"
+            >
+                <option value="default">
+                    {{
+                        searchActive
+                            ? "За релевантністю"
+                            : "Спочатку нові"
+                    }}
+                </option>
+
+                <option value="created-desc">
+                    Спочатку нові
+                </option>
+
+                <option value="created-asc">
+                    Спочатку старі
+                </option>
+
+                <option value="name-asc">
+                    Назва: А–Я
+                </option>
+
+                <option value="name-desc">
+                    Назва: Я–А
+                </option>
+
+                <option value="size-desc">
+                    Спочатку більші
+                </option>
+
+                <option value="size-asc">
+                    Спочатку менші
+                </option>
+            </select>
+        </div>
+
+        <button
+            v-if="filtersActive"
+            class="document-filter-reset"
+            type="button"
+            @click="resetFilters"
+        >
+            Скинути фільтри
+        </button>
+
+        <div class="document-filter-summary">
+            Показано:
+            <strong>
+                {{ displayedDocuments.length }}
+            </strong>
+            із
+            <strong>
+                {{ documents.length }}
+            </strong>
+        </div>
+    </section>
+
+    <div
+        v-if="displayedDocuments.length"
         class="documents-list"
     >
         <article
-            v-for="(documentItem, index) in documents"
+            v-for="(documentItem, index) in displayedDocuments"
             :key="documentItem.id"
             class="document-card"
         >
@@ -361,7 +596,31 @@ function documentType(
         v-else
         class="empty-state"
     >
-        <template v-if="searchActive">
+        <template
+            v-if="
+                documents.length
+                && filtersActive
+            "
+        >
+            <h3>
+                Фільтри не дали результатів
+            </h3>
+
+            <p>
+                Змініть параметри фільтрації
+                або покажіть усі документи.
+            </p>
+
+            <button
+                class="secondary-button"
+                type="button"
+                @click="resetFilters"
+            >
+                Скинути фільтри
+            </button>
+        </template>
+
+        <template v-else-if="searchActive">
             <h3>
                 Нічого не знайдено
             </h3>
@@ -384,3 +643,124 @@ function documentType(
         </template>
     </div>
 </template>
+
+
+<style scoped>
+.documents-filter-toolbar {
+    display: grid;
+    grid-template-columns:
+        minmax(150px, 0.8fr)
+        minmax(170px, 0.9fr)
+        minmax(210px, 1fr)
+        auto;
+
+    gap: 12px;
+    align-items: end;
+
+    margin: 0 0 18px;
+    padding: 18px;
+
+    border: 1px solid var(--mezha);
+    border-radius: 12px;
+
+    background: var(--poverkhna-svitla);
+}
+
+.document-filter-control {
+    min-width: 0;
+}
+
+.document-filter-control label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: var(--tekst-drugoryadnyi);
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.document-filter-control select {
+    width: 100%;
+    height: 42px;
+
+    padding: 0 11px;
+
+    border: 1px solid var(--mezha-temna);
+    border-radius: 8px;
+
+    background: var(--poverkhna-svitla);
+    color: var(--tekst-osnovnyi);
+
+    font: inherit;
+    font-size: 14px;
+}
+
+.document-filter-control select:focus {
+    border-color: var(--focus);
+
+    outline: none;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(128, 175, 186, 0.15);
+}
+
+.document-filter-reset {
+    height: 42px;
+
+    padding: 0 14px;
+
+    border: 1px solid var(--mezha-temna);
+    border-radius: 8px;
+
+    background: transparent;
+    color: var(--akvamarin-temnyi);
+
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.document-filter-reset:hover {
+    background: var(--poverkhna);
+}
+
+.document-filter-summary {
+    grid-column: 1 / -1;
+
+    padding-top: 4px;
+
+    color: var(--tekst-drugoryadnyi);
+
+    font-size: 13px;
+}
+
+.document-filter-summary strong {
+    color: var(--morskyi-hlybokyi);
+}
+
+@media (max-width: 820px) {
+    .documents-filter-toolbar {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .document-filter-reset {
+        width: 100%;
+    }
+}
+
+@media (max-width: 560px) {
+    .documents-filter-toolbar {
+        grid-template-columns: 1fr;
+    }
+
+    .document-filter-summary {
+        grid-column: auto;
+    }
+}
+</style>
