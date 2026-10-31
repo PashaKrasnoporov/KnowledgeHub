@@ -14,6 +14,7 @@ import {
 import CollectionDeleteDialog from "../components/collections/CollectionDeleteDialog.vue"
 import CollectionEditDialog from "../components/collections/CollectionEditDialog.vue"
 import CollectionHeader from "../components/collections/CollectionHeader.vue"
+import CollectionOverview from "../components/collections/CollectionOverview.vue"
 import FeedbackMessages from "../components/common/FeedbackMessages.vue"
 import AppBreadcrumbs from "../components/common/AppBreadcrumbs.vue"
 import DocumentsList from "../components/documents/DocumentsList.vue"
@@ -368,6 +369,10 @@ onMounted(
                 :collection="collection"
                 @edit="editDialog?.open()"
                 @delete="deleteDialog?.open()"
+            />
+
+            <CollectionOverview
+                :documents="documents"
             />
 
             <FeedbackMessages
