@@ -15,6 +15,7 @@ import CollectionDeleteDialog from "../components/collections/CollectionDeleteDi
 import CollectionEditDialog from "../components/collections/CollectionEditDialog.vue"
 import CollectionHeader from "../components/collections/CollectionHeader.vue"
 import FeedbackMessages from "../components/common/FeedbackMessages.vue"
+import AppBreadcrumbs from "../components/common/AppBreadcrumbs.vue"
 import DocumentsList from "../components/documents/DocumentsList.vue"
 import DocumentUploadDialog from "../components/documents/DocumentUploadDialog.vue"
 import ResearchPanel from "../components/research/ResearchPanel.vue"
@@ -47,6 +48,23 @@ const collectionId = computed(
 const collection = ref(null)
 const documents = ref([])
 const loading = ref(true)
+
+const breadcrumbs = computed(
+    () => [
+        {
+            label: "\u041a\u043e\u043b\u0435\u043a\u0446\u0456\u0457",
+            to: {
+                name: "collections"
+            }
+        },
+        {
+            label:
+                collection.value?.name
+                || "\u041a\u043e\u043b\u0435\u043a\u0446\u0456\u044f",
+            current: true
+        }
+    ]
+)
 
 const errors = ref([])
 const successMessage = ref("")
@@ -321,12 +339,9 @@ onMounted(
 
 <template>
     <section class="collections-page">
-        <RouterLink
-            class="back-link"
-            :to="{ name: 'collections' }"
-        >
-            ← Назад до колекцій
-        </RouterLink>
+        <AppBreadcrumbs
+            :items="breadcrumbs"
+        />
 
         <div
             v-if="loading"

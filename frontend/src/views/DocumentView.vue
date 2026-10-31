@@ -12,10 +12,13 @@ import {
 
 import {
     deleteDocument,
+    getCollection,
     getDocument,
     getDocumentContentUrl,
     getDocumentDownloadUrl
 } from "../api/index.js"
+
+import AppBreadcrumbs from "../components/common/AppBreadcrumbs.vue"
 
 import {
     addRecentDocument
@@ -31,7 +34,36 @@ const documentId =
     Number(route.params.documentId)
 
 const document = ref(null)
+const collection = ref(null)
 const loading = ref(true)
+
+const breadcrumbs = computed(
+    () => [
+        {
+            label: "\u041a\u043e\u043b\u0435\u043a\u0446\u0456\u0457",
+            to: {
+                name: "collections"
+            }
+        },
+        {
+            label:
+                collection.value?.name
+                || "\u041a\u043e\u043b\u0435\u043a\u0446\u0456\u044f",
+            to: {
+                name: "collection-detail",
+                params: {
+                    collectionId
+                }
+            }
+        },
+        {
+            label:
+                document.value?.original_name
+                || "\u0414\u043e\u043a\u0443\u043c\u0435\u043d\u0442",
+            current: true
+        }
+    ]
+)
 const deleting = ref(false)
 const errorMessage = ref("")
 
@@ -80,11 +112,24 @@ async function loadDocument() {
     errorMessage.value = ""
 
     try {
-        document.value =
-            await getDocument(
+        const [
+            loadedDocument,
+            loadedCollection
+        ] = await Promise.all([
+            getDocument(
                 collectionId,
                 documentId
+            ),
+            getCollection(
+                collectionId
             )
+        ])
+
+        document.value =
+            loadedDocument
+
+        collection.value =
+            loadedCollection
 
         addRecentDocument(
             collectionId,
@@ -212,17 +257,9 @@ onMounted(
         v-else-if="document"
         class="document-view-page"
     >
-        <RouterLink
-            class="document-back-link"
-            :to="{
-                name: 'collection-detail',
-                params: {
-                    collectionId
-                }
-            }"
-        >
-            ← Назад до колекції
-        </RouterLink>
+        <AppBreadcrumbs
+            :items="breadcrumbs"
+        />
 
         <header class="document-view-header">
             <div>
