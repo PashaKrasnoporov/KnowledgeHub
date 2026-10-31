@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import {
     computed,
     onMounted,
@@ -25,6 +25,10 @@ import {
     getDocuments,
     searchCollection
 } from "../api/index.js"
+
+import {
+    addRecentCollection
+} from "../utils/recentItems.js"
 
 const route = useRoute()
 const router = useRouter()
@@ -133,6 +137,10 @@ async function loadCollection() {
                 collectionId.value
             )
 
+        addRecentCollection(
+            collection.value
+        )
+
         await refreshDocuments()
 
         localStorage.setItem(
@@ -141,7 +149,7 @@ async function loadCollection() {
         )
 
         document.title =
-            `${collection.value.name} — KnowledgeHub`
+            `${collection.value.name} вЂ” KnowledgeHub`
     }
     catch (error) {
         if (error.status === 404) {
@@ -169,7 +177,7 @@ async function runSearch({
 
     if (!query) {
         showError(
-            "Введіть пошуковий запит."
+            "Р’РІРµРґС–С‚СЊ РїРѕС€СѓРєРѕРІРёР№ Р·Р°РїРёС‚."
         )
 
         return
@@ -233,7 +241,7 @@ async function handleUploaded() {
     clearMessages()
 
     successMessage.value =
-        "Документ успішно завантажено."
+        "Р”РѕРєСѓРјРµРЅС‚ СѓСЃРїС–С€РЅРѕ Р·Р°РІР°РЅС‚Р°Р¶РµРЅРѕ."
 
     await refreshDocuments()
 
@@ -243,7 +251,7 @@ async function handleUploaded() {
                 await refreshDocuments()
             }
             catch {
-                // Повторне оновлення не критичне.
+                // РџРѕРІС‚РѕСЂРЅРµ РѕРЅРѕРІР»РµРЅРЅСЏ РЅРµ РєСЂРёС‚РёС‡РЅРµ.
             }
         },
         1200
@@ -259,10 +267,10 @@ function handleCollectionSaved(
         updated
 
     successMessage.value =
-        "Колекцію успішно оновлено."
+        "РљРѕР»РµРєС†С–СЋ СѓСЃРїС–С€РЅРѕ РѕРЅРѕРІР»РµРЅРѕ."
 
     document.title =
-        `${updated.name} — KnowledgeHub`
+        `${updated.name} вЂ” KnowledgeHub`
 }
 
 async function handleCollectionDeleted() {
@@ -317,7 +325,7 @@ onMounted(
             class="back-link"
             :to="{ name: 'collections' }"
         >
-            ← Назад до колекцій
+            в†ђ РќР°Р·Р°Рґ РґРѕ РєРѕР»РµРєС†С–Р№
         </RouterLink>
 
         <div
@@ -325,7 +333,7 @@ onMounted(
             class="empty-state"
         >
             <h3>
-                Завантаження...
+                Р—Р°РІР°РЅС‚Р°Р¶РµРЅРЅСЏ...
             </h3>
         </div>
 
@@ -362,16 +370,16 @@ onMounted(
             >
                 <div class="search-section-heading">
                     <h2>
-                        Дослідницька відповідь
+                        Р”РѕСЃР»С–РґРЅРёС†СЊРєР° РІС–РґРїРѕРІС–РґСЊ
                     </h2>
 
                     <p>
-                        У безкоштовному хмарному профілі
-                        важкі ML/LLM-функції вимкнено.
-                        Для лабораторної №4 доступні
-                        автентифікація, колекції,
-                        документи, REST API і
-                        лексичний пошук.
+                        РЈ Р±РµР·РєРѕС€С‚РѕРІРЅРѕРјСѓ С…РјР°СЂРЅРѕРјСѓ РїСЂРѕС„С–Р»С–
+                        РІР°Р¶РєС– ML/LLM-С„СѓРЅРєС†С–С— РІРёРјРєРЅРµРЅРѕ.
+                        Р”Р»СЏ Р»Р°Р±РѕСЂР°С‚РѕСЂРЅРѕС— в„–4 РґРѕСЃС‚СѓРїРЅС–
+                        Р°РІС‚РµРЅС‚РёС„С–РєР°С†С–СЏ, РєРѕР»РµРєС†С–С—,
+                        РґРѕРєСѓРјРµРЅС‚Рё, REST API С–
+                        Р»РµРєСЃРёС‡РЅРёР№ РїРѕС€СѓРє.
                     </p>
                 </div>
             </section>
@@ -408,3 +416,4 @@ onMounted(
         </template>
     </section>
 </template>
+

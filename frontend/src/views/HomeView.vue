@@ -1,7 +1,9 @@
-<script setup>
+﻿<script setup>
 import {
     computed,
-    ref
+    onMounted,
+    ref,
+    watch
 } from "vue"
 
 import {
@@ -11,6 +13,10 @@ import {
 import {
     extractLocalDocumentText
 } from "../utils/localDocumentText.js"
+
+import {
+    getRecentItems
+} from "../utils/recentItems.js"
 
 
 const {
@@ -30,11 +36,31 @@ const searched = ref(false)
 const totalMatches = ref(0)
 const resultSnippets = ref([])
 
+const recentItems = ref([])
+
+
+function loadRecentItems() {
+    recentItems.value =
+        currentUser.value
+            ? getRecentItems()
+            : []
+}
+
+
+onMounted(
+    loadRecentItems
+)
+
+watch(
+    currentUser,
+    loadRecentItems
+)
+
 
 const selectedFileLabel = computed(
     () => {
         if (!selectedFile.value) {
-            return "Файл не вибрано"
+            return "Р¤Р°Р№Р» РЅРµ РІРёР±СЂР°РЅРѕ"
         }
 
         const typeSuffix =
@@ -101,7 +127,7 @@ async function handleFileSelection(
 
     if (!supported) {
         searchError.value =
-            "Підтримуються лише TXT, PDF і DOCX."
+            "РџС–РґС‚СЂРёРјСѓСЋС‚СЊСЃСЏ Р»РёС€Рµ TXT, PDF С– DOCX."
 
         event.target.value = ""
         return
@@ -112,8 +138,8 @@ async function handleFileSelection(
 
     if (file.size > maxBytes) {
         searchError.value =
-            "Файл завеликий. "
-            + "Максимальний розмір — 10 МБ."
+            "Р¤Р°Р№Р» Р·Р°РІРµР»РёРєРёР№. "
+            + "РњР°РєСЃРёРјР°Р»СЊРЅРёР№ СЂРѕР·РјС–СЂ вЂ” 10 РњР‘."
 
         event.target.value = ""
         return
@@ -133,14 +159,14 @@ async function handleFileSelection(
         if (!text.trim()) {
             if (result.type === "PDF") {
                 searchError.value =
-                    "У PDF не вдалося знайти текст. "
-                    + "Можливо, це скановані сторінки. "
-                    + "OCR у гостьовому режимі поки "
-                    + "не підтримується."
+                    "РЈ PDF РЅРµ РІРґР°Р»РѕСЃСЏ Р·РЅР°Р№С‚Рё С‚РµРєСЃС‚. "
+                    + "РњРѕР¶Р»РёРІРѕ, С†Рµ СЃРєР°РЅРѕРІР°РЅС– СЃС‚РѕСЂС–РЅРєРё. "
+                    + "OCR Сѓ РіРѕСЃС‚СЊРѕРІРѕРјСѓ СЂРµР¶РёРјС– РїРѕРєРё "
+                    + "РЅРµ РїС–РґС‚СЂРёРјСѓС”С‚СЊСЃСЏ."
             }
             else {
                 searchError.value =
-                    "Файл не містить тексту."
+                    "Р¤Р°Р№Р» РЅРµ РјС–СЃС‚РёС‚СЊ С‚РµРєСЃС‚Сѓ."
             }
 
             event.target.value = ""
@@ -163,22 +189,22 @@ async function handleFileSelection(
             lowerName.endsWith(".pdf")
         ) {
             searchError.value =
-                "Не вдалося прочитати PDF. "
-                + "Файл може бути пошкоджений, "
-                + "захищений паролем або мати "
-                + "непідтримувану структуру."
+                "РќРµ РІРґР°Р»РѕСЃСЏ РїСЂРѕС‡РёС‚Р°С‚Рё PDF. "
+                + "Р¤Р°Р№Р» РјРѕР¶Рµ Р±СѓС‚Рё РїРѕС€РєРѕРґР¶РµРЅРёР№, "
+                + "Р·Р°С…РёС‰РµРЅРёР№ РїР°СЂРѕР»РµРј Р°Р±Рѕ РјР°С‚Рё "
+                + "РЅРµРїС–РґС‚СЂРёРјСѓРІР°РЅСѓ СЃС‚СЂСѓРєС‚СѓСЂСѓ."
         }
         else if (
             lowerName.endsWith(".docx")
         ) {
             searchError.value =
-                "Не вдалося прочитати DOCX. "
-                + "Перевірте, що це коректний "
-                + "документ Microsoft Word."
+                "РќРµ РІРґР°Р»РѕСЃСЏ РїСЂРѕС‡РёС‚Р°С‚Рё DOCX. "
+                + "РџРµСЂРµРІС–СЂС‚Рµ, С‰Рѕ С†Рµ РєРѕСЂРµРєС‚РЅРёР№ "
+                + "РґРѕРєСѓРјРµРЅС‚ Microsoft Word."
         }
         else {
             searchError.value =
-                "Не вдалося прочитати локальний файл."
+                "РќРµ РІРґР°Р»РѕСЃСЏ РїСЂРѕС‡РёС‚Р°С‚Рё Р»РѕРєР°Р»СЊРЅРёР№ С„Р°Р№Р»."
         }
 
         event.target.value = ""
@@ -199,13 +225,13 @@ function runLocalSearch() {
 
     if (!selectedFile.value) {
         searchError.value =
-            "Спочатку виберіть TXT, PDF або DOCX."
+            "РЎРїРѕС‡Р°С‚РєСѓ РІРёР±РµСЂС–С‚СЊ TXT, PDF Р°Р±Рѕ DOCX."
         return
     }
 
     if (!query) {
         searchError.value =
-            "Введіть слово або фразу для пошуку."
+            "Р’РІРµРґС–С‚СЊ СЃР»РѕРІРѕ Р°Р±Рѕ С„СЂР°Р·Сѓ РґР»СЏ РїРѕС€СѓРєСѓ."
         return
     }
 
@@ -271,11 +297,11 @@ function runLocalSearch() {
 
             if (start > 0) {
                 snippet =
-                    "… " + snippet
+                    "вЂ¦ " + snippet
             }
 
             if (end < source.length) {
-                snippet += " …"
+                snippet += " вЂ¦"
             }
 
             snippets.push({
@@ -331,13 +357,13 @@ function resetLocalSearch() {
             </p>
 
             <h1>
-                Організовуйте свої знання в одному місці
+                РћСЂРіР°РЅС–Р·РѕРІСѓР№С‚Рµ СЃРІРѕС— Р·РЅР°РЅРЅСЏ РІ РѕРґРЅРѕРјСѓ РјС–СЃС†С–
             </h1>
 
             <p class="hero-description">
-                KnowledgeHub — платформа для створення колекцій,
-                зберігання документів, пошуку інформації та
-                подальшого інтелектуального аналізу матеріалів.
+                KnowledgeHub вЂ” РїР»Р°С‚С„РѕСЂРјР° РґР»СЏ СЃС‚РІРѕСЂРµРЅРЅСЏ РєРѕР»РµРєС†С–Р№,
+                Р·Р±РµСЂС–РіР°РЅРЅСЏ РґРѕРєСѓРјРµРЅС‚С–РІ, РїРѕС€СѓРєСѓ С–РЅС„РѕСЂРјР°С†С–С— С‚Р°
+                РїРѕРґР°Р»СЊС€РѕРіРѕ С–РЅС‚РµР»РµРєС‚СѓР°Р»СЊРЅРѕРіРѕ Р°РЅР°Р»С–Р·Сѓ РјР°С‚РµСЂС–Р°Р»С–РІ.
             </p>
 
             <div class="hero-actions">
@@ -346,7 +372,7 @@ function resetLocalSearch() {
                     class="button primary"
                     :to="{ name: 'collections' }"
                 >
-                    Відкрити мої колекції
+                    Р’С–РґРєСЂРёС‚Рё РјРѕС— РєРѕР»РµРєС†С–С—
                 </RouterLink>
 
                 <template v-else>
@@ -354,14 +380,14 @@ function resetLocalSearch() {
                         class="button primary"
                         :to="{ name: 'register' }"
                     >
-                        Створити акаунт
+                        РЎС‚РІРѕСЂРёС‚Рё Р°РєР°СѓРЅС‚
                     </RouterLink>
 
                     <RouterLink
                         class="button secondary-home"
                         :to="{ name: 'login' }"
                     >
-                        Увійти
+                        РЈРІС–Р№С‚Рё
                     </RouterLink>
                 </template>
 
@@ -369,7 +395,7 @@ function resetLocalSearch() {
                     class="button secondary-home"
                     :to="{ name: 'about' }"
                 >
-                    Про систему
+                    РџСЂРѕ СЃРёСЃС‚РµРјСѓ
                 </RouterLink>
             </div>
         </div>
@@ -385,25 +411,25 @@ function resetLocalSearch() {
             </p>
 
             <h2 id="guest-search-title">
-                Швидкий пошук у локальному файлі
+                РЁРІРёРґРєРёР№ РїРѕС€СѓРє Сѓ Р»РѕРєР°Р»СЊРЅРѕРјСѓ С„Р°Р№Р»С–
             </h2>
 
             <p>
-                Виберіть TXT, PDF або DOCX
-                і знайдіть потрібне слово
-                чи фразу без реєстрації.
+                Р’РёР±РµСЂС–С‚СЊ TXT, PDF Р°Р±Рѕ DOCX
+                С– Р·РЅР°Р№РґС–С‚СЊ РїРѕС‚СЂС–Р±РЅРµ СЃР»РѕРІРѕ
+                С‡Рё С„СЂР°Р·Сѓ Р±РµР· СЂРµС”СЃС‚СЂР°С†С–С—.
             </p>
 
             <p class="guest-search-privacy">
-                Файл обробляється тільки у вашому браузері:
-                він не завантажується на сервер KnowledgeHub
-                і не зберігається в базі даних.
+                Р¤Р°Р№Р» РѕР±СЂРѕР±Р»СЏС”С‚СЊСЃСЏ С‚С–Р»СЊРєРё Сѓ РІР°С€РѕРјСѓ Р±СЂР°СѓР·РµСЂС–:
+                РІС–РЅ РЅРµ Р·Р°РІР°РЅС‚Р°Р¶СѓС”С‚СЊСЃСЏ РЅР° СЃРµСЂРІРµСЂ KnowledgeHub
+                С– РЅРµ Р·Р±РµСЂС–РіР°С”С‚СЊСЃСЏ РІ Р±Р°Р·С– РґР°РЅРёС….
             </p>
 
             <p class="guest-search-privacy">
-                Для PDF виконується пошук у текстовому шарі.
-                Скановані PDF без текстового шару потребують OCR
-                і поки не підтримуються в гостьовому режимі.
+                Р”Р»СЏ PDF РІРёРєРѕРЅСѓС”С‚СЊСЃСЏ РїРѕС€СѓРє Сѓ С‚РµРєСЃС‚РѕРІРѕРјСѓ С€Р°СЂС–.
+                РЎРєР°РЅРѕРІР°РЅС– PDF Р±РµР· С‚РµРєСЃС‚РѕРІРѕРіРѕ С€Р°СЂСѓ РїРѕС‚СЂРµР±СѓСЋС‚СЊ OCR
+                С– РїРѕРєРё РЅРµ РїС–РґС‚СЂРёРјСѓСЋС‚СЊСЃСЏ РІ РіРѕСЃС‚СЊРѕРІРѕРјСѓ СЂРµР¶РёРјС–.
             </p>
         </div>
 
@@ -413,7 +439,7 @@ function resetLocalSearch() {
                     class="guest-file-label"
                     for="guest-file-input"
                 >
-                    Вибрати файл
+                    Р’РёР±СЂР°С‚Рё С„Р°Р№Р»
                 </label>
 
                 <input
@@ -434,7 +460,7 @@ function resetLocalSearch() {
                 <span class="guest-file-name">
                     {{
                         fileProcessing
-                            ? "Обробка документа..."
+                            ? "РћР±СЂРѕР±РєР° РґРѕРєСѓРјРµРЅС‚Р°..."
                             : selectedFileLabel
                     }}
                 </span>
@@ -445,7 +471,7 @@ function resetLocalSearch() {
                 @submit.prevent="runLocalSearch"
             >
                 <label for="guest-search-query">
-                    Слово або фраза
+                    РЎР»РѕРІРѕ Р°Р±Рѕ С„СЂР°Р·Р°
                 </label>
 
                 <div class="guest-search-row">
@@ -455,7 +481,7 @@ function resetLocalSearch() {
                         type="search"
                         maxlength="120"
                         autocomplete="off"
-                        placeholder="Наприклад: продуктивність"
+                        placeholder="РќР°РїСЂРёРєР»Р°Рґ: РїСЂРѕРґСѓРєС‚РёРІРЅС–СЃС‚СЊ"
                     >
 
                     <button
@@ -465,8 +491,8 @@ function resetLocalSearch() {
                     >
                         {{
                             fileProcessing
-                                ? "Обробка..."
-                                : "Знайти"
+                                ? "РћР±СЂРѕР±РєР°..."
+                                : "Р—РЅР°Р№С‚Рё"
                         }}
                     </button>
 
@@ -476,7 +502,7 @@ function resetLocalSearch() {
                         :disabled="fileProcessing"
                         @click="resetLocalSearch"
                     >
-                        Очистити
+                        РћС‡РёСЃС‚РёС‚Рё
                     </button>
                 </div>
             </form>
@@ -495,7 +521,7 @@ function resetLocalSearch() {
             >
                 <div class="guest-search-summary">
                     <strong>
-                        Знайдено збігів:
+                        Р—РЅР°Р№РґРµРЅРѕ Р·Р±С–РіС–РІ:
                         {{ totalMatches }}
                     </strong>
 
@@ -505,9 +531,9 @@ function resetLocalSearch() {
                             > resultSnippets.length
                         "
                     >
-                        Показано перші
+                        РџРѕРєР°Р·Р°РЅРѕ РїРµСЂС€С–
                         {{ resultSnippets.length }}
-                        фрагментів.
+                        С„СЂР°РіРјРµРЅС‚С–РІ.
                     </span>
                 </div>
 
@@ -527,37 +553,115 @@ function resetLocalSearch() {
                     v-else
                     class="guest-search-empty"
                 >
-                    У вибраному файлі збігів не знайдено.
+                    РЈ РІРёР±СЂР°РЅРѕРјСѓ С„Р°Р№Р»С– Р·Р±С–РіС–РІ РЅРµ Р·РЅР°Р№РґРµРЅРѕ.
                 </p>
             </div>
         </div>
     </section>
 
+    <section
+        v-if="currentUser && recentItems.length"
+        class="recent-section"
+        aria-labelledby="recent-title"
+    >
+        <div class="recent-heading">
+            <div>
+                <p class="eyebrow">
+                    RECENT
+                </p>
+
+                <h2 id="recent-title">
+                    Нещодавні
+                </h2>
+
+                <p>
+                    Швидкий доступ до останніх
+                    відкритих матеріалів.
+                </p>
+            </div>
+
+            <RouterLink
+                class="recent-all-link"
+                :to="{ name: 'collections' }"
+            >
+                Усі колекції →
+            </RouterLink>
+        </div>
+
+        <div class="recent-grid">
+            <RouterLink
+                v-for="item in recentItems"
+                :key="
+                    item.type
+                    + '-'
+                    + item.collectionId
+                    + '-'
+                    + item.id
+                "
+                class="recent-card"
+                :to="
+                    item.type === 'document'
+                        ? {
+                            name: 'document',
+                            params: {
+                                collectionId:
+                                    item.collectionId,
+                                documentId:
+                                    item.id
+                            }
+                        }
+                        : {
+                            name: 'collection-detail',
+                            params: {
+                                collectionId:
+                                    item.collectionId
+                            }
+                        }
+                "
+            >
+                <span class="recent-type">
+                    {{
+                        item.type === "document"
+                            ? "ДОКУМЕНТ"
+                            : "КОЛЕКЦІЯ"
+                    }}
+                </span>
+
+                <strong>
+                    {{ item.name }}
+                </strong>
+
+                <span class="recent-open">
+                    Відкрити →
+                </span>
+            </RouterLink>
+        </div>
+    </section>
     <section class="features">
         <article class="feature-card">
-            <h2>Колекції</h2>
+            <h2>РљРѕР»РµРєС†С–С—</h2>
 
             <p>
-                Об'єднуйте документи за темами,
-                проєктами або напрямами дослідження.
+                РћР±'С”РґРЅСѓР№С‚Рµ РґРѕРєСѓРјРµРЅС‚Рё Р·Р° С‚РµРјР°РјРё,
+                РїСЂРѕС”РєС‚Р°РјРё Р°Р±Рѕ РЅР°РїСЂСЏРјР°РјРё РґРѕСЃР»С–РґР¶РµРЅРЅСЏ.
             </p>
         </article>
 
         <article class="feature-card">
-            <h2>Документи</h2>
+            <h2>Р”РѕРєСѓРјРµРЅС‚Рё</h2>
 
             <p>
-                Зберігайте власну структуровану
-                базу матеріалів.
+                Р—Р±РµСЂС–РіР°Р№С‚Рµ РІР»Р°СЃРЅСѓ СЃС‚СЂСѓРєС‚СѓСЂРѕРІР°РЅСѓ
+                Р±Р°Р·Сѓ РјР°С‚РµСЂС–Р°Р»С–РІ.
             </p>
         </article>
 
         <article class="feature-card">
-            <h2>Пошук</h2>
+            <h2>РџРѕС€СѓРє</h2>
 
             <p>
-                Використовуйте lexical, semantic
-                і hybrid пошук у власних колекціях.
+                Р’РёРєРѕСЂРёСЃС‚РѕРІСѓР№С‚Рµ lexical, semantic
+                С– hybrid РїРѕС€СѓРє Сѓ РІР»Р°СЃРЅРёС… РєРѕР»РµРєС†С–СЏС….
             </p>
         </article>
     </section>
