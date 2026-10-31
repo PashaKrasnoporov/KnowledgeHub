@@ -107,6 +107,56 @@ function formatMegabytes(bytes) {
     ).toFixed(2)
 }
 
+
+function documentStatusLabel(
+    status
+) {
+    if (status === "ready") {
+        return "Готовий"
+    }
+
+    if (status === "pending") {
+        return "Обробляється"
+    }
+
+    if (status === "error") {
+        return "Помилка"
+    }
+
+    return status || "Невідомо"
+}
+
+
+function formatDate(
+    value
+) {
+    if (!value) {
+        return "—"
+    }
+
+    const date =
+        new Date(value)
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+        return "—"
+    }
+
+    return new Intl.DateTimeFormat(
+        "uk-UA",
+        {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+        }
+    ).format(date)
+}
+
 async function loadDocument() {
     loading.value = true
     errorMessage.value = ""
@@ -271,29 +321,12 @@ onMounted(
                     {{ document.original_name }}
                 </h1>
 
-                <div class="document-metadata">
-                    <span>
-                        Формат:
-                        <strong>
-                            {{ extension.toUpperCase() }}
-                        </strong>
-                    </span>
-
-                    <span>
-                        Розмір:
-                        <strong>
-                            {{ formatMegabytes(document.size_bytes) }}
-                            МБ
-                        </strong>
-                    </span>
-
-                    <span>
-                        Статус:
-                        <strong>
-                            {{ document.processing_status }}
-                        </strong>
-                    </span>
-                </div>
+                <p class="document-header-summary">
+                    Документ із колекції
+                    <strong>
+                        {{ collection?.name || "—" }}
+                    </strong>
+                </p>
             </div>
 
             <div class="document-header-actions">
@@ -313,6 +346,126 @@ onMounted(
                 </button>
             </div>
         </header>
+
+        <section class="document-details-card">
+            <div class="document-details-heading">
+                <div>
+                    <p class="eyebrow">
+                        METADATA
+                    </p>
+
+                    <h2>
+                        Інформація про документ
+                    </h2>
+                </div>
+
+                <span
+                    class="document-status-badge"
+                    :class="
+                        'status-'
+                        + document.processing_status
+                    "
+                >
+                    {{
+                        documentStatusLabel(
+                            document.processing_status
+                        )
+                    }}
+                </span>
+            </div>
+
+            <dl class="document-details-grid">
+                <div class="document-detail-item">
+                    <dt>
+                        Формат
+                    </dt>
+
+                    <dd>
+                        {{ extension.toUpperCase() || "—" }}
+                    </dd>
+                </div>
+
+                <div class="document-detail-item">
+                    <dt>
+                        Розмір
+                    </dt>
+
+                    <dd>
+                        {{ formatMegabytes(document.size_bytes) }}
+                        МБ
+                    </dd>
+                </div>
+
+                <div class="document-detail-item">
+                    <dt>
+                        MIME-type
+                    </dt>
+
+                    <dd>
+                        {{ document.mime_type || "—" }}
+                    </dd>
+                </div>
+
+                <div class="document-detail-item">
+                    <dt>
+                        Додано
+                    </dt>
+
+                    <dd>
+                        {{ formatDate(document.created_at) }}
+                    </dd>
+                </div>
+
+                <div class="document-detail-item">
+                    <dt>
+                        Колекція
+                    </dt>
+
+                    <dd>
+                        <RouterLink
+                            :to="{
+                                name: 'collection-detail',
+                                params: {
+                                    collectionId
+                                }
+                            }"
+                        >
+                            {{ collection?.name || "—" }}
+                        </RouterLink>
+                    </dd>
+                </div>
+
+                <div class="document-detail-item">
+                    <dt>
+                        Статус обробки
+                    </dt>
+
+                    <dd>
+                        {{
+                            documentStatusLabel(
+                                document.processing_status
+                            )
+                        }}
+                    </dd>
+                </div>
+            </dl>
+
+            <div
+                v-if="
+                    document.processing_status === 'error'
+                    && document.processing_error
+                "
+                class="document-processing-error"
+            >
+                <strong>
+                    Помилка обробки
+                </strong>
+
+                <p>
+                    {{ document.processing_error }}
+                </p>
+            </div>
+        </section>
 
         <section
             v-if="extension === 'pdf'"

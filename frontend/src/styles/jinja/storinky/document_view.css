@@ -203,3 +203,204 @@
     }
 
 }
+
+.document-header-summary {
+    max-width: 720px;
+    margin: 0;
+
+    color: var(--tekst-drugoryadnyi);
+
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.document-header-summary strong {
+    color: var(--tekst-osnovnyi);
+}
+
+
+.document-details-card {
+    margin-bottom: 38px;
+    padding: 26px;
+
+    border: 1px solid var(--mezha);
+    border-radius: 14px;
+
+    background:
+        var(--poverkhna-svitla);
+}
+
+
+.document-details-heading {
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 22px;
+}
+
+.document-details-heading h2 {
+    margin: 6px 0 0;
+}
+
+
+.document-status-badge {
+    display: inline-flex;
+
+    min-height: 32px;
+    padding: 0 11px;
+
+    align-items: center;
+
+    border: 1px solid var(--mezha);
+    border-radius: 999px;
+
+    background: var(--poverkhna);
+
+    color: var(--tekst-osnovnyi);
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+.document-status-badge.status-ready {
+    border-color:
+        var(--uspikh-mezha);
+
+    background:
+        var(--uspikh-fon);
+
+    color:
+        var(--uspikh-tekst);
+}
+
+.document-status-badge.status-error {
+    border-color:
+        var(--pomylka-mezha);
+
+    background:
+        var(--pomylka-fon);
+
+    color:
+        var(--pomylka-tekst);
+}
+
+
+.document-details-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    gap: 14px;
+
+    margin: 0;
+}
+
+
+.document-detail-item {
+    min-width: 0;
+
+    padding: 16px;
+
+    border: 1px solid var(--mezha);
+    border-radius: 10px;
+
+    background:
+        var(--poverkhna);
+}
+
+
+.document-detail-item dt {
+    margin-bottom: 7px;
+
+    color:
+        var(--tekst-drugoryadnyi);
+
+    font-size: 11px;
+    font-weight: 700;
+
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+
+.document-detail-item dd {
+    margin: 0;
+
+    color:
+        var(--tekst-osnovnyi);
+
+    font-size: 14px;
+    font-weight: 600;
+
+    overflow-wrap: anywhere;
+}
+
+
+.document-detail-item a {
+    color:
+        var(--akvamarin-temnyi);
+
+    text-decoration: none;
+}
+
+.document-detail-item a:hover {
+    text-decoration: underline;
+}
+
+
+.document-processing-error {
+    margin-top: 18px;
+    padding: 16px;
+
+    border:
+        1px solid
+        var(--pomylka-mezha);
+
+    border-radius: 10px;
+
+    background:
+        var(--pomylka-fon);
+
+    color:
+        var(--pomylka-tekst);
+}
+
+
+.document-processing-error p {
+    margin: 7px 0 0;
+}
+
+
+@media (max-width: 850px) {
+
+    .document-details-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+
+@media (max-width: 560px) {
+
+    .document-details-heading {
+        flex-direction: column;
+    }
+
+    .document-details-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
