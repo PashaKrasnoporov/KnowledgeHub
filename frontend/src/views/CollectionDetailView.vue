@@ -417,6 +417,7 @@ onMounted(
 
             <DocumentsList
                 :collection-id="collectionId"
+                :collection-name="collection.name"
                 :documents="visibleDocuments"
                 :search-active="searchActive"
                 :score-map="scoreMap"

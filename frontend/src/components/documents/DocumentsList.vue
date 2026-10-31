@@ -4,10 +4,24 @@ import {
     ref
 } from "vue"
 
+import {
+    useAuth
+} from "../../composables/useAuth.js"
+
+import {
+    isFavorite,
+    toggleFavorite
+} from "../../utils/favoriteItems.js"
+
 const props = defineProps({
     collectionId: {
         type: Number,
         required: true
+    },
+
+    collectionName: {
+        type: String,
+        default: ""
     },
 
     documents: {
@@ -44,6 +58,12 @@ const props = defineProps({
 defineEmits([
     "upload"
 ])
+
+const {
+    currentUser
+} = useAuth()
+
+const favoriteVersion = ref(0)
 
 const typeFilter = ref("all")
 const statusFilter = ref("all")
@@ -305,6 +325,52 @@ function highlightSnippet(
 }
 
 
+function documentIsFavorite(
+    documentItem
+) {
+    favoriteVersion.value
+
+    if (!currentUser.value) {
+        return false
+    }
+
+    return isFavorite(
+        currentUser.value.id,
+        {
+            type: "document",
+            id: documentItem.id,
+            collectionId:
+                props.collectionId
+        }
+    )
+}
+
+
+function toggleDocumentFavorite(
+    documentItem
+) {
+    if (!currentUser.value) {
+        return
+    }
+
+    toggleFavorite(
+        currentUser.value.id,
+        {
+            type: "document",
+            id: documentItem.id,
+            collectionId:
+                props.collectionId,
+            name:
+                documentItem.original_name,
+            collectionName:
+                props.collectionName
+        }
+    )
+
+    favoriteVersion.value += 1
+}
+
+
 function documentStatusLabel(
     status
 ) {
@@ -512,6 +578,43 @@ function documentType(
                 {{ documentType(documentItem) }}
             </div>
 
+            <button
+                class="document-card-favorite"
+                type="button"
+                :aria-pressed="
+                    documentIsFavorite(
+                        documentItem
+                    )
+                "
+                :aria-label="
+                    documentIsFavorite(
+                        documentItem
+                    )
+                        ? 'Прибрати документ з обраного'
+                        : 'Додати документ в обране'
+                "
+                :title="
+                    documentIsFavorite(
+                        documentItem
+                    )
+                        ? 'Прибрати з обраного'
+                        : 'Додати в обране'
+                "
+                @click="
+                    toggleDocumentFavorite(
+                        documentItem
+                    )
+                "
+            >
+                {{
+                    documentIsFavorite(
+                        documentItem
+                    )
+                        ? "★"
+                        : "☆"
+                }}
+            </button>
+
             <div class="document-info">
                 <h3>
                     <RouterLink
@@ -669,6 +772,47 @@ function documentType(
 
 
 <style scoped>
+.document-card {
+    position: relative;
+}
+
+.document-info {
+    padding-right: 44px;
+}
+
+.document-card-favorite {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+
+    z-index: 2;
+
+    width: 34px;
+    height: 34px;
+
+    padding: 0;
+
+    border: 1px solid var(--mezha);
+    border-radius: 50%;
+
+    background: var(--poverkhna-svitla);
+    color: var(--akvamarin-temnyi);
+
+    font-size: 20px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.document-card-favorite:hover {
+    border-color: var(--mezha-temna);
+    background: var(--poverkhna);
+}
+
+.document-card-favorite[aria-pressed="true"] {
+    color: var(--morskyi-hlybokyi);
+}
+
 .documents-filter-toolbar {
     display: grid;
     grid-template-columns:

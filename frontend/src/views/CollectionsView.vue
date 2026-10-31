@@ -10,10 +10,25 @@ import {
     getCollections
 } from "../api/index.js"
 
+import {
+    useAuth
+} from "../composables/useAuth.js"
+
+import {
+    isFavorite,
+    toggleFavorite
+} from "../utils/favoriteItems.js"
+
+
+const {
+    currentUser
+} = useAuth()
 
 const collections = ref([])
 const loading = ref(true)
 const errors = ref([])
+
+const favoriteVersion = ref(0)
 
 const searchQuery = ref("")
 const activeQuery = ref("")
@@ -80,6 +95,47 @@ async function clearSearch() {
     searchQuery.value = ""
 
     await loadCollections()
+}
+
+
+function collectionIsFavorite(
+    collection
+) {
+    favoriteVersion.value
+
+    if (!currentUser.value) {
+        return false
+    }
+
+    return isFavorite(
+        currentUser.value.id,
+        {
+            type: "collection",
+            id: collection.id,
+            collectionId: collection.id
+        }
+    )
+}
+
+
+function toggleCollectionFavorite(
+    collection
+) {
+    if (!currentUser.value) {
+        return
+    }
+
+    toggleFavorite(
+        currentUser.value.id,
+        {
+            type: "collection",
+            id: collection.id,
+            collectionId: collection.id,
+            name: collection.name
+        }
+    )
+
+    favoriteVersion.value += 1
 }
 
 
@@ -309,18 +365,21 @@ onMounted(
                 v-else-if="collections.length"
                 class="collections-grid"
             >
-                <RouterLink
+                <div
                     v-for="collection in collections"
                     :key="collection.id"
-                    class="collection-card-link"
-                    :to="{
-                        name: 'collection-detail',
-                        params: {
-                            collectionId: collection.id
-                        }
-                    }"
+                    class="collection-card-shell"
                 >
-                    <article class="collection-card">
+                    <RouterLink
+                        class="collection-card-link"
+                        :to="{
+                            name: 'collection-detail',
+                            params: {
+                                collectionId: collection.id
+                            }
+                        }"
+                    >
+                        <article class="collection-card">
                         <div class="collection-card-top">
                             <div>
                                 <p class="collection-label">
@@ -360,8 +419,46 @@ onMounted(
                                 Відкрити →
                             </span>
                         </div>
-                    </article>
-                </RouterLink>
+                        </article>
+                    </RouterLink>
+
+                    <button
+                        class="collection-card-favorite"
+                        type="button"
+                        :aria-pressed="
+                            collectionIsFavorite(
+                                collection
+                            )
+                        "
+                        :aria-label="
+                            collectionIsFavorite(
+                                collection
+                            )
+                                ? 'Прибрати колекцію з обраного'
+                                : 'Додати колекцію в обране'
+                        "
+                        :title="
+                            collectionIsFavorite(
+                                collection
+                            )
+                                ? 'Прибрати з обраного'
+                                : 'Додати в обране'
+                        "
+                        @click="
+                            toggleCollectionFavorite(
+                                collection
+                            )
+                        "
+                    >
+                        {{
+                            collectionIsFavorite(
+                                collection
+                            )
+                                ? "★"
+                                : "☆"
+                        }}
+                    </button>
+                </div>
             </div>
 
             <div
@@ -515,3 +612,48 @@ onMounted(
         </dialog>
     </section>
 </template>
+
+<style scoped>
+.collection-card-shell {
+    position: relative;
+    min-width: 0;
+}
+
+.collection-card-favorite {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+
+    z-index: 2;
+
+    width: 34px;
+    height: 34px;
+
+    padding: 0;
+
+    border: 1px solid var(--mezha);
+    border-radius: 50%;
+
+    background: var(--poverkhna-svitla);
+    color: var(--akvamarin-temnyi);
+
+    font-size: 20px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.collection-card-favorite:hover {
+    border-color: var(--mezha-temna);
+    background: var(--poverkhna);
+}
+
+.collection-card-favorite[aria-pressed="true"] {
+    color: var(--morskyi-hlybokyi);
+}
+
+.collection-card-shell
+.collection-card-top {
+    padding-right: 38px;
+}
+</style>
