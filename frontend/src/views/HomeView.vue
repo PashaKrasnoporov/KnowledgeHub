@@ -8,6 +8,10 @@ import {
     useAuth
 } from "../composables/useAuth.js"
 
+import {
+    extractLocalDocumentText
+} from "../utils/localDocumentText.js"
+
 
 const {
     currentUser
@@ -15,9 +19,13 @@ const {
 
 
 const selectedFile = ref(null)
+const selectedFileType = ref("")
 const fileText = ref("")
+
 const searchQuery = ref("")
 const searchError = ref("")
+const fileProcessing = ref(false)
+
 const searched = ref(false)
 const totalMatches = ref(0)
 const resultSnippets = ref([])
@@ -29,8 +37,23 @@ const selectedFileLabel = computed(
             return "Файл не вибрано"
         }
 
-        return selectedFile.value.name
+        const typeSuffix =
+            selectedFileType.value
+                ? ` (${selectedFileType.value})`
+                : ""
+
+        return (
+            selectedFile.value.name
+            + typeSuffix
+        )
     }
+)
+
+
+const searchDisabled = computed(
+    () =>
+        fileProcessing.value
+        || !selectedFile.value
 )
 
 
@@ -43,18 +66,25 @@ function normalizeText(
 }
 
 
-async function handleFileSelection(
-    event
-) {
+function clearResults() {
     searchError.value = ""
     searched.value = false
     totalMatches.value = 0
     resultSnippets.value = []
+}
+
+
+async function handleFileSelection(
+    event
+) {
+    clearResults()
 
     const file =
-        event.target.files?.[0] ?? null
+        event.target.files?.[0]
+        ?? null
 
     selectedFile.value = null
+    selectedFileType.value = ""
     fileText.value = ""
 
     if (!file) {
@@ -64,56 +94,103 @@ async function handleFileSelection(
     const lowerName =
         file.name.toLowerCase()
 
-    if (!lowerName.endsWith(".txt")) {
+    const supported =
+        lowerName.endsWith(".txt")
+        || lowerName.endsWith(".pdf")
+        || lowerName.endsWith(".docx")
+
+    if (!supported) {
         searchError.value =
-            "Для швидкого гостьового пошуку "
-            + "поки підтримуються лише TXT-файли."
+            "Підтримуються лише TXT, PDF і DOCX."
 
         event.target.value = ""
         return
     }
 
     const maxBytes =
-        2 * 1024 * 1024
+        10 * 1024 * 1024
 
     if (file.size > maxBytes) {
         searchError.value =
             "Файл завеликий. "
-            + "Максимальний розмір для демо — 2 МБ."
+            + "Максимальний розмір — 10 МБ."
 
         event.target.value = ""
         return
     }
 
+    fileProcessing.value = true
+
     try {
+        const result =
+            await extractLocalDocumentText(
+                file
+            )
+
         const text =
-            await file.text()
+            result.text
 
         if (!text.trim()) {
-            searchError.value =
-                "Файл не містить тексту."
+            if (result.type === "PDF") {
+                searchError.value =
+                    "У PDF не вдалося знайти текст. "
+                    + "Можливо, це скановані сторінки. "
+                    + "OCR у гостьовому режимі поки "
+                    + "не підтримується."
+            }
+            else {
+                searchError.value =
+                    "Файл не містить тексту."
+            }
 
             event.target.value = ""
             return
         }
 
         selectedFile.value = file
+        selectedFileType.value =
+            result.type
+
         fileText.value = text
     }
-    catch {
-        searchError.value =
-            "Не вдалося прочитати локальний файл."
+    catch (error) {
+        console.error(
+            "Local document parsing failed:",
+            error
+        )
+
+        if (
+            lowerName.endsWith(".pdf")
+        ) {
+            searchError.value =
+                "Не вдалося прочитати PDF. "
+                + "Файл може бути пошкоджений, "
+                + "захищений паролем або мати "
+                + "непідтримувану структуру."
+        }
+        else if (
+            lowerName.endsWith(".docx")
+        ) {
+            searchError.value =
+                "Не вдалося прочитати DOCX. "
+                + "Перевірте, що це коректний "
+                + "документ Microsoft Word."
+        }
+        else {
+            searchError.value =
+                "Не вдалося прочитати локальний файл."
+        }
 
         event.target.value = ""
+    }
+    finally {
+        fileProcessing.value = false
     }
 }
 
 
 function runLocalSearch() {
-    searchError.value = ""
-    searched.value = false
-    totalMatches.value = 0
-    resultSnippets.value = []
+    clearResults()
 
     const query =
         normalizeText(
@@ -122,7 +199,7 @@ function runLocalSearch() {
 
     if (!selectedFile.value) {
         searchError.value =
-            "Спочатку виберіть TXT-файл."
+            "Спочатку виберіть TXT, PDF або DOCX."
         return
     }
 
@@ -136,10 +213,14 @@ function runLocalSearch() {
         fileText.value
 
     const sourceLower =
-        source.toLocaleLowerCase("uk-UA")
+        source.toLocaleLowerCase(
+            "uk-UA"
+        )
 
     const queryLower =
-        query.toLocaleLowerCase("uk-UA")
+        query.toLocaleLowerCase(
+            "uk-UA"
+        )
 
     const snippets = []
 
@@ -162,7 +243,10 @@ function runLocalSearch() {
 
         count += 1
 
-        if (snippets.length < maxSnippets) {
+        if (
+            snippets.length
+            < maxSnippets
+        ) {
             const start =
                 Math.max(
                     0,
@@ -216,9 +300,13 @@ function runLocalSearch() {
 
 function resetLocalSearch() {
     selectedFile.value = null
+    selectedFileType.value = ""
     fileText.value = ""
+
     searchQuery.value = ""
     searchError.value = ""
+    fileProcessing.value = false
+
     searched.value = false
     totalMatches.value = 0
     resultSnippets.value = []
@@ -301,14 +389,21 @@ function resetLocalSearch() {
             </h2>
 
             <p>
-                Виберіть TXT-файл і знайдіть потрібне слово
-                або фразу без реєстрації.
+                Виберіть TXT, PDF або DOCX
+                і знайдіть потрібне слово
+                чи фразу без реєстрації.
             </p>
 
             <p class="guest-search-privacy">
                 Файл обробляється тільки у вашому браузері:
                 він не завантажується на сервер KnowledgeHub
                 і не зберігається в базі даних.
+            </p>
+
+            <p class="guest-search-privacy">
+                Для PDF виконується пошук у текстовому шарі.
+                Скановані PDF без текстового шару потребують OCR
+                і поки не підтримуються в гостьовому режимі.
             </p>
         </div>
 
@@ -318,19 +413,30 @@ function resetLocalSearch() {
                     class="guest-file-label"
                     for="guest-file-input"
                 >
-                    Вибрати TXT-файл
+                    Вибрати файл
                 </label>
 
                 <input
                     id="guest-file-input"
                     class="guest-file-input"
                     type="file"
-                    accept=".txt,text/plain"
+                    accept="
+                        .txt,
+                        text/plain,
+                        .pdf,
+                        application/pdf,
+                        .docx,
+                        application/vnd.openxmlformats-officedocument.wordprocessingml.document
+                    "
                     @change="handleFileSelection"
                 >
 
                 <span class="guest-file-name">
-                    {{ selectedFileLabel }}
+                    {{
+                        fileProcessing
+                            ? "Обробка документа..."
+                            : selectedFileLabel
+                    }}
                 </span>
             </div>
 
@@ -355,13 +461,19 @@ function resetLocalSearch() {
                     <button
                         class="guest-search-submit"
                         type="submit"
+                        :disabled="searchDisabled"
                     >
-                        Знайти
+                        {{
+                            fileProcessing
+                                ? "Обробка..."
+                                : "Знайти"
+                        }}
                     </button>
 
                     <button
                         class="guest-search-reset"
                         type="button"
+                        :disabled="fileProcessing"
                         @click="resetLocalSearch"
                     >
                         Очистити
@@ -388,7 +500,10 @@ function resetLocalSearch() {
                     </strong>
 
                     <span
-                        v-if="totalMatches > resultSnippets.length"
+                        v-if="
+                            totalMatches
+                            > resultSnippets.length
+                        "
                     >
                         Показано перші
                         {{ resultSnippets.length }}

@@ -9,6 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "mammoth": "^1.13.0",
+    "pdfjs-dist": "^6.4.299",
     "vue": "^3.5.42",
     "vue-router": "^4.6.4"
   },
