@@ -305,6 +305,25 @@ function highlightSnippet(
 }
 
 
+function documentStatusLabel(
+    status
+) {
+    if (status === "ready") {
+        return "Готовий"
+    }
+
+    if (status === "pending") {
+        return "Обробляється"
+    }
+
+    if (status === "error") {
+        return "Помилка"
+    }
+
+    return status || "Невідомо"
+}
+
+
 function documentType(
     document
 ) {
@@ -513,7 +532,11 @@ function documentType(
                     {{ formatMegabytes(documentItem.size_bytes) }}
                     МБ
                     ·
-                    {{ documentItem.processing_status }}
+                    {{
+                        documentStatusLabel(
+                            documentItem.processing_status
+                        )
+                    }}
                 </p>
 
                 <p

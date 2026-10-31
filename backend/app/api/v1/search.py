@@ -274,10 +274,6 @@ def api_search_documents(
                     result.document,
                     normalized_query,
                 ),
-                "snippet": build_search_snippet(
-                    result.document,
-                    normalized_query,
-                ),
             }
             for result in raw_results
         ]
@@ -319,6 +315,10 @@ def api_search_documents(
                     ),
                 },
                 "score": float(result.score),
+                "snippet": build_search_snippet(
+                    result.document,
+                    normalized_query,
+                ),
             }
             for result in raw_results
         ]
