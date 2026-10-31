@@ -26,6 +26,10 @@ import {
     searchCollection
 } from "../api/index.js"
 
+import {
+    addRecentCollection
+} from "../utils/recentItems.js"
+
 const route = useRoute()
 const router = useRouter()
 
@@ -132,6 +136,10 @@ async function loadCollection() {
             await getCollection(
                 collectionId.value
             )
+
+        addRecentCollection(
+            collection.value
+        )
 
         await refreshDocuments()
 

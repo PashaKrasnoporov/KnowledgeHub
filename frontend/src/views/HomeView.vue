@@ -8,6 +8,8 @@ import {
     useAuth
 } from "../composables/useAuth.js"
 
+import RecentItems from "../components/common/RecentItems.vue"
+
 import {
     extractLocalDocumentText
 } from "../utils/localDocumentText.js"
@@ -532,6 +534,10 @@ function resetLocalSearch() {
             </div>
         </div>
     </section>
+
+    <RecentItems
+        v-if="currentUser"
+    />
 
     <section class="features">
         <article class="feature-card">

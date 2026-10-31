@@ -17,6 +17,10 @@ import {
     getDocumentDownloadUrl
 } from "../api/index.js"
 
+import {
+    addRecentDocument
+} from "../utils/recentItems.js"
+
 const route = useRoute()
 const router = useRouter()
 
@@ -81,6 +85,11 @@ async function loadDocument() {
                 collectionId,
                 documentId
             )
+
+        addRecentDocument(
+            collectionId,
+            document.value
+        )
 
         document.title =
             `${document.value.original_name} — KnowledgeHub`
