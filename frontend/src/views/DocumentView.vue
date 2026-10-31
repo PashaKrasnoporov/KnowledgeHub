@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import {
     computed,
     onMounted,
@@ -16,10 +16,6 @@ import {
     getDocumentContentUrl,
     getDocumentDownloadUrl
 } from "../api/index.js"
-
-import {
-    addRecentDocument
-} from "../utils/recentItems.js"
 
 const route = useRoute()
 const router = useRouter()
@@ -86,13 +82,8 @@ async function loadDocument() {
                 documentId
             )
 
-        addRecentDocument(
-            collectionId,
-            document.value
-        )
-
         document.title =
-            `${document.value.original_name} вЂ” KnowledgeHub`
+            `${document.value.original_name} — KnowledgeHub`
     }
     catch (error) {
         errorMessage.value =
@@ -159,7 +150,7 @@ onMounted(
     >
         <div class="document-preview-empty">
             <h3>
-                Р—Р°РІР°РЅС‚Р°Р¶РµРЅРЅСЏ РґРѕРєСѓРјРµРЅС‚Р°...
+                Завантаження документа...
             </h3>
         </div>
     </section>
@@ -178,7 +169,7 @@ onMounted(
             </p>
 
             <h1>
-                Р”РѕРєСѓРјРµРЅС‚ РЅРµ Р·РЅР°Р№РґРµРЅРѕ
+                Документ не знайдено
             </h1>
 
             <p class="error-description">
@@ -195,14 +186,14 @@ onMounted(
                         }
                     }"
                 >
-                    Р”Рѕ РєРѕР»РµРєС†С–С—
+                    До колекції
                 </RouterLink>
 
                 <RouterLink
                     class="error-secondary-button"
                     :to="{ name: 'home' }"
                 >
-                    РќР° РіРѕР»РѕРІРЅСѓ
+                    На головну
                 </RouterLink>
             </div>
         </div>
@@ -221,13 +212,13 @@ onMounted(
                 }
             }"
         >
-            в†ђ РќР°Р·Р°Рґ РґРѕ РєРѕР»РµРєС†С–С—
+            ← Назад до колекції
         </RouterLink>
 
         <header class="document-view-header">
             <div>
                 <p class="eyebrow">
-                    Р”РћРљРЈРњР•РќРў
+                    ДОКУМЕНТ
                 </p>
 
                 <h1>
@@ -236,22 +227,22 @@ onMounted(
 
                 <div class="document-metadata">
                     <span>
-                        Р¤РѕСЂРјР°С‚:
+                        Формат:
                         <strong>
                             {{ extension.toUpperCase() }}
                         </strong>
                     </span>
 
                     <span>
-                        Р РѕР·РјС–СЂ:
+                        Розмір:
                         <strong>
                             {{ formatMegabytes(document.size_bytes) }}
-                            РњР‘
+                            МБ
                         </strong>
                     </span>
 
                     <span>
-                        РЎС‚Р°С‚СѓСЃ:
+                        Статус:
                         <strong>
                             {{ document.processing_status }}
                         </strong>
@@ -264,7 +255,7 @@ onMounted(
                     class="document-download-button"
                     :href="downloadUrl"
                 >
-                    Р—Р°РІР°РЅС‚Р°Р¶РёС‚Рё РѕСЂРёРіС–РЅР°Р»
+                    Завантажити оригінал
                 </a>
 
                 <button
@@ -272,7 +263,7 @@ onMounted(
                     type="button"
                     @click="openDeleteModal"
                 >
-                    Р’РёРґР°Р»РёС‚Рё
+                    Видалити
                 </button>
             </div>
         </header>
@@ -283,7 +274,7 @@ onMounted(
         >
             <div class="document-section-title">
                 <h2>
-                    РџРµСЂРµРіР»СЏРґ PDF
+                    Перегляд PDF
                 </h2>
 
                 <a
@@ -291,7 +282,7 @@ onMounted(
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    Р’С–РґРєСЂРёС‚Рё РІ РЅРѕРІС–Р№ РІРєР»Р°РґС†С–
+                    Відкрити в новій вкладці
                 </a>
             </div>
 
@@ -311,7 +302,7 @@ onMounted(
         >
             <div class="document-section-title">
                 <h2>
-                    РўРµРєСЃС‚ РґРѕРєСѓРјРµРЅС‚Р°
+                    Текст документа
                 </h2>
             </div>
 
@@ -329,7 +320,7 @@ onMounted(
                 class="document-preview-empty"
             >
                 <h3>
-                    РќРµ РІРґР°Р»РѕСЃСЏ РѕС‚СЂРёРјР°С‚Рё С‚РµРєСЃС‚
+                    Не вдалося отримати текст
                 </h3>
 
                 <p>
@@ -342,7 +333,7 @@ onMounted(
                 class="document-preview-empty"
             >
                 <h3>
-                    РўРµРєСЃС‚ РґРѕРєСѓРјРµРЅС‚Р° РІС–РґСЃСѓС‚РЅС–Р№
+                    Текст документа відсутній
                 </h3>
             </div>
         </section>
@@ -356,40 +347,40 @@ onMounted(
                 <div class="document-delete-header">
                     <div>
                         <p class="eyebrow">
-                            РќР•Р‘Р•Р—РџР•Р§РќРђ Р”Р†РЇ
+                            НЕБЕЗПЕЧНА ДІЯ
                         </p>
 
                         <h2>
-                            Р’РёРґР°Р»РёС‚Рё РґРѕРєСѓРјРµРЅС‚?
+                            Видалити документ?
                         </h2>
                     </div>
 
                     <button
                         class="document-delete-close"
                         type="button"
-                        aria-label="Р—Р°РєСЂРёС‚Рё"
+                        aria-label="Закрити"
                         @click="closeDeleteModal"
                     >
-                        Г—
+                        ×
                     </button>
                 </div>
 
                 <div class="document-delete-warning">
                     <p>
-                        Р”РѕРєСѓРјРµРЅС‚
+                        Документ
                         <strong>
-                            В«{{ document.original_name }}В»
+                            «{{ document.original_name }}»
                         </strong>
-                        Р±СѓРґРµ РІРёРґР°Р»РµРЅРѕ.
+                        буде видалено.
                     </p>
 
                     <p>
-                        Р‘СѓРґРµ РІРёРґР°Р»РµРЅРѕ С– Р·Р°РїРёСЃ
-                        Сѓ Р±Р°Р·С– РґР°РЅРёС…, С– СЃР°Рј С„Р°Р№Р».
+                        Буде видалено і запис
+                        у базі даних, і сам файл.
                     </p>
 
                     <p>
-                        Р¦СЋ РґС–СЋ РЅРµРјРѕР¶Р»РёРІРѕ СЃРєР°СЃСѓРІР°С‚Рё.
+                        Цю дію неможливо скасувати.
                     </p>
                 </div>
 
@@ -400,7 +391,7 @@ onMounted(
                             type="button"
                             @click="closeDeleteModal"
                         >
-                            РЎРєР°СЃСѓРІР°С‚Рё
+                            Скасувати
                         </button>
 
                         <button
@@ -410,8 +401,8 @@ onMounted(
                         >
                             {{
                                 deleting
-                                    ? "Р’РёРґР°Р»РµРЅРЅСЏ..."
-                                    : "Р’РёРґР°Р»РёС‚Рё РЅР°Р·Р°РІР¶РґРё"
+                                    ? "Видалення..."
+                                    : "Видалити назавжди"
                             }}
                         </button>
                     </div>
@@ -420,4 +411,3 @@ onMounted(
         </dialog>
     </section>
 </template>
-
