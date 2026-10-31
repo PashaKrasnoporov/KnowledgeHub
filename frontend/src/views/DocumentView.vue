@@ -26,8 +26,21 @@ import {
     addRecentDocument
 } from "../utils/recentItems.js"
 
+import {
+    isFavorite,
+    toggleFavorite
+} from "../utils/favoriteItems.js"
+
+import {
+    useAuth
+} from "../composables/useAuth.js"
+
 const route = useRoute()
 const router = useRouter()
+
+const {
+    currentUser
+} = useAuth()
 
 const collectionId =
     Number(route.params.collectionId)
@@ -70,6 +83,9 @@ const deleting = ref(false)
 const errorMessage = ref("")
 
 const deleteModal = ref(null)
+
+const documentFavorite =
+    ref(false)
 
 const textSearchQuery = ref("")
 const activeTextMatch = ref(0)
@@ -397,6 +413,8 @@ async function loadDocument() {
         collection.value =
             loadedCollection
 
+        syncDocumentFavorite()
+
         addRecentDocument(
             collectionId,
             document.value
@@ -413,6 +431,57 @@ async function loadDocument() {
         loading.value = false
     }
 }
+
+function syncDocumentFavorite() {
+    if (
+        !currentUser.value
+        || !document.value
+    ) {
+        documentFavorite.value =
+            false
+
+        return
+    }
+
+    documentFavorite.value =
+        isFavorite(
+            currentUser.value.id,
+            {
+                type: "document",
+                id:
+                    document.value.id,
+                collectionId
+            }
+        )
+}
+
+
+function toggleDocumentFavorite() {
+    if (
+        !currentUser.value
+        || !document.value
+    ) {
+        return
+    }
+
+    documentFavorite.value =
+        toggleFavorite(
+            currentUser.value.id,
+            {
+                type: "document",
+                id:
+                    document.value.id,
+                collectionId,
+                name:
+                    document.value
+                        .original_name,
+                collectionName:
+                    collection.value?.name
+                    || ""
+            }
+        )
+}
+
 
 function openDeleteModal() {
     deleteModal.value?.showModal()
@@ -546,6 +615,21 @@ onMounted(
             </div>
 
             <div class="document-header-actions">
+                <button
+                    class="secondary-button"
+                    type="button"
+                    :aria-pressed="
+                        documentFavorite
+                    "
+                    @click="toggleDocumentFavorite"
+                >
+                    {{
+                        documentFavorite
+                            ? "★ В обраному"
+                            : "☆ В обране"
+                    }}
+                </button>
+
                 <a
                     class="document-download-button"
                     :href="downloadUrl"

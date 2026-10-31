@@ -8,6 +8,7 @@ import {
     useAuth
 } from "../composables/useAuth.js"
 
+import FavoriteItems from "../components/common/FavoriteItems.vue"
 import RecentItems from "../components/common/RecentItems.vue"
 
 import {
@@ -534,6 +535,11 @@ function resetLocalSearch() {
             </div>
         </div>
     </section>
+
+    <FavoriteItems
+        v-if="currentUser"
+        :user-id="currentUser.id"
+    />
 
     <RecentItems
         v-if="currentUser"
