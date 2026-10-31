@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import {
     onMounted,
     ref
@@ -8,22 +8,30 @@ import {
     getSystemHealth
 } from "../api/index.js"
 
-const version = ref("0.1.0")
+
+const version = ref(null)
+const versionLoaded = ref(false)
+
 
 onMounted(
     async () => {
         try {
-            const data = await getSystemHealth()
+            const data =
+                await getSystemHealth()
 
             version.value =
-                data.api_version || "0.1.0"
+                data.api_version || null
         }
         catch {
-            version.value = "0.1.0"
+            version.value = null
+        }
+        finally {
+            versionLoaded.value = true
         }
     }
 )
 </script>
+
 
 <template>
     <section class="page-section">
@@ -41,9 +49,26 @@ onMounted(
             колекціях документів.
         </p>
 
-        <p>
+        <p class="system-version">
             Поточна версія системи:
-            <strong>{{ version }}</strong>.
+
+            <strong
+                v-if="versionLoaded && version"
+            >
+                {{ version }}
+            </strong>
+
+            <span
+                v-else-if="!versionLoaded"
+                class="version-placeholder"
+                aria-label="Завантаження версії"
+            >
+                …
+            </span>
+
+            <strong v-else>
+                недоступна
+            </strong>.
         </p>
 
         <p>
@@ -53,3 +78,12 @@ onMounted(
         </p>
     </section>
 </template>
+
+
+<style scoped>
+.version-placeholder {
+    display: inline-block;
+    min-width: 24px;
+    font-weight: 700;
+}
+</style>
