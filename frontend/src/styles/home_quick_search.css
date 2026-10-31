@@ -1,0 +1,351 @@
+/* =========================================================
+   KNOWLEDGEHUB
+   HOME PAGE — GUEST QUICK LOCAL SEARCH
+   ========================================================= */
+
+.hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.button.secondary-home {
+    border:
+        1px solid
+        var(--mezha-temna);
+
+    background:
+        var(--poverkhna-svitla);
+
+    color:
+        var(--morskyi-hlybokyi);
+}
+
+.button.secondary-home:hover {
+    background:
+        var(--poverkhna);
+}
+
+
+.guest-search {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 0.85fr)
+        minmax(0, 1.15fr);
+
+    gap: 32px;
+
+    margin-bottom: 60px;
+    padding: 30px;
+
+    background:
+        var(--poverkhna-svitla);
+
+    border:
+        1px solid
+        var(--mezha);
+
+    border-radius: 14px;
+}
+
+.guest-search-intro h2 {
+    margin:
+        6px
+        0
+        14px;
+
+    font-size: 30px;
+}
+
+.guest-search-intro p {
+    margin:
+        0
+        0
+        12px;
+
+    color:
+        var(--tekst-drugoryadnyi);
+
+    line-height: 1.65;
+}
+
+.guest-search-privacy {
+    padding:
+        12px
+        14px;
+
+    background:
+        var(--poverkhna);
+
+    border-left:
+        3px solid
+        var(--blakytnyi-pryhlushenyi);
+
+    border-radius: 6px;
+
+    font-size: 14px;
+}
+
+
+.guest-search-panel {
+    display: grid;
+
+    gap: 20px;
+}
+
+
+.guest-file-field {
+    display: grid;
+
+    gap: 8px;
+}
+
+.guest-file-label {
+    width: fit-content;
+
+    padding:
+        10px
+        15px;
+
+    border:
+        1px solid
+        var(--blakytnyi-pryhlushenyi);
+
+    border-radius: 8px;
+
+    background:
+        var(--blakytnyi-pryhlushenyi);
+
+    color:
+        var(--tekst-svitlyi);
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.guest-file-label:hover {
+    background:
+        var(--hover-osnovnyi);
+}
+
+.guest-file-input {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    padding: 0;
+    margin: -1px;
+
+    overflow: hidden;
+
+    clip: rect(0, 0, 0, 0);
+
+    white-space: nowrap;
+
+    border: 0;
+}
+
+.guest-file-name {
+    color:
+        var(--tekst-drugoryadnyi);
+
+    font-size: 14px;
+}
+
+
+.guest-search-form {
+    display: grid;
+
+    gap: 8px;
+}
+
+.guest-search-form label {
+    font-weight: 600;
+}
+
+.guest-search-row {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        auto
+        auto;
+
+    gap: 10px;
+}
+
+.guest-search-row input {
+    min-width: 0;
+
+    padding:
+        11px
+        13px;
+
+    border:
+        1px solid
+        var(--mezha-temna);
+
+    border-radius: 8px;
+
+    background:
+        var(--poverkhna-svitla);
+
+    color:
+        var(--tekst-osnovnyi);
+
+    font: inherit;
+}
+
+.guest-search-row input:focus {
+    outline:
+        2px solid
+        var(--focus);
+
+    outline-offset: 2px;
+}
+
+
+.guest-search-submit,
+.guest-search-reset {
+    padding:
+        11px
+        16px;
+
+    border-radius: 8px;
+
+    font: inherit;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.guest-search-submit {
+    border:
+        1px solid
+        var(--akvamarin-temnyi);
+
+    background:
+        var(--akvamarin-temnyi);
+
+    color:
+        var(--tekst-svitlyi);
+}
+
+.guest-search-submit:hover {
+    background:
+        var(--hover-osnovnyi);
+}
+
+.guest-search-reset {
+    border:
+        1px solid
+        var(--mezha-temna);
+
+    background:
+        transparent;
+
+    color:
+        var(--tekst-osnovnyi);
+}
+
+.guest-search-reset:hover {
+    background:
+        var(--poverkhna);
+}
+
+
+.guest-search-results {
+    padding:
+        18px;
+
+    background:
+        var(--fon-osnovnyi);
+
+    border:
+        1px solid
+        var(--mezha);
+
+    border-radius: 10px;
+}
+
+.guest-search-summary {
+    display: flex;
+
+    align-items: baseline;
+    justify-content: space-between;
+
+    gap: 16px;
+
+    margin-bottom: 14px;
+}
+
+.guest-search-summary span {
+    color:
+        var(--tekst-drugoryadnyi);
+
+    font-size: 13px;
+}
+
+.guest-snippet-list {
+    display: grid;
+
+    gap: 10px;
+
+    margin:
+        0;
+
+    padding-left: 24px;
+}
+
+.guest-snippet-list li {
+    color:
+        var(--tekst-drugoryadnyi);
+
+    line-height: 1.55;
+}
+
+.guest-search-empty {
+    margin: 0;
+
+    color:
+        var(--tekst-drugoryadnyi);
+}
+
+
+@media (max-width: 900px) {
+
+    .guest-search {
+        grid-template-columns:
+            1fr;
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .guest-search {
+        padding: 22px;
+    }
+
+    .guest-search-row {
+        grid-template-columns:
+            1fr;
+    }
+
+    .guest-search-submit,
+    .guest-search-reset {
+        width: 100%;
+    }
+
+    .guest-search-summary {
+        align-items: flex-start;
+        flex-direction: column;
+
+        gap: 6px;
+    }
+
+}
