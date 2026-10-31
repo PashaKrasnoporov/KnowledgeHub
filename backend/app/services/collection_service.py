@@ -1,3 +1,5 @@
+from typing import Literal
+
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
@@ -9,6 +11,18 @@ from app.repositories.collection_repository import (
     get_collections_by_user_id,
 )
 from app.schemas.collection import CollectionCreate
+
+
+CollectionSortField = Literal[
+    "created_at",
+    "updated_at",
+    "name",
+]
+
+CollectionSortOrder = Literal[
+    "asc",
+    "desc",
+]
 
 
 def create_collection(
@@ -40,10 +54,16 @@ def create_collection(
 def get_user_collections(
     session: Session,
     user: User,
+    query_text: str | None = None,
+    sort_by: CollectionSortField = "created_at",
+    sort_order: CollectionSortOrder = "desc",
 ) -> list[Collection]:
     return get_collections_by_user_id(
         session=session,
         user_id=user.id,
+        query_text=query_text,
+        sort_by=sort_by,
+        sort_order=sort_order,
     )
 
 

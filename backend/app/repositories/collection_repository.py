@@ -1,7 +1,25 @@
-from sqlalchemy import select
+from typing import Literal
+
+from sqlalchemy import (
+    func,
+    or_,
+    select,
+)
 from sqlalchemy.orm import Session
 
 from app.modeli.collection import Collection
+
+
+CollectionSortField = Literal[
+    "created_at",
+    "updated_at",
+    "name",
+]
+
+CollectionSortOrder = Literal[
+    "asc",
+    "desc",
+]
 
 
 def add_collection(
@@ -24,19 +42,70 @@ def add_collection(
 def get_collections_by_user_id(
     session: Session,
     user_id: int,
+    query_text: str | None = None,
+    sort_by: CollectionSortField = "created_at",
+    sort_order: CollectionSortOrder = "desc",
 ) -> list[Collection]:
-    query = (
-        select(Collection)
-        .where(
-            Collection.user_id == user_id
+    query = select(
+        Collection
+    ).where(
+        Collection.user_id == user_id
+    )
+
+    if query_text:
+        normalized_query = (
+            query_text.strip()
         )
-        .order_by(
-            Collection.created_at.desc()
+
+        if normalized_query:
+            search_pattern = (
+                f"%{normalized_query}%"
+            )
+
+            query = query.where(
+                or_(
+                    Collection.name.ilike(
+                        search_pattern
+                    ),
+                    Collection.description.ilike(
+                        search_pattern
+                    ),
+                )
+            )
+
+    sort_columns = {
+        "created_at":
+            Collection.created_at,
+        "updated_at":
+            Collection.updated_at,
+        "name":
+            func.lower(
+                Collection.name
+            ),
+    }
+
+    sort_column = sort_columns[
+        sort_by
+    ]
+
+    if sort_order == "asc":
+        sort_expression = (
+            sort_column.asc()
         )
+    else:
+        sort_expression = (
+            sort_column.desc()
+        )
+
+    query = query.order_by(
+        sort_expression,
+        Collection.id.desc(),
     )
 
     return list(
-        session.scalars(query).all()
+        session.scalars(
+            query
+        ).all()
     )
 
 

@@ -7,9 +7,37 @@ import {
 } from "./csrf.js"
 
 
-export function getCollections() {
+export function getCollections(
+    {
+        q = "",
+        sortBy = "created_at",
+        sortOrder = "desc"
+    } = {}
+) {
+    const params = new URLSearchParams()
+
+    const normalizedQuery =
+        q.trim()
+
+    if (normalizedQuery) {
+        params.set(
+            "q",
+            normalizedQuery
+        )
+    }
+
+    params.set(
+        "sort_by",
+        sortBy
+    )
+
+    params.set(
+        "sort_order",
+        sortOrder
+    )
+
     return request(
-        "/api/v1/collections"
+        `/api/v1/collections?${params.toString()}`
     )
 }
 

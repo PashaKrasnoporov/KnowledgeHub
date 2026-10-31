@@ -416,3 +416,176 @@
         flex-direction: column;
     }
 }
+
+/* Collection search and sorting controls */
+.collections-toolbar {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin: 0 0 14px;
+    padding: 18px;
+
+    background: var(--poverkhna-svitla);
+
+    border: 1px solid var(--mezha);
+    border-radius: 12px;
+}
+
+.collection-search-form {
+    display: flex;
+    align-items: center;
+    flex: 1;
+
+    gap: 10px;
+}
+
+.collection-search-input {
+    width: min(100%, 620px);
+
+    padding: 11px 13px;
+
+    border: 1px solid var(--mezha-temna);
+    border-radius: 8px;
+
+    background: var(--poverkhna-svitla);
+    color: var(--tekst-osnovnyi);
+
+    font: inherit;
+}
+
+.collection-search-input:focus,
+.collection-sort-control select:focus {
+    outline: 2px solid var(--blakytnyi-pryhlushenyi);
+    outline-offset: 2px;
+}
+
+.collection-search-button,
+.collection-clear-button {
+    padding: 11px 16px;
+
+    border-radius: 8px;
+
+    font: inherit;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.collection-search-button {
+    border: 1px solid var(--blakytnyi-pryhlushenyi);
+
+    background: var(--blakytnyi-pryhlushenyi);
+    color: var(--tekst-svitlyi);
+}
+
+.collection-search-button:hover {
+    background: var(--hover-osnovnyi);
+}
+
+.collection-clear-button {
+    border: 1px solid var(--mezha-temna);
+
+    background: transparent;
+    color: var(--tekst-osnovnyi);
+}
+
+.collection-clear-button:hover {
+    background: var(--poverkhna);
+}
+
+.collection-search-button:disabled,
+.collection-clear-button:disabled,
+.collection-sort-control select:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.collection-sort-control {
+    display: grid;
+
+    gap: 6px;
+
+    min-width: 210px;
+}
+
+.collection-sort-control label {
+    color: var(--tekst-drugoryadnyi);
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.collection-sort-control select {
+    width: 100%;
+
+    padding: 11px 34px 11px 12px;
+
+    border: 1px solid var(--mezha-temna);
+    border-radius: 8px;
+
+    background: var(--poverkhna-svitla);
+    color: var(--tekst-osnovnyi);
+
+    font: inherit;
+}
+
+.collections-result-summary {
+    margin: 0 0 22px;
+
+    color: var(--tekst-drugoryadnyi);
+
+    font-size: 14px;
+}
+
+.visually-hidden {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    padding: 0;
+    margin: -1px;
+
+    overflow: hidden;
+
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+
+    border: 0;
+}
+
+@media (max-width: 850px) {
+
+    .collections-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .collection-sort-control {
+        min-width: 0;
+    }
+
+}
+
+@media (max-width: 620px) {
+
+    .collection-search-form {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .collection-search-input {
+        width: 100%;
+
+        box-sizing: border-box;
+    }
+
+    .collection-search-button,
+    .collection-clear-button {
+        width: 100%;
+    }
+
+}

@@ -1,7 +1,10 @@
+from typing import Literal
+
 from fastapi import (
     APIRouter,
     Depends,
     HTTPException,
+    Query,
     Response,
     status,
 )
@@ -46,6 +49,34 @@ router = APIRouter()
     summary="List user collections",
 )
 def api_list_collections(
+    q: str | None = Query(
+        default=None,
+        max_length=100,
+        description=(
+            "Case-insensitive search "
+            "by collection name or description."
+        ),
+    ),
+    sort_by: Literal[
+        "created_at",
+        "updated_at",
+        "name",
+    ] = Query(
+        default="created_at",
+        description=(
+            "Collection field used "
+            "for sorting."
+        ),
+    ),
+    sort_order: Literal[
+        "asc",
+        "desc",
+    ] = Query(
+        default="desc",
+        description=(
+            "Sort direction."
+        ),
+    ),
     user: User = Depends(
         get_api_user
     ),
@@ -56,6 +87,9 @@ def api_list_collections(
     return get_user_collections(
         session=session,
         user=user,
+        query_text=q,
+        sort_by=sort_by,
+        sort_order=sort_order,
     )
 
 

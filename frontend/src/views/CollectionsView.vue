@@ -10,9 +10,16 @@ import {
     getCollections
 } from "../api/index.js"
 
+
 const collections = ref([])
 const loading = ref(true)
 const errors = ref([])
+
+const searchQuery = ref("")
+const activeQuery = ref("")
+const sortValue = ref(
+    "created_at-desc"
+)
 
 const name = ref("")
 const description = ref("")
@@ -21,13 +28,42 @@ const modal = ref(null)
 const nameInput = ref(null)
 const submitting = ref(false)
 
+
+function getSortParameters() {
+    const [
+        sortBy,
+        sortOrder
+    ] = sortValue.value.split("-")
+
+    return {
+        sortBy,
+        sortOrder
+    }
+}
+
+
 async function loadCollections() {
     loading.value = true
     errors.value = []
 
+    const normalizedQuery =
+        searchQuery.value.trim()
+
+    const {
+        sortBy,
+        sortOrder
+    } = getSortParameters()
+
     try {
         collections.value =
-            await getCollections()
+            await getCollections({
+                q: normalizedQuery,
+                sortBy,
+                sortOrder
+            })
+
+        activeQuery.value =
+            normalizedQuery
     }
     catch (error) {
         errors.value = [
@@ -39,6 +75,32 @@ async function loadCollections() {
     }
 }
 
+
+async function clearSearch() {
+    searchQuery.value = ""
+
+    await loadCollections()
+}
+
+
+function formatDate(value) {
+    if (!value) {
+        return ""
+    }
+
+    return new Intl.DateTimeFormat(
+        "uk-UA",
+        {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit"
+        }
+    ).format(
+        new Date(value)
+    )
+}
+
+
 async function openModal() {
     modal.value?.showModal()
 
@@ -47,9 +109,11 @@ async function openModal() {
     nameInput.value?.focus()
 }
 
+
 function closeModal() {
     modal.value?.close()
 }
+
 
 function closeOnBackdrop(event) {
     if (
@@ -58,6 +122,7 @@ function closeOnBackdrop(event) {
         closeModal()
     }
 }
+
 
 async function submitCollection() {
     errors.value = []
@@ -87,10 +152,12 @@ async function submitCollection() {
     }
 }
 
+
 onMounted(
     loadCollections
 )
 </script>
+
 
 <template>
     <section class="collections-page">
@@ -117,6 +184,115 @@ onMounted(
             >
                 + Нова колекція
             </button>
+        </div>
+
+        <section
+            class="collections-toolbar"
+            aria-label="Пошук і сортування колекцій"
+        >
+            <form
+                class="collection-search-form"
+                role="search"
+                @submit.prevent="loadCollections"
+            >
+                <label
+                    class="visually-hidden"
+                    for="collection-search"
+                >
+                    Пошук колекцій
+                </label>
+
+                <input
+                    id="collection-search"
+                    v-model="searchQuery"
+                    class="collection-search-input"
+                    type="search"
+                    maxlength="100"
+                    autocomplete="off"
+                    placeholder="Пошук за назвою або описом..."
+                >
+
+                <button
+                    class="collection-search-button"
+                    type="submit"
+                    :disabled="loading"
+                >
+                    Знайти
+                </button>
+
+                <button
+                    v-if="searchQuery || activeQuery"
+                    class="collection-clear-button"
+                    type="button"
+                    :disabled="loading"
+                    @click="clearSearch"
+                >
+                    Очистити
+                </button>
+            </form>
+
+            <div class="collection-sort-control">
+                <label for="collection-sort">
+                    Сортування
+                </label>
+
+                <select
+                    id="collection-sort"
+                    v-model="sortValue"
+                    :disabled="loading"
+                    @change="loadCollections"
+                >
+                    <option value="created_at-desc">
+                        Спочатку нові
+                    </option>
+
+                    <option value="created_at-asc">
+                        Спочатку старі
+                    </option>
+
+                    <option value="updated_at-desc">
+                        Нещодавно оновлені
+                    </option>
+
+                    <option value="name-asc">
+                        Назва: А–Я
+                    </option>
+
+                    <option value="name-desc">
+                        Назва: Я–А
+                    </option>
+                </select>
+            </div>
+        </section>
+
+        <div
+            v-if="!loading"
+            class="collections-result-summary"
+            aria-live="polite"
+        >
+            <span v-if="activeQuery">
+                За запитом
+                «{{ activeQuery }}»
+                знайдено:
+                {{ collections.length }}
+            </span>
+
+            <span v-else>
+                Колекцій:
+                {{ collections.length }}
+            </span>
+        </div>
+
+        <div
+            v-if="errors.length"
+            class="message message-error"
+        >
+            <p
+                v-for="error in errors"
+                :key="error"
+            >
+                {{ error }}
+            </p>
         </div>
 
         <section class="collections-list">
@@ -176,7 +352,8 @@ onMounted(
 
                         <div class="collection-card-footer">
                             <span>
-                                ID: {{ collection.id }}
+                                Створено:
+                                {{ formatDate(collection.created_at) }}
                             </span>
 
                             <span class="collection-open">
@@ -185,6 +362,30 @@ onMounted(
                         </div>
                     </article>
                 </RouterLink>
+            </div>
+
+            <div
+                v-else-if="activeQuery"
+                class="empty-state"
+            >
+                <h2>
+                    Колекцій не знайдено
+                </h2>
+
+                <p>
+                    За запитом
+                    «{{ activeQuery }}»
+                    немає збігів у назвах
+                    або описах колекцій.
+                </p>
+
+                <button
+                    class="secondary-button"
+                    type="button"
+                    @click="clearSearch"
+                >
+                    Показати всі колекції
+                </button>
             </div>
 
             <div
