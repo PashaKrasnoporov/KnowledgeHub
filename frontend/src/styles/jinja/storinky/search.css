@@ -367,3 +367,40 @@
     }
 
 }
+
+.search-snippet {
+    max-width: 820px;
+
+    margin: 10px 0 0;
+    padding: 11px 13px;
+
+    border-left:
+        3px solid
+        var(--blakytnyi-pryhlushenyi);
+
+    border-radius:
+        0 7px 7px 0;
+
+    background:
+        var(--poverkhna);
+
+    color:
+        var(--tekst-drugoryadnyi);
+
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.search-snippet mark {
+    padding: 1px 3px;
+
+    border-radius: 3px;
+
+    background:
+        var(--morska-pina);
+
+    color:
+        var(--morskyi-hlybokyi);
+
+    font-weight: 700;
+}

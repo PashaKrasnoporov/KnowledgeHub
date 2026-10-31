@@ -33,6 +33,111 @@ from app.services.semantic_search_service import (
 router = APIRouter()
 
 
+def build_search_snippet(
+    document,
+    query: str,
+    max_length: int = 260,
+) -> str | None:
+    source = " ".join(
+        (
+            document.extracted_text
+            or ""
+        ).split()
+    )
+
+    if not source:
+        return None
+
+    lowered = source.casefold()
+
+    terms = [
+        term.casefold()
+        for term in query.split()
+        if len(term) >= 2
+    ]
+
+    positions = [
+        lowered.find(term)
+        for term in terms
+    ]
+
+    positions = [
+        position
+        for position in positions
+        if position >= 0
+    ]
+
+    focus = (
+        min(positions)
+        if positions
+        else 0
+    )
+
+    context_before = (
+        max_length // 3
+    )
+
+    start = max(
+        0,
+        focus - context_before,
+    )
+
+    end = min(
+        len(source),
+        start + max_length,
+    )
+
+    if start > 0:
+        space_position = (
+            source.find(
+                " ",
+                start,
+            )
+        )
+
+        if (
+            space_position != -1
+            and space_position < focus
+        ):
+            start = (
+                space_position + 1
+            )
+
+    if end < len(source):
+        space_position = (
+            source.rfind(
+                " ",
+                start,
+                end,
+            )
+        )
+
+        if (
+            space_position > start
+        ):
+            end = space_position
+
+    snippet = (
+        source[
+            start:end
+        ].strip()
+    )
+
+    if not snippet:
+        return None
+
+    if start > 0:
+        snippet = (
+            "... "
+            + snippet
+        )
+
+    if end < len(source):
+        snippet += " ..."
+
+    return snippet
+
+
 @router.get(
     "/collections/{collection_id}/search",
     summary="Search collection documents",
@@ -119,6 +224,10 @@ def api_search_documents(
                     "created_at": document.created_at,
                 },
                 "score": float(score),
+                "snippet": build_search_snippet(
+                    document,
+                    normalized_query,
+                ),
             }
             for document, score
             in raw_results[:limit]
@@ -161,6 +270,14 @@ def api_search_documents(
                     ),
                 },
                 "score": float(result.score),
+                "snippet": build_search_snippet(
+                    result.document,
+                    normalized_query,
+                ),
+                "snippet": build_search_snippet(
+                    result.document,
+                    normalized_query,
+                ),
             }
             for result in raw_results
         ]

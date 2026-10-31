@@ -24,6 +24,16 @@ const props = defineProps({
         default: () => ({})
     },
 
+    snippetMap: {
+        type: Object,
+        default: () => ({})
+    },
+
+    searchQuery: {
+        type: String,
+        default: ""
+    },
+
     searchMode: {
         type: String,
         default: "hybrid"
@@ -64,6 +74,124 @@ function formatMegabytes(
         / 1024
     ).toFixed(2)
 }
+
+function highlightSnippet(
+    value
+) {
+    if (!value) {
+        return []
+    }
+
+    const terms = [
+        ...new Set(
+            props.searchQuery
+                .trim()
+                .split(/\s+/)
+                .map(
+                    term =>
+                        term.toLocaleLowerCase(
+                            "uk-UA"
+                        )
+                )
+                .filter(
+                    term =>
+                        term.length >= 2
+                )
+        )
+    ].sort(
+        (a, b) =>
+            b.length - a.length
+    )
+
+    if (!terms.length) {
+        return [
+            {
+                text: value,
+                match: false
+            }
+        ]
+    }
+
+    let parts = [
+        {
+            text: value,
+            match: false
+        }
+    ]
+
+    for (const term of terms) {
+        const nextParts = []
+
+        for (const part of parts) {
+            if (part.match) {
+                nextParts.push(
+                    part
+                )
+
+                continue
+            }
+
+            let remaining =
+                part.text
+
+            while (remaining) {
+                const lowered =
+                    remaining.toLocaleLowerCase(
+                        "uk-UA"
+                    )
+
+                const index =
+                    lowered.indexOf(
+                        term
+                    )
+
+                if (index < 0) {
+                    nextParts.push({
+                        text: remaining,
+                        match: false
+                    })
+
+                    break
+                }
+
+                if (index > 0) {
+                    nextParts.push({
+                        text:
+                            remaining.slice(
+                                0,
+                                index
+                            ),
+                        match: false
+                    })
+                }
+
+                nextParts.push({
+                    text:
+                        remaining.slice(
+                            index,
+                            index + term.length
+                        ),
+
+                    match: true
+                })
+
+                remaining =
+                    remaining.slice(
+                        index + term.length
+                    )
+            }
+        }
+
+        parts =
+            nextParts
+    }
+
+    return parts.filter(
+        part =>
+            part.text
+    )
+}
+
 
 function documentType(
     document
@@ -151,6 +279,31 @@ function documentType(
                     МБ
                     ·
                     {{ documentItem.processing_status }}
+                </p>
+
+                <p
+                    v-if="
+                        searchActive
+                        && snippetMap[documentItem.id]
+                    "
+                    class="search-snippet"
+                >
+                    <template
+                        v-for="(part, partIndex) in highlightSnippet(
+                            snippetMap[documentItem.id]
+                        )"
+                        :key="partIndex"
+                    >
+                        <mark
+                            v-if="part.match"
+                        >
+                            {{ part.text }}
+                        </mark>
+
+                        <span v-else>
+                            {{ part.text }}
+                        </span>
+                    </template>
                 </p>
 
                 <div

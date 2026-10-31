@@ -124,6 +124,17 @@ const scoreMap = computed(
     )
 )
 
+const snippetMap = computed(
+    () => Object.fromEntries(
+        searchResults.value.map(
+            result => [
+                result.document.id,
+                result.snippet || ""
+            ]
+        )
+    )
+)
+
 function clearMessages() {
     errors.value = []
     successMessage.value = ""
@@ -404,6 +415,8 @@ onMounted(
                 :documents="visibleDocuments"
                 :search-active="searchActive"
                 :score-map="scoreMap"
+                :snippet-map="snippetMap"
+                :search-query="searchQuery"
                 :search-mode="searchMode"
                 @upload="uploadDialog?.open()"
             />
