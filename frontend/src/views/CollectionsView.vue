@@ -675,25 +675,87 @@ onMounted(
 }
 
 .collections-favorites-filter label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    position: relative;
 
-    min-height: 38px;
+    display: block;
 
     cursor: pointer;
-
-    color: var(--tekst-osnovnyi);
-
-    font-size: 13px;
-    font-weight: 600;
 }
 
 .collections-favorites-filter input {
-    width: 17px;
-    height: 17px;
+    position: absolute;
 
-    accent-color:
+    width: 1px;
+    height: 1px;
+
+    opacity: 0;
+
+    pointer-events: none;
+}
+
+.collections-favorites-filter span {
+    display: inline-flex;
+
+    min-height: 44px;
+
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+
+    padding: 0 16px;
+
+    border:
+        1px solid
+        var(--mezha-temna);
+
+    border-radius: 12px;
+
+    background:
+        var(--poverkhna-svitla);
+
+    color:
+        var(--akvamarin-temnyi);
+
+    font-size: 13px;
+    font-weight: 700;
+
+    user-select: none;
+
+    transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.collections-favorites-filter
+label:hover span {
+    background:
+        var(--poverkhna);
+}
+
+.collections-favorites-filter
+input:focus-visible + span {
+    outline:
+        2px solid
+        var(--focus);
+
+    outline-offset: 2px;
+}
+
+.collections-favorites-filter
+input:checked + span {
+    border-color:
+        var(--akvamarin-temnyi);
+
+    background:
+        var(--poverkhna);
+
+    color:
+        var(--morskyi-hlybokyi);
+
+    box-shadow:
+        inset 0 0 0 1px
         var(--akvamarin-temnyi);
 }
 
