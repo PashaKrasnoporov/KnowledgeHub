@@ -1,6 +1,11 @@
 ﻿<script setup>
-import { ref } from "vue"
-import { uploadDocument } from "../../api/index.js"
+import {
+    ref
+} from "vue"
+
+import {
+    uploadDocument
+} from "../../api/index.js"
 
 const props = defineProps({
     collectionId: {
@@ -19,23 +24,34 @@ const fileInput = ref(null)
 const selectedFile = ref(null)
 const uploading = ref(false)
 const dragging = ref(false)
+const uploadProgress = ref(0)
 
-const MAX_SIZE = 10 * 1024 * 1024
-const ALLOWED = [".pdf", ".docx", ".txt"]
+const MAX_SIZE =
+    10 * 1024 * 1024
+
+const ALLOWED = [
+    ".pdf",
+    ".docx",
+    ".txt"
+]
+
 
 function reset() {
     selectedFile.value = null
     dragging.value = false
+    uploadProgress.value = 0
 
     if (fileInput.value) {
         fileInput.value.value = ""
     }
 }
 
+
 function open() {
     reset()
     dialog.value?.showModal()
 }
+
 
 function close() {
     if (!uploading.value) {
@@ -43,20 +59,31 @@ function close() {
     }
 }
 
-function closeOnBackdrop(event) {
+
+function closeOnBackdrop(
+    event
+) {
     if (event.target === dialog.value) {
         close()
     }
 }
 
-function validate(file) {
+
+function validate(
+    file
+) {
     if (!file) {
         return "Спочатку виберіть файл."
     }
 
-    const name = file.name.toLowerCase()
+    const name =
+        file.name.toLowerCase()
 
-    if (!ALLOWED.some(ext => name.endsWith(ext))) {
+    if (
+        !ALLOWED.some(
+            ext => name.endsWith(ext)
+        )
+    ) {
         return "Дозволені лише PDF, DOCX та TXT."
     }
 
@@ -67,21 +94,38 @@ function validate(file) {
     return null
 }
 
-function setFile(file) {
-    const error = validate(file)
+
+function setFile(
+    file
+) {
+    const error =
+        validate(file)
 
     if (error) {
         reset()
-        emit("error", error)
+
+        emit(
+            "error",
+            error
+        )
+
         return
     }
 
     selectedFile.value = file
+    uploadProgress.value = 0
 }
 
-function selectFile(event) {
-    setFile(event.target.files?.[0] || null)
+
+function selectFile(
+    event
+) {
+    setFile(
+        event.target.files?.[0]
+        || null
+    )
 }
+
 
 function chooseFile() {
     if (!uploading.value) {
@@ -89,41 +133,78 @@ function chooseFile() {
     }
 }
 
-function dropFile(event) {
+
+function dropFile(
+    event
+) {
     dragging.value = false
 
     if (!uploading.value) {
-        setFile(event.dataTransfer?.files?.[0] || null)
+        setFile(
+            event.dataTransfer?.files?.[0]
+            || null
+        )
     }
 }
 
-function fileSize(bytes) {
+
+function fileSize(
+    bytes
+) {
     if (bytes < 1024 * 1024) {
-        return `${(bytes / 1024).toFixed(1)} КБ`
+        return `${
+            (
+                bytes / 1024
+            ).toFixed(1)
+        } КБ`
     }
 
-    return `${(bytes / 1024 / 1024).toFixed(1)} МБ`
+    return `${
+        (
+            bytes
+            / 1024
+            / 1024
+        ).toFixed(1)
+    } МБ`
 }
+
 
 async function submit() {
-    const error = validate(selectedFile.value)
+    const error =
+        validate(
+            selectedFile.value
+        )
 
     if (error) {
-        emit("error", error)
+        emit(
+            "error",
+            error
+        )
+
         return
     }
 
     uploading.value = true
+    uploadProgress.value = 0
 
     try {
         await uploadDocument(
             props.collectionId,
-            selectedFile.value
+            selectedFile.value,
+            progress => {
+                uploadProgress.value =
+                    progress
+            }
         )
+
+        uploadProgress.value = 100
 
         dialog.value?.close()
         reset()
-        emit("uploaded")
+
+        emit(
+            "uploaded"
+        )
     }
     catch (error) {
         if (error.status === 413) {
@@ -141,7 +222,8 @@ async function submit() {
         else {
             emit(
                 "error",
-                "Не вдалося завантажити файл."
+                error.message
+                || "Не вдалося завантажити файл."
             )
         }
     }
@@ -150,11 +232,13 @@ async function submit() {
     }
 }
 
+
 defineExpose({
     open,
     close
 })
 </script>
+
 
 <template>
     <dialog
@@ -227,7 +311,7 @@ defineExpose({
                             {{ fileSize(selectedFile.size) }}
                         </span>
 
-                        <small>
+                        <small v-if="!uploading">
                             Натисніть, щоб вибрати інший файл
                         </small>
                     </template>
@@ -247,6 +331,36 @@ defineExpose({
                     </template>
                 </div>
 
+                <div
+                    v-if="uploading"
+                    class="upload-progress"
+                >
+                    <div class="upload-progress-header">
+                        <span>
+                            Завантаження файла
+                        </span>
+
+                        <strong>
+                            {{ uploadProgress }}%
+                        </strong>
+                    </div>
+
+                    <div
+                        class="upload-progress-track"
+                        role="progressbar"
+                        :aria-valuenow="uploadProgress"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                    >
+                        <div
+                            class="upload-progress-bar"
+                            :style="{
+                                width: `${uploadProgress}%`
+                            }"
+                        ></div>
+                    </div>
+                </div>
+
                 <div class="collection-modal-actions">
                     <button
                         class="secondary-button"
@@ -264,7 +378,7 @@ defineExpose({
                     >
                         {{
                             uploading
-                                ? "Завантаження..."
+                                ? `Завантаження ${uploadProgress}%`
                                 : "Завантажити"
                         }}
                     </button>
@@ -273,6 +387,7 @@ defineExpose({
         </div>
     </dialog>
 </template>
+
 
 <style scoped>
 .native-file-input {
@@ -339,8 +454,34 @@ defineExpose({
     color: var(--tekst-drugoryadnyi);
 }
 
-.drop-zone small {
-    margin-top: 5px;
+.upload-progress {
+    display: grid;
+    gap: 8px;
+    margin-top: 18px;
+}
+
+.upload-progress-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 14px;
+}
+
+.upload-progress-track {
+    width: 100%;
+    height: 10px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--poverkhna);
+    border: 1px solid var(--mezha);
+}
+
+.upload-progress-bar {
+    height: 100%;
+    border-radius: inherit;
+    background: var(--blakytnyi-pryhlushenyi);
+    transition: width 0.12s linear;
 }
 
 button:disabled {
