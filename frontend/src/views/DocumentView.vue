@@ -1,8 +1,10 @@
 <script setup>
 import {
     computed,
+    nextTick,
     onMounted,
-    ref
+    ref,
+    watch
 } from "vue"
 
 import {
@@ -68,6 +70,220 @@ const deleting = ref(false)
 const errorMessage = ref("")
 
 const deleteModal = ref(null)
+
+const textSearchQuery = ref("")
+const activeTextMatch = ref(0)
+
+const textMatches = computed(
+    () => {
+        const source =
+            document.value?.extracted_text
+            || ""
+
+        const query =
+            textSearchQuery.value.trim()
+
+        if (
+            !source
+            || !query
+        ) {
+            return []
+        }
+
+        const sourceLower =
+            source.toLocaleLowerCase(
+                "uk-UA"
+            )
+
+        const queryLower =
+            query.toLocaleLowerCase(
+                "uk-UA"
+            )
+
+        const matches = []
+
+        let position = 0
+
+        while (
+            position < source.length
+        ) {
+            const index =
+                sourceLower.indexOf(
+                    queryLower,
+                    position
+                )
+
+            if (index < 0) {
+                break
+            }
+
+            matches.push({
+                start: index,
+                end:
+                    index
+                    + query.length
+            })
+
+            position =
+                index
+                + Math.max(
+                    query.length,
+                    1
+                )
+        }
+
+        return matches
+    }
+)
+
+
+const highlightedDocumentParts = computed(
+    () => {
+        const source =
+            document.value?.extracted_text
+            || ""
+
+        const matches =
+            textMatches.value
+
+        if (!matches.length) {
+            return [
+                {
+                    text: source,
+                    match: false,
+                    index: -1
+                }
+            ]
+        }
+
+        const parts = []
+
+        let cursor = 0
+
+        matches.forEach(
+            (match, index) => {
+                if (
+                    match.start > cursor
+                ) {
+                    parts.push({
+                        text:
+                            source.slice(
+                                cursor,
+                                match.start
+                            ),
+                        match: false,
+                        index: -1
+                    })
+                }
+
+                parts.push({
+                    text:
+                        source.slice(
+                            match.start,
+                            match.end
+                        ),
+                    match: true,
+                    index
+                })
+
+                cursor =
+                    match.end
+            }
+        )
+
+        if (
+            cursor < source.length
+        ) {
+            parts.push({
+                text:
+                    source.slice(
+                        cursor
+                    ),
+                match: false,
+                index: -1
+            })
+        }
+
+        return parts
+    }
+)
+
+
+watch(
+    textSearchQuery,
+    () => {
+        activeTextMatch.value = 0
+
+        nextTick(
+            () => {
+                scrollToActiveMatch()
+            }
+        )
+    }
+)
+
+
+function scrollToActiveMatch() {
+    if (
+        !textMatches.value.length
+    ) {
+        return
+    }
+
+    const element =
+        window.document.querySelector(
+            '[data-document-match="'
+            + activeTextMatch.value
+            + '"]'
+        )
+
+    element?.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    })
+}
+
+
+function selectTextMatch(
+    index
+) {
+    const count =
+        textMatches.value.length
+
+    if (!count) {
+        return
+    }
+
+    activeTextMatch.value =
+        (
+            index
+            + count
+        ) % count
+
+    nextTick(
+        scrollToActiveMatch
+    )
+}
+
+
+function previousTextMatch() {
+    selectTextMatch(
+        activeTextMatch.value - 1
+    )
+}
+
+
+function nextTextMatch() {
+    selectTextMatch(
+        activeTextMatch.value + 1
+    )
+}
+
+
+function clearTextSearch() {
+    textSearchQuery.value = ""
+    activeTextMatch.value = 0
+}
 
 const extension = computed(
     () => {
@@ -505,12 +721,101 @@ onMounted(
                 </h2>
             </div>
 
-            <div
+            <template
                 v-if="document.extracted_text"
-                class="document-text-view"
             >
-                <pre>{{ document.extracted_text }}</pre>
-            </div>
+                <div class="document-text-search">
+                    <div class="document-text-search-field">
+                        <label for="document-text-search-input">
+                            Пошук у документі
+                        </label>
+
+                        <input
+                            id="document-text-search-input"
+                            v-model="textSearchQuery"
+                            type="search"
+                            placeholder="Введіть слово або фразу..."
+                            autocomplete="off"
+                            @keydown.enter.prevent="
+                                nextTextMatch
+                            "
+                        />
+                    </div>
+
+                    <div
+                        v-if="textSearchQuery.trim()"
+                        class="document-text-search-navigation"
+                    >
+                        <span class="document-text-search-count">
+                            <template
+                                v-if="textMatches.length"
+                            >
+                                {{
+                                    activeTextMatch + 1
+                                }}
+                                /
+                                {{
+                                    textMatches.length
+                                }}
+                            </template>
+
+                            <template v-else>
+                                0 збігів
+                            </template>
+                        </span>
+
+                        <button
+                            type="button"
+                            :disabled="
+                                !textMatches.length
+                            "
+                            aria-label="Попередній збіг"
+                            @click="previousTextMatch"
+                        >
+                            ↑
+                        </button>
+
+                        <button
+                            type="button"
+                            :disabled="
+                                !textMatches.length
+                            "
+                            aria-label="Наступний збіг"
+                            @click="nextTextMatch"
+                        >
+                            ↓
+                        </button>
+
+                        <button
+                            class="document-text-search-clear"
+                            type="button"
+                            @click="clearTextSearch"
+                        >
+                            Очистити
+                        </button>
+                    </div>
+                </div>
+
+                <div class="document-text-view">
+                    <pre><template
+                        v-for="(part, index) in highlightedDocumentParts"
+                        :key="index"
+                    ><mark
+                        v-if="part.match"
+                        class="document-text-match"
+                        :class="{
+                            active:
+                                part.index
+                                === activeTextMatch
+                        }"
+                        :data-document-match="
+                            part.index
+                        "
+                    >{{ part.text }}</mark><template
+                        v-else
+                    >{{ part.text }}</template></template></pre>
+                </div>
+            </template>
 
             <div
                 v-else-if="
