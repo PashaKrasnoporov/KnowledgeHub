@@ -64,6 +64,7 @@ const {
 } = useAuth()
 
 const favoriteVersion = ref(0)
+const onlyFavorites = ref(false)
 
 const typeFilter = ref("all")
 const statusFilter = ref("all")
@@ -84,9 +85,16 @@ const displayedDocuments = computed(
                         || document.processing_status
                             === statusFilter.value
 
+                    const favoriteMatches =
+                        !onlyFavorites.value
+                        || documentIsFavorite(
+                            document
+                        )
+
                     return (
                         typeMatches
                         && statusMatches
+                        && favoriteMatches
                     )
                 }
             )
@@ -165,6 +173,7 @@ const filtersActive = computed(
         typeFilter.value !== "all"
         || statusFilter.value !== "all"
         || sortMode.value !== "default"
+        || onlyFavorites.value
     )
 )
 
@@ -173,6 +182,7 @@ function resetFilters() {
     typeFilter.value = "all"
     statusFilter.value = "all"
     sortMode.value = "default"
+    onlyFavorites.value = false
 }
 
 
@@ -537,6 +547,19 @@ function documentType(
             </select>
         </div>
 
+        <div class="document-favorites-filter">
+            <label>
+                <input
+                    v-model="onlyFavorites"
+                    type="checkbox"
+                >
+
+                <span>
+                    ★ Тільки обране
+                </span>
+            </label>
+        </div>
+
         <button
             v-if="filtersActive"
             class="document-filter-reset"
@@ -872,6 +895,36 @@ function documentType(
     box-shadow:
         0 0 0 3px
         rgba(128, 175, 186, 0.15);
+}
+
+.document-favorites-filter {
+    display: flex;
+    align-items: center;
+
+    min-height: 42px;
+}
+
+.document-favorites-filter label {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    cursor: pointer;
+
+    color:
+        var(--tekst-osnovnyi);
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.document-favorites-filter input {
+    width: 17px;
+    height: 17px;
+
+    accent-color:
+        var(--akvamarin-temnyi);
 }
 
 .document-filter-reset {

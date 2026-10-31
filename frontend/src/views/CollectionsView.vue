@@ -1,5 +1,6 @@
 <script setup>
 import {
+    computed,
     nextTick,
     onMounted,
     ref
@@ -29,6 +30,7 @@ const loading = ref(true)
 const errors = ref([])
 
 const favoriteVersion = ref(0)
+const onlyFavorites = ref(false)
 
 const searchQuery = ref("")
 const activeQuery = ref("")
@@ -42,6 +44,24 @@ const description = ref("")
 const modal = ref(null)
 const nameInput = ref(null)
 const submitting = ref(false)
+
+
+const displayedCollections = computed(
+    () => {
+        favoriteVersion.value
+
+        if (!onlyFavorites.value) {
+            return collections.value
+        }
+
+        return collections.value.filter(
+            collection =>
+                collectionIsFavorite(
+                    collection
+                )
+        )
+    }
+)
 
 
 function getSortParameters() {
@@ -287,6 +307,19 @@ onMounted(
                 </button>
             </form>
 
+            <div class="collections-favorites-filter">
+                <label>
+                    <input
+                        v-model="onlyFavorites"
+                        type="checkbox"
+                    >
+
+                    <span>
+                        ★ Тільки обране
+                    </span>
+                </label>
+            </div>
+
             <div class="collection-sort-control">
                 <label for="collection-sort">
                     Сортування
@@ -330,12 +363,12 @@ onMounted(
                 За запитом
                 «{{ activeQuery }}»
                 знайдено:
-                {{ collections.length }}
+                {{ displayedCollections.length }}
             </span>
 
             <span v-else>
                 Колекцій:
-                {{ collections.length }}
+                {{ displayedCollections.length }}
             </span>
         </div>
 
@@ -362,11 +395,11 @@ onMounted(
             </div>
 
             <div
-                v-else-if="collections.length"
+                v-else-if="displayedCollections.length"
                 class="collections-grid"
             >
                 <div
-                    v-for="collection in collections"
+                    v-for="collection in displayedCollections"
                     :key="collection.id"
                     class="collection-card-shell"
                 >
@@ -459,6 +492,28 @@ onMounted(
                         }}
                     </button>
                 </div>
+            </div>
+
+            <div
+                v-else-if="onlyFavorites"
+                class="empty-state"
+            >
+                <h2>
+                    Обраних колекцій не знайдено
+                </h2>
+
+                <p>
+                    Додайте потрібні колекції
+                    в обране за допомогою зірочки.
+                </p>
+
+                <button
+                    class="secondary-button"
+                    type="button"
+                    @click="onlyFavorites = false"
+                >
+                    Показати всі колекції
+                </button>
             </div>
 
             <div
@@ -614,6 +669,34 @@ onMounted(
 </template>
 
 <style scoped>
+.collections-favorites-filter {
+    display: flex;
+    align-items: end;
+}
+
+.collections-favorites-filter label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    min-height: 38px;
+
+    cursor: pointer;
+
+    color: var(--tekst-osnovnyi);
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.collections-favorites-filter input {
+    width: 17px;
+    height: 17px;
+
+    accent-color:
+        var(--akvamarin-temnyi);
+}
+
 .collection-card-shell {
     position: relative;
     min-width: 0;
