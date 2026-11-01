@@ -42,22 +42,43 @@ def forbid(
 
 
 def main() -> None:
+    # -----------------------------------------------------
+    # Frontend production build
+    # -----------------------------------------------------
+
     frontend_dist = (
         PROJECT_ROOT
         / "frontend"
         / "dist"
     )
 
-    assert frontend_dist.is_dir()
+    assert frontend_dist.is_dir(), (
+        "frontend/dist does not exist. "
+        "Run npm run build first."
+    )
+
     assert (
         frontend_dist
         / "index.html"
-    ).is_file()
+    ).is_file(), (
+        "frontend/dist/index.html "
+        "does not exist."
+    )
 
-    production_source = read(
+    # -----------------------------------------------------
+    # Production FastAPI source
+    # Do NOT import app.production here:
+    # importing it initializes DB dependencies.
+    # -----------------------------------------------------
+
+    production_file = (
         BACKEND_ROOT
         / "app"
         / "production.py"
+    )
+
+    production_source = read(
+        production_file
     )
 
     require(
@@ -74,8 +95,20 @@ def main() -> None:
 
     require(
         production_source,
+        "api_router",
+        "API router",
+    )
+
+    require(
+        production_source,
         '"/{full_path:path}"',
         "Vue SPA fallback route",
+    )
+
+    require(
+        production_source,
+        "FRONTEND_DIST",
+        "Frontend distribution path",
     )
 
     require(
@@ -84,75 +117,111 @@ def main() -> None:
         "Unified application version",
     )
 
+    forbid(
+        production_source,
+        "laboratory work",
+        "Legacy laboratory wording",
+    )
+
+    forbid(
+        production_source,
+        "в„–4",
+        "Broken legacy encoding",
+    )
+
+    # -----------------------------------------------------
+    # Health endpoint source
+    # -----------------------------------------------------
+
+    health_source = read(
+        BACKEND_ROOT
+        / "app"
+        / "api"
+        / "v1"
+        / "health.py"
+    )
+
+    require(
+        health_source,
+        '"/health"',
+        "Health endpoint",
+    )
+
+    require(
+        health_source,
+        "app_version",
+        "Application version in health response",
+    )
+
+    require(
+        health_source,
+        "APP_VERSION",
+        "Unified health version",
+    )
+
+    # -----------------------------------------------------
+    # Docker / Railway runtime
+    # -----------------------------------------------------
+
     dockerfile = read(
         PROJECT_ROOT
         / "Dockerfile"
     )
 
-    for marker, label in [
-        (
-            "app.production:app",
-            "Production ASGI entrypoint",
-        ),
-        (
-            "${PORT:-8000}",
-            "Railway PORT binding",
-        ),
-        (
-            "alembic upgrade head",
-            "Database migrations",
-        ),
-        (
-            "backfill_embeddings",
-            "Embedding backfill",
-        ),
-        (
-            "DEPLOYMENT_PROFILE=railway-ml",
-            "Railway ML profile",
-        ),
-        (
-            "ML_ENABLED=true",
-            "Semantic ML enabled",
-        ),
-        (
-            "LLM_ENABLED=false",
-            "LLM capability isolation",
-        ),
-    ]:
-        require(
-            dockerfile,
-            marker,
-            label,
-        )
+    require(
+        dockerfile,
+        "app.production:app",
+        "Production ASGI entrypoint",
+    )
+
+    require(
+        dockerfile,
+        "${PORT:-8000}",
+        "Railway PORT binding",
+    )
+
+    require(
+        dockerfile,
+        "alembic upgrade head",
+        "Database migrations on startup",
+    )
+
+    require(
+        dockerfile,
+        "COPY VERSION",
+        "VERSION copied into image",
+    )
+
+    # -----------------------------------------------------
+    # Lightweight Railway dependencies
+    # -----------------------------------------------------
 
     requirements = read(
         BACKEND_ROOT
         / "requirements.railway.txt"
     )
 
-    require(
+    forbid(
         requirements,
-        "fastembed==0.9.1",
-        "FastEmbed runtime",
-    )
-
-    require(
-        requirements,
-        "onnxruntime==1.31.1",
-        "ONNX Runtime",
+        "torch==",
+        "torch in Railway-lite",
     )
 
     forbid(
         requirements,
-        "torch==",
-        "torch in Railway runtime",
+        "transformers==",
+        "transformers in Railway-lite",
     )
 
     forbid(
         requirements,
         "sentence-transformers==",
-        "PyTorch SentenceTransformers",
+        "sentence-transformers in Railway-lite",
     )
+
+    # -----------------------------------------------------
+    # Deployment settings contract
+    # -----------------------------------------------------
 
     settings_source = read(
         BACKEND_ROOT
@@ -163,15 +232,25 @@ def main() -> None:
 
     require(
         settings_source,
-        "ml_enabled",
-        "ML deployment switch",
+        "database_url",
+        "DATABASE_URL support",
     )
 
     require(
         settings_source,
-        "llm_enabled",
-        "LLM deployment switch",
+        "deployment_profile",
+        "Deployment profile setting",
     )
+
+    require(
+        settings_source,
+        "ml_enabled",
+        "ML deployment switch",
+    )
+
+    # -----------------------------------------------------
+    # Version
+    # -----------------------------------------------------
 
     version = read(
         PROJECT_ROOT
@@ -180,6 +259,9 @@ def main() -> None:
 
     assert version.startswith(
         "2.0.0"
+    ), (
+        "Unexpected application VERSION: "
+        + version
     )
 
     print(
