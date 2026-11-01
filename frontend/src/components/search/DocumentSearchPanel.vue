@@ -54,7 +54,7 @@ const modeHelp = computed(
 
         const descriptions = {
             lexical:
-                "Lexical шукає точні збіги слів і фраз у текстах документів.",
+                "Lexical шукає документи за словами запиту та їхнім лексичним збігом із текстом.",
 
             semantic:
                 "Semantic шукає документи зі схожим змістом, навіть якщо слова запиту не збігаються буквально.",
@@ -70,10 +70,15 @@ const modeHelp = computed(
 )
 
 const modeTitle = computed(
-    () => (
-        props.mode.charAt(0).toUpperCase()
-        + props.mode.slice(1)
-    )
+    () => {
+        const titles = {
+            lexical: "Лексичний",
+            semantic: "Семантичний",
+            hybrid: "Гібридний"
+        }
+
+        return titles[props.mode] || props.mode
+    }
 )
 </script>
 
@@ -119,8 +124,8 @@ const modeTitle = computed(
 
                             <span>
                                 <b>Lexical</b> — шукає
-                                збіги конкретних слів
-                                і фраз у тексті.
+                                документи за словами
+                                пошукового запиту.
                             </span>
 
                             <span>

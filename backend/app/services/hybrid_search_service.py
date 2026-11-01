@@ -1,18 +1,10 @@
 from sqlalchemy.orm import Session
 
 from app.modeli.collection import Collection
-from app.repositories.document_repository import (
-    get_documents_by_collection_id,
-)
-from app.schemas.search import (
-    DocumentSearchResult,
-)
-from app.services.document_service import (
-    search_collection_documents,
-)
-from app.services.semantic_search_service import (
-    search_semantic_documents,
-)
+from app.repositories.document_repository import get_documents_by_collection_id
+from app.schemas.search import DocumentSearchResult
+from app.services.document_service import search_collection_documents
+from app.services.semantic_search_service import search_semantic_documents
 
 
 HYBRID_LEXICAL_WEIGHT = 0.30
@@ -25,10 +17,7 @@ def normalize_scores(
     if not scores:
         return {}
 
-    values = list(
-        scores.values()
-    )
-
+    values = list(scores.values())
     minimum = min(values)
     maximum = max(values)
 
@@ -43,8 +32,7 @@ def normalize_scores(
             (score - minimum)
             / (maximum - minimum)
         )
-        for document_id, score
-        in scores.items()
+        for document_id, score in scores.items()
     }
 
 
@@ -52,12 +40,8 @@ def search_hybrid_documents(
     session: Session,
     collection: Collection,
     search_text: str,
-    lexical_weight: float = (
-        HYBRID_LEXICAL_WEIGHT
-    ),
-    semantic_weight: float = (
-        HYBRID_SEMANTIC_WEIGHT
-    ),
+    lexical_weight: float = HYBRID_LEXICAL_WEIGHT,
+    semantic_weight: float = HYBRID_SEMANTIC_WEIGHT,
     limit: int = 10,
 ) -> list[DocumentSearchResult]:
     normalized_query = " ".join(
@@ -77,40 +61,26 @@ def search_hybrid_documents(
             "semantic_weight must be >= 0"
         )
 
-    total_weight = (
-        lexical_weight
-        + semantic_weight
-    )
+    total_weight = lexical_weight + semantic_weight
 
     if total_weight <= 0:
         raise ValueError(
-            "At least one weight "
-            "must be positive."
+            "At least one weight must be positive."
         )
 
-    lexical_weight = (
-        lexical_weight
-        / total_weight
-    )
+    lexical_weight /= total_weight
+    semantic_weight /= total_weight
 
-    semantic_weight = (
-        semantic_weight
-        / total_weight
-    )
-
-    documents = (
-        get_documents_by_collection_id(
-            session=session,
-            collection_id=collection.id,
-        )
+    documents = get_documents_by_collection_id(
+        session=session,
+        collection_id=collection.id,
     )
 
     document_map = {
         document.id: document
         for document in documents
         if (
-            document.processing_status
-            == "ready"
+            document.processing_status == "ready"
             and document.extracted_text
         )
     }
@@ -118,79 +88,66 @@ def search_hybrid_documents(
     if not document_map:
         return []
 
-    lexical_results = (
-        search_collection_documents(
-            session=session,
-            collection=collection,
-            search_text=normalized_query,
-        )
+    lexical_results = search_collection_documents(
+        session=session,
+        collection=collection,
+        search_text=normalized_query,
     )
 
-    semantic_results = (
-        search_semantic_documents(
-            session=session,
-            collection=collection,
-            search_text=normalized_query,
-            limit=len(document_map),
-        )
+    semantic_results = search_semantic_documents(
+        session=session,
+        collection=collection,
+        search_text=normalized_query,
+        limit=len(document_map),
     )
 
     lexical_scores = {
-        result.document.id:
-            result.score
+        result.document.id: result.score
         for result in lexical_results
     }
 
     semantic_scores = {
-        result.document.id:
-            result.score
+        result.document.id: result.score
         for result in semantic_results
     }
 
-    lexical_normalized = (
-        normalize_scores(
-            lexical_scores
-        )
+    semantic_snippets = {
+        result.document.id: result.snippet
+        for result in semantic_results
+        if result.snippet
+    }
+
+    lexical_normalized = normalize_scores(
+        lexical_scores
     )
 
-    semantic_normalized = (
-        normalize_scores(
-            semantic_scores
-        )
+    semantic_normalized = normalize_scores(
+        semantic_scores
     )
 
-    results: list[
-        DocumentSearchResult
-    ] = []
+    results: list[DocumentSearchResult] = []
 
-    for document_id, document in (
-        document_map.items()
-    ):
-        lexical_score = (
-            lexical_normalized.get(
-                document_id,
-                0.0,
-            )
+    for document_id, document in document_map.items():
+        lexical_score = lexical_normalized.get(
+            document_id,
+            0.0,
         )
 
-        semantic_score = (
-            semantic_normalized.get(
-                document_id,
-                0.0,
-            )
+        semantic_score = semantic_normalized.get(
+            document_id,
+            0.0,
         )
 
         hybrid_score = (
-            lexical_weight
-            * lexical_score
-            + semantic_weight
-            * semantic_score
+            lexical_weight * lexical_score
+            + semantic_weight * semantic_score
         )
 
         results.append(
             DocumentSearchResult(
                 document=document,
                 score=hybrid_score,
+                snippet=semantic_snippets.get(document_id),
             )
         )
 
@@ -199,6 +156,4 @@ def search_hybrid_documents(
         reverse=True,
     )
 
-    return results[
-        :max(1, limit)
-    ]
+    return results[:max(1, limit)]

@@ -543,6 +543,7 @@ function resetLocalSearch() {
 
     <RecentItems
         v-if="currentUser"
+        :user-id="currentUser.id"
     />
 
     <section class="features">

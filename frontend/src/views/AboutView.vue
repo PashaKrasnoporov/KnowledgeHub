@@ -1,5 +1,9 @@
 <script setup>
-const SYSTEM_VERSION = "v1"
+import {
+    APP_VERSION
+} from "../version.js"
+
+const SYSTEM_VERSION = APP_VERSION
 
 const capabilities = [
     {
@@ -54,8 +58,8 @@ const steps = [
 const searchModes = [
     {
         name: "Lexical",
-        badge: "Точні збіги",
-        text: "Шукає слова та фрази, що безпосередньо присутні у документі. Підходить для назв, термінів і конкретних формулювань."
+        badge: "За словами",
+        text: "Шукає документи за словами запиту та їхнім лексичним збігом із текстом. Підходить для назв, термінів і конкретних формулювань."
     },
     {
         name: "Semantic",
@@ -90,7 +94,7 @@ const searchModes = [
 
                 <div class="about-meta">
                     <span class="version-badge">
-                        Версія {{ SYSTEM_VERSION }}
+                        Версія v{{ SYSTEM_VERSION }}
                     </span>
 
                     <span>

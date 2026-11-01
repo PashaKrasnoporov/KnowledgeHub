@@ -1,4 +1,4 @@
-﻿from pathlib import Path
+from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.gzip import GZipMiddleware
@@ -7,6 +7,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.api.v1.router import api_router
 from app.core.security_headers import SecurityHeadersMiddleware
+from app.version import APP_VERSION
 
 
 PROJECT_ROOT = (
@@ -42,10 +43,9 @@ FRONTEND_DIST = FRONTEND_DIST.resolve()
 app = FastAPI(
     title="KnowledgeHub",
     description=(
-        "KnowledgeHub Railway deployment "
-        "for laboratory work в„–4."
+        "KnowledgeHub production deployment."
     ),
-    version="1.7-railway",
+    version=APP_VERSION,
 )
 
 app.add_middleware(
@@ -116,4 +116,3 @@ def serve_vue_spa(
         FRONTEND_DIST
         / "index.html"
     )
-

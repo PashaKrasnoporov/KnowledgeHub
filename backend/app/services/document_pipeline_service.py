@@ -5,12 +5,8 @@ from pypdf import PdfReader
 
 from app.baza_danykh.sesii import FabrykaSesii
 from app.modeli.document import Document
-from app.nalashtuvannia.parametry import (
-    parametry,
-)
-from app.services.document_index_service import (
-    index_document_embeddings,
-)
+from app.nalashtuvannia.parametry import parametry
+from app.services.document_index_service import index_document_embeddings
 from app.services.document_view_service import (
     DocumentStorageError,
     get_document_file_path,
@@ -20,9 +16,7 @@ from app.services.document_view_service import (
 logger = logging.getLogger(__name__)
 
 
-def extract_txt_text(
-    file_path,
-) -> str:
+def extract_txt_text(file_path) -> str:
     raw = file_path.read_bytes()
 
     for encoding in (
@@ -31,102 +25,66 @@ def extract_txt_text(
         "cp1251",
     ):
         try:
-            return raw.decode(
-                encoding
-            )
-
+            return raw.decode(encoding)
         except UnicodeDecodeError:
             continue
 
     raise ValueError(
-        "Не вдалося визначити "
-        "кодування TXT-файла."
+        "Не вдалося визначити кодування TXT-файла."
     )
 
 
-def extract_docx_text(
-    file_path,
-) -> str:
-    document = DocxDocument(
-        file_path
-    )
+def extract_docx_text(file_path) -> str:
+    source = DocxDocument(file_path)
 
     paragraphs = [
         paragraph.text
-        for paragraph
-        in document.paragraphs
+        for paragraph in source.paragraphs
         if paragraph.text.strip()
     ]
 
-    return "\n".join(
-        paragraphs
-    )
+    return "\n".join(paragraphs)
 
 
-def extract_pdf_text(
-    file_path,
-) -> str:
-    reader = PdfReader(
-        str(file_path)
-    )
-
+def extract_pdf_text(file_path) -> str:
+    reader = PdfReader(str(file_path))
     pages: list[str] = []
 
     for page in reader.pages:
-        text = (
-            page.extract_text()
-            or ""
-        ).strip()
+        text = (page.extract_text() or "").strip()
 
         if text:
-            pages.append(
-                text
-            )
+            pages.append(text)
 
-    return "\n\n".join(
-        pages
-    )
+    return "\n\n".join(pages)
 
 
-def extract_document_text(
-    document: Document,
-) -> str:
+def extract_document_text(document: Document) -> str:
     file_path = get_document_file_path(
         document=document,
     )
 
     extension = (
         document.original_name
-        .rsplit(
-            ".",
-            maxsplit=1,
-        )[-1]
+        .rsplit(".", maxsplit=1)[-1]
         .lower()
     )
 
     if extension == "txt":
-        return extract_txt_text(
-            file_path
-        )
+        return extract_txt_text(file_path)
 
     if extension == "docx":
-        return extract_docx_text(
-            file_path
-        )
+        return extract_docx_text(file_path)
 
     if extension == "pdf":
-        return extract_pdf_text(
-            file_path
-        )
+        return extract_pdf_text(file_path)
 
     raise ValueError(
         "Непідтримуваний формат документа."
     )
 
 
-def process_and_index_document(
-    document_id: int,
-) -> None:
+def process_and_index_document(document_id: int) -> None:
     session = FabrykaSesii()
 
     try:
@@ -137,75 +95,67 @@ def process_and_index_document(
 
         if document is None:
             logger.warning(
-                "Document ID %s "
-                "was not found.",
+                "Document ID %s was not found.",
                 document_id,
             )
             return
 
         try:
             if (
-                document.processing_status
-                != "ready"
-                or not document.extracted_text
+                not document.extracted_text
+                or not document.extracted_text.strip()
             ):
-                extracted_text = (
-                    extract_document_text(
-                        document=document,
-                    )
+                extracted_text = extract_document_text(
+                    document=document,
                 )
 
                 if not extracted_text.strip():
                     raise ValueError(
-                        "Не вдалося отримати "
-                        "текст із документа."
+                        "Не вдалося отримати текст із документа."
                     )
 
-                document.extracted_text = (
-                    extracted_text
-                )
+                document.extracted_text = extracted_text
 
-                document.processing_status = (
-                    "ready"
-                )
+            document.processing_error = None
 
-                document.processing_error = None
-
+            if parametry.ml_enabled:
+                document.processing_status = "processing"
                 session.commit()
+                session.refresh(document)
 
-                session.refresh(
-                    document
-                )
-
-            if not parametry.ml_enabled:
-                logger.info(
-                    "ML indexing is disabled. "
-                    "Document ID %s remains available "
-                    "for lexical search.",
-                    document.id,
-                )
-                return
-
-            chunk_count = (
-                index_document_embeddings(
+                chunk_count = index_document_embeddings(
                     session=session,
                     document=document,
                 )
-            )
 
-            logger.info(
-                "Document ID %s processed. "
-                "Chunks: %s",
-                document.id,
-                chunk_count,
-            )
+                document = session.get(
+                    Document,
+                    document_id,
+                )
 
-        except (
-            DocumentStorageError,
-            ValueError,
-            OSError,
-            Exception,
-        ) as exc:
+                if document is not None:
+                    document.processing_status = "ready"
+                    document.processing_error = None
+                    session.commit()
+
+                logger.info(
+                    "Document ID %s indexed. Chunks: %s",
+                    document_id,
+                    chunk_count,
+                )
+
+            else:
+                document.processing_status = "ready"
+                document.processing_error = None
+                session.commit()
+
+                logger.info(
+                    "ML indexing disabled. "
+                    "Document ID %s is ready for lexical search.",
+                    document_id,
+                )
+
+        except (DocumentStorageError, ValueError, OSError, Exception) as exc:
             session.rollback()
 
             document = session.get(
@@ -214,19 +164,12 @@ def process_and_index_document(
             )
 
             if document is not None:
-                document.processing_status = (
-                    "error"
-                )
-
-                document.processing_error = (
-                    str(exc)[:1000]
-                )
-
+                document.processing_status = "error"
+                document.processing_error = str(exc)[:500]
                 session.commit()
 
             logger.exception(
-                "Document processing failed. "
-                "Document ID: %s",
+                "Document processing failed. Document ID: %s",
                 document_id,
             )
 

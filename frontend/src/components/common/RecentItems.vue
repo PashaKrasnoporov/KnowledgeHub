@@ -1,18 +1,91 @@
 <script setup>
 import {
     onMounted,
-    ref
+    onUnmounted,
+    ref,
+    watch
 } from "vue"
 
 import {
     getRecentItems
 } from "../../utils/recentItems.js"
 
+
+const props = defineProps({
+    userId: {
+        type: [
+            Number,
+            String
+        ],
+        required: true
+    }
+})
+
 const items = ref([])
+
+
+function refresh() {
+    items.value = getRecentItems(
+        props.userId
+    )
+}
+
+
+function handleRecentChanged(event) {
+    if (
+        String(event.detail?.userId)
+        === String(props.userId)
+    ) {
+        refresh()
+    }
+}
+
+
+function handleStorage(event) {
+    if (
+        event.key?.startsWith(
+            "knowledgehub.recentItems.v2."
+        )
+    ) {
+        refresh()
+    }
+}
+
+
+watch(
+    () => props.userId,
+    refresh
+)
+
 
 onMounted(
     () => {
-        items.value = getRecentItems()
+        refresh()
+
+        window.addEventListener(
+            "knowledgehub:recent-changed",
+            handleRecentChanged
+        )
+
+        window.addEventListener(
+            "storage",
+            handleStorage
+        )
+    }
+)
+
+
+onUnmounted(
+    () => {
+        window.removeEventListener(
+            "knowledgehub:recent-changed",
+            handleRecentChanged
+        )
+
+        window.removeEventListener(
+            "storage",
+            handleStorage
+        )
     }
 )
 </script>
@@ -98,6 +171,7 @@ onMounted(
 .recent-section {
     margin-bottom: 44px;
     padding: 26px;
+
     background: var(--poverkhna-svitla);
     border: 1px solid var(--mezha);
     border-radius: 14px;
@@ -130,8 +204,7 @@ onMounted(
 
 .recent-grid {
     display: grid;
-    grid-template-columns:
-        repeat(auto-fit, minmax(210px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
     gap: 14px;
 }
 
@@ -139,7 +212,6 @@ onMounted(
     display: flex;
     min-height: 120px;
     padding: 18px;
-    box-sizing: border-box;
     flex-direction: column;
     gap: 8px;
 
@@ -159,9 +231,7 @@ onMounted(
 .recent-card:hover {
     transform: translateY(-2px);
     border-color: var(--mezha-temna);
-    box-shadow:
-        0 6px 18px
-        rgba(38, 60, 67, 0.06);
+    box-shadow: 0 6px 18px rgba(38, 60, 67, 0.06);
 }
 
 .recent-type {

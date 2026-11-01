@@ -97,6 +97,23 @@ async function submitLogin() {
             </div>
 
             <div
+                v-if="
+                    route.query.reason
+                    === 'session-expired'
+                "
+                class="message"
+            >
+                <strong>
+                    Сесію завершено.
+                </strong>
+
+                <p>
+                    Увійдіть повторно,
+                    щоб продовжити роботу.
+                </p>
+            </div>
+
+            <div
                 v-if="startupMessage"
                 class="message"
             >

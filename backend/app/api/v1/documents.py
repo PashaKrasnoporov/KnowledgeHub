@@ -26,6 +26,9 @@ from app.bezpeka.faily import (
     InvalidDocumentError,
 )
 from app.modeli.user import User
+from app.nalashtuvannia.parametry import (
+    parametry,
+)
 from app.schemas.api import (
     DocumentAPIResponse,
 )
@@ -125,10 +128,29 @@ def api_upload_document(
             detail="Document was not created.",
         )
 
-    background_tasks.add_task(
-        process_and_index_document,
-        document.id,
-    )
+    if (
+        parametry.ml_enabled
+        and document.processing_status != "error"
+    ):
+        try:
+            document.processing_status = "processing"
+            document.processing_error = None
+
+            session.commit()
+            session.refresh(document)
+
+        except SQLAlchemyError as exc:
+            session.rollback()
+
+            raise HTTPException(
+                status_code=500,
+                detail="Database error.",
+            ) from exc
+
+        background_tasks.add_task(
+            process_and_index_document,
+            document.id,
+        )
 
     return document
 

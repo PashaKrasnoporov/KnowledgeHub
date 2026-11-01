@@ -143,6 +143,13 @@ async function copyAnswer() {
                     </span>
                 </div>
 
+                <details
+                    class="research-advanced-details"
+                >
+                    <summary>
+                        Розширена технічна інформація
+                    </summary>
+
                 <div
                     v-if="result.generation_provider"
                     class="research-generation-meta"
@@ -260,6 +267,8 @@ async function copyAnswer() {
                         Cold start
                     </span>
                 </div>
+
+                </details>
             </div>
 
             <div class="research-answer-actions">

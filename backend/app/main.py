@@ -1,4 +1,5 @@
 from app.api.v1.router import api_router
+from app.version import APP_VERSION
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
@@ -21,7 +22,7 @@ app = FastAPI(
         "Platform for organizing and "
         "working with document collections."
     ),
-    version="0.1.0",
+    version=APP_VERSION,
 )
 
 

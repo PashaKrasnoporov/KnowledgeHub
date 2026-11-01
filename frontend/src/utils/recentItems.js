@@ -1,10 +1,46 @@
-const STORAGE_KEY = "knowledgehub.recentItems.v1"
+const PREFIX = "knowledgehub.recentItems.v2"
+const LEGACY_KEY = "knowledgehub.recentItems.v1"
 const MAX_ITEMS = 6
 
-function readItems() {
+
+function storageKey(userId) {
+    return `${PREFIX}.${String(userId)}`
+}
+
+
+function discardLegacyStorage() {
+    localStorage.removeItem(
+        LEGACY_KEY
+    )
+}
+
+
+function notify(userId) {
+    window.dispatchEvent(
+        new CustomEvent(
+            "knowledgehub:recent-changed",
+            {
+                detail: {
+                    userId: String(userId)
+                }
+            }
+        )
+    )
+}
+
+
+function readItems(userId) {
+    if (!userId) {
+        return []
+    }
+
+    discardLegacyStorage()
+
     try {
         const value = JSON.parse(
-            localStorage.getItem(STORAGE_KEY) || "[]"
+            localStorage.getItem(
+                storageKey(userId)
+            ) || "[]"
         )
 
         return Array.isArray(value)
@@ -16,65 +52,136 @@ function readItems() {
     }
 }
 
-function saveItems(items) {
+
+function saveItems(userId, items) {
+    if (!userId) {
+        return
+    }
+
     localStorage.setItem(
-        STORAGE_KEY,
+        storageKey(userId),
         JSON.stringify(
             items.slice(0, MAX_ITEMS)
         )
     )
+
+    notify(userId)
 }
 
-function addItem(item) {
-    const items = readItems().filter(
-        existing =>
-            !(
-                existing.type === item.type
-                && existing.id === item.id
-                && existing.collectionId === item.collectionId
-            )
+
+function sameItem(a, b) {
+    return (
+        a.type === b.type
+        && String(a.id) === String(b.id)
+        && String(a.collectionId) === String(b.collectionId)
+    )
+}
+
+
+function addItem(userId, item) {
+    const items = readItems(userId).filter(
+        existing => !sameItem(existing, item)
     )
 
-    saveItems([
+    saveItems(
+        userId,
+        [
+            {
+                ...item,
+                visitedAt: new Date().toISOString()
+            },
+            ...items
+        ]
+    )
+}
+
+
+export function addRecentCollection(userId, collection) {
+    if (!userId || !collection?.id) {
+        return
+    }
+
+    addItem(
+        userId,
         {
-            ...item,
-            visitedAt: new Date().toISOString()
-        },
-        ...items
-    ])
+            type: "collection",
+            id: collection.id,
+            collectionId: collection.id,
+            name: collection.name || "Колекція"
+        }
+    )
 }
 
-export function addRecentCollection(collection) {
-    if (!collection?.id) {
+
+export function addRecentDocument(userId, collectionId, document) {
+    if (!userId || !collectionId || !document?.id) {
         return
     }
 
-    addItem({
-        type: "collection",
-        id: collection.id,
-        collectionId: collection.id,
-        name: collection.name || "\u041a\u043e\u043b\u0435\u043a\u0446\u0456\u044f"
-    })
+    addItem(
+        userId,
+        {
+            type: "document",
+            id: document.id,
+            collectionId: Number(collectionId),
+            name: document.original_name || "Документ"
+        }
+    )
 }
 
-export function addRecentDocument(
-    collectionId,
-    document
-) {
-    if (!collectionId || !document?.id) {
+
+export function getRecentItems(userId) {
+    return readItems(userId)
+}
+
+
+export function updateRecentCollection(userId, collection) {
+    if (!userId || !collection?.id) {
         return
     }
 
-    addItem({
-        type: "document",
-        id: document.id,
-        collectionId: Number(collectionId),
-        name:
-            document.original_name
-            || "\u0414\u043e\u043a\u0443\u043c\u0435\u043d\u0442"
-    })
+    const collectionId = Number(collection.id)
+
+    const items = readItems(userId).map(
+        item => {
+            if (Number(item.collectionId) !== collectionId) {
+                return item
+            }
+
+            if (item.type === "collection") {
+                return {
+                    ...item,
+                    name: collection.name
+                }
+            }
+
+            return item
+        }
+    )
+
+    saveItems(userId, items)
 }
 
-export function getRecentItems() {
-    return readItems()
+
+export function removeRecentCollection(userId, collectionId) {
+    const normalized = Number(collectionId)
+
+    const items = readItems(userId).filter(
+        item => Number(item.collectionId) !== normalized
+    )
+
+    saveItems(userId, items)
+}
+
+
+export function removeRecentDocument(userId, collectionId, documentId) {
+    const items = readItems(userId).filter(
+        item => !(
+            item.type === "document"
+            && Number(item.collectionId) === Number(collectionId)
+            && Number(item.id) === Number(documentId)
+        )
+    )
+
+    saveItems(userId, items)
 }

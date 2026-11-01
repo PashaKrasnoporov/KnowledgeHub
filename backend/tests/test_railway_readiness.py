@@ -1,5 +1,4 @@
 from pathlib import Path
-import sys
 
 
 BACKEND_ROOT = (
@@ -13,81 +12,261 @@ PROJECT_ROOT = (
     .parent
 )
 
-if str(BACKEND_ROOT) not in sys.path:
-    sys.path.insert(
-        0,
-        str(BACKEND_ROOT),
+
+def read(
+    path: Path,
+) -> str:
+    return path.read_text(
+        encoding="utf-8-sig",
+    )
+
+
+def require(
+    source: str,
+    marker: str,
+    label: str,
+) -> None:
+    assert marker in source, (
+        f"Missing Railway contract: {label}"
+    )
+
+
+def forbid(
+    source: str,
+    marker: str,
+    label: str,
+) -> None:
+    assert marker not in source, (
+        f"Forbidden Railway contract: {label}"
     )
 
 
 def main() -> None:
+    # -----------------------------------------------------
+    # Frontend production build
+    # -----------------------------------------------------
+
     frontend_dist = (
         PROJECT_ROOT
         / "frontend"
         / "dist"
     )
 
-    assert frontend_dist.is_dir()
+    assert frontend_dist.is_dir(), (
+        "frontend/dist does not exist. "
+        "Run npm run build first."
+    )
+
     assert (
         frontend_dist
         / "index.html"
-    ).is_file()
-
-    from app.production import app
-    from app.api.v1.health import (
-        router as health_router,
+    ).is_file(), (
+        "frontend/dist/index.html "
+        "does not exist."
     )
 
-    # FastAPI 0.141 can keep included routers as internal wrapper
-    # objects, so do not depend on app.routes being fully flattened.
-    health_paths = {
-        getattr(
-            route,
-            "path",
-            None,
-        )
-        for route
-        in health_router.routes
-    }
+    # -----------------------------------------------------
+    # Production FastAPI source
+    # Do NOT import app.production here:
+    # importing it initializes DB dependencies.
+    # -----------------------------------------------------
 
-    assert "/health" in health_paths
-
-    production_source = (
+    production_file = (
         BACKEND_ROOT
         / "app"
         / "production.py"
-    ).read_text(
-        encoding="utf-8"
     )
 
-    assert "app.include_router" in production_source
-    assert "api_router" in production_source
-    assert '"/{full_path:path}"' in production_source
-    assert app is not None
+    production_source = read(
+        production_file
+    )
 
-    dockerfile = (
+    require(
+        production_source,
+        "FastAPI(",
+        "FastAPI production application",
+    )
+
+    require(
+        production_source,
+        "app.include_router",
+        "API router inclusion",
+    )
+
+    require(
+        production_source,
+        "api_router",
+        "API router",
+    )
+
+    require(
+        production_source,
+        '"/{full_path:path}"',
+        "Vue SPA fallback route",
+    )
+
+    require(
+        production_source,
+        "FRONTEND_DIST",
+        "Frontend distribution path",
+    )
+
+    require(
+        production_source,
+        "APP_VERSION",
+        "Unified application version",
+    )
+
+    forbid(
+        production_source,
+        "laboratory work",
+        "Legacy laboratory wording",
+    )
+
+    forbid(
+        production_source,
+        "в„–4",
+        "Broken legacy encoding",
+    )
+
+    # -----------------------------------------------------
+    # Health endpoint source
+    # -----------------------------------------------------
+
+    health_source = read(
+        BACKEND_ROOT
+        / "app"
+        / "api"
+        / "v1"
+        / "health.py"
+    )
+
+    require(
+        health_source,
+        '"/health"',
+        "Health endpoint",
+    )
+
+    require(
+        health_source,
+        "app_version",
+        "Application version in health response",
+    )
+
+    require(
+        health_source,
+        "APP_VERSION",
+        "Unified health version",
+    )
+
+    # -----------------------------------------------------
+    # Docker / Railway runtime
+    # -----------------------------------------------------
+
+    dockerfile = read(
         PROJECT_ROOT
         / "Dockerfile"
-    ).read_text(
-        encoding="utf-8"
     )
 
-    assert "app.production:app" in dockerfile
-    assert "${PORT:-8000}" in dockerfile
-    assert "alembic upgrade head" in dockerfile
+    require(
+        dockerfile,
+        "app.production:app",
+        "Production ASGI entrypoint",
+    )
 
-    requirements = (
+    require(
+        dockerfile,
+        "${PORT:-8000}",
+        "Railway PORT binding",
+    )
+
+    require(
+        dockerfile,
+        "alembic upgrade head",
+        "Database migrations on startup",
+    )
+
+    require(
+        dockerfile,
+        "COPY VERSION",
+        "VERSION copied into image",
+    )
+
+    # -----------------------------------------------------
+    # Lightweight Railway dependencies
+    # -----------------------------------------------------
+
+    requirements = read(
         BACKEND_ROOT
         / "requirements.railway.txt"
-    ).read_text(
-        encoding="utf-8"
     )
 
-    assert "torch==" not in requirements
-    assert "transformers==" not in requirements
-    assert "sentence-transformers==" not in requirements
+    forbid(
+        requirements,
+        "torch==",
+        "torch in Railway-lite",
+    )
 
-    print("Railway readiness self-test: OK")
+    forbid(
+        requirements,
+        "transformers==",
+        "transformers in Railway-lite",
+    )
+
+    forbid(
+        requirements,
+        "sentence-transformers==",
+        "sentence-transformers in Railway-lite",
+    )
+
+    # -----------------------------------------------------
+    # Deployment settings contract
+    # -----------------------------------------------------
+
+    settings_source = read(
+        BACKEND_ROOT
+        / "app"
+        / "nalashtuvannia"
+        / "parametry.py"
+    )
+
+    require(
+        settings_source,
+        "database_url",
+        "DATABASE_URL support",
+    )
+
+    require(
+        settings_source,
+        "deployment_profile",
+        "Deployment profile setting",
+    )
+
+    require(
+        settings_source,
+        "ml_enabled",
+        "ML deployment switch",
+    )
+
+    # -----------------------------------------------------
+    # Version
+    # -----------------------------------------------------
+
+    version = read(
+        PROJECT_ROOT
+        / "VERSION"
+    ).strip()
+
+    assert version.startswith(
+        "2.0.0"
+    ), (
+        "Unexpected application VERSION: "
+        + version
+    )
+
+    print(
+        "Railway readiness self-test: PASS"
+    )
 
 
 if __name__ == "__main__":

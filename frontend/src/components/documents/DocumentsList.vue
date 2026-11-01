@@ -82,8 +82,14 @@ const displayedDocuments = computed(
 
                     const statusMatches =
                         statusFilter.value === "all"
-                        || document.processing_status
-                            === statusFilter.value
+                        || (
+                            statusFilter.value === "pending"
+                            && (
+                                document.processing_status === "pending"
+                                || document.processing_status === "processing"
+                            )
+                        )
+                        || document.processing_status === statusFilter.value
 
                     const favoriteMatches =
                         !onlyFavorites.value
@@ -388,7 +394,10 @@ function documentStatusLabel(
         return "Готовий"
     }
 
-    if (status === "pending") {
+    if (
+        status === "pending"
+        || status === "processing"
+    ) {
         return "Обробляється"
     }
 

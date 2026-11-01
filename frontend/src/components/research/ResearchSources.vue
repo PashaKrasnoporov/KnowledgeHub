@@ -54,13 +54,18 @@ defineProps({
                     </RouterLink>
 
                     <span>
-                        chunk {{ source.chunk_index }}
+                        Фрагмент {{ source.chunk_index + 1 }}
                     </span>
                 </div>
 
                 <p>
                     {{ source.excerpt }}
                 </p>
+
+                <details class="research-source-technical">
+                    <summary>
+                        Технічна оцінка
+                    </summary>
 
                 <div class="research-score-row">
                     <span>
@@ -96,6 +101,8 @@ defineProps({
                         </strong>
                     </span>
                 </div>
+
+                </details>
             </div>
         </article>
     </div>

@@ -35,9 +35,10 @@ const readyCount = computed(
 const pendingCount = computed(
     () =>
         props.documents.filter(
-            document =>
-                document.processing_status
-                === "pending"
+            document => (
+                document.processing_status === "pending"
+                || document.processing_status === "processing"
+            )
         ).length
 )
 

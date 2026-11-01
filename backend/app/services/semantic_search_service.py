@@ -2,15 +2,24 @@ import numpy as np
 from sqlalchemy.orm import Session
 
 from app.modeli.collection import Collection
-from app.repositories.document_chunk_repository import (
-    get_collection_chunks,
-)
-from app.schemas.search import (
-    DocumentSearchResult,
-)
-from app.services.embedding_service import (
-    create_query_embedding,
-)
+from app.repositories.document_chunk_repository import get_collection_chunks
+from app.schemas.search import DocumentSearchResult
+from app.services.embedding_service import create_query_embedding
+
+
+def _snippet(text: str, max_length: int = 420) -> str:
+    normalized = " ".join(text.split())
+
+    if len(normalized) <= max_length:
+        return normalized
+
+    shortened = (
+        normalized[:max_length]
+        .rsplit(" ", 1)[0]
+        .rstrip(" ,.;:")
+    )
+
+    return shortened + "…"
 
 
 def search_semantic_documents(
@@ -34,17 +43,12 @@ def search_semantic_documents(
     if not rows:
         return []
 
-    query_embedding = (
-        create_query_embedding(
-            normalized_query
-        )
+    query_embedding = create_query_embedding(
+        normalized_query
     )
 
-    document_scores: dict[
-        int,
-        float,
-    ] = {}
-
+    document_scores: dict[int, float] = {}
+    document_snippets: dict[int, str] = {}
     documents = {}
 
     for chunk, document in rows:
@@ -60,33 +64,28 @@ def search_semantic_documents(
             )
         )
 
-        previous_score = (
-            document_scores.get(
-                document.id
-            )
+        previous_score = document_scores.get(
+            document.id
         )
 
         if (
             previous_score is None
             or score > previous_score
         ):
-            document_scores[
-                document.id
-            ] = score
+            document_scores[document.id] = score
+            document_snippets[document.id] = _snippet(
+                chunk.chunk_text
+            )
 
-        documents[
-            document.id
-        ] = document
+        documents[document.id] = document
 
     results = [
         DocumentSearchResult(
-            document=documents[
-                document_id
-            ],
+            document=documents[document_id],
             score=score,
+            snippet=document_snippets.get(document_id),
         )
-        for document_id, score
-        in document_scores.items()
+        for document_id, score in document_scores.items()
     ]
 
     results.sort(
@@ -94,9 +93,4 @@ def search_semantic_documents(
         reverse=True,
     )
 
-    return results[
-        :max(
-            1,
-            limit,
-        )
-    ]
+    return results[:max(1, limit)]

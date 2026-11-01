@@ -19,15 +19,13 @@ async function refreshCurrentUser() {
     authLoading.value = true
 
     try {
-        currentUser.value =
-            await getCurrentUser()
-
+        currentUser.value = await getCurrentUser()
         return currentUser.value
     }
     catch (error) {
         if (
-            error.status === 401 ||
-            error.status === 403
+            error.status === 401
+            || error.status === 403
         ) {
             currentUser.value = null
             return null
@@ -51,15 +49,11 @@ async function ensureAuthReady() {
 }
 
 
-async function login(
-    email,
-    password
-) {
-    currentUser.value =
-        await loginAccount({
-            email,
-            password
-        })
+async function login(email, password) {
+    currentUser.value = await loginAccount({
+        email,
+        password
+    })
 
     authReady.value = true
 
@@ -72,29 +66,27 @@ async function logout() {
         await logoutAccount()
     }
     finally {
-        currentUser.value = null
-        authReady.value = true
+        clearAuthState()
     }
+}
+
+
+function clearAuthState() {
+    currentUser.value = null
+    authReady.value = true
+    authLoading.value = false
 }
 
 
 export function useAuth() {
     return {
-        currentUser: readonly(
-            currentUser
-        ),
-
-        authReady: readonly(
-            authReady
-        ),
-
-        authLoading: readonly(
-            authLoading
-        ),
-
+        currentUser: readonly(currentUser),
+        authReady: readonly(authReady),
+        authLoading: readonly(authLoading),
         ensureAuthReady,
         refreshCurrentUser,
         login,
-        logout
+        logout,
+        clearAuthState
     }
 }

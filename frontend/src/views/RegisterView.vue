@@ -81,16 +81,17 @@ async function submitRegistration() {
 
                     <p>
                         Обліковий запис створено.
-                        Далі ми підключимо вхід
-                        у систему.
+                        Тепер увійдіть у систему,
+                        використовуючи свій email
+                        і пароль.
                     </p>
                 </div>
 
                 <RouterLink
                     class="button primary"
-                    :to="{ name: 'home' }"
+                    :to="{ name: 'login' }"
                 >
-                    Перейти на головну
+                    Увійти в систему
                 </RouterLink>
             </template>
 

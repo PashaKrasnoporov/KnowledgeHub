@@ -23,11 +23,13 @@ import {
 import AppBreadcrumbs from "../components/common/AppBreadcrumbs.vue"
 
 import {
-    addRecentDocument
+    addRecentDocument,
+    removeRecentDocument
 } from "../utils/recentItems.js"
 
 import {
     isFavorite,
+    removeFavoriteDocument,
     toggleFavorite
 } from "../utils/favoriteItems.js"
 
@@ -347,7 +349,10 @@ function documentStatusLabel(
         return "Готовий"
     }
 
-    if (status === "pending") {
+    if (
+        status === "pending"
+        || status === "processing"
+    ) {
         return "Обробляється"
     }
 
@@ -415,10 +420,13 @@ async function loadDocument() {
 
         syncDocumentFavorite()
 
-        addRecentDocument(
-            collectionId,
-            document.value
-        )
+        if (currentUser.value) {
+            addRecentDocument(
+                currentUser.value.id,
+                collectionId,
+                document.value
+            )
+        }
 
         document.title =
             `${document.value.original_name} — KnowledgeHub`
@@ -508,6 +516,20 @@ async function submitDelete() {
             collectionId,
             documentId
         )
+
+        if (currentUser.value) {
+            removeFavoriteDocument(
+                currentUser.value.id,
+                collectionId,
+                documentId
+            )
+
+            removeRecentDocument(
+                currentUser.value.id,
+                collectionId,
+                documentId
+            )
+        }
 
         await router.push({
             name: "collection-detail",

@@ -23,11 +23,11 @@ const props = defineProps({
     }
 })
 
-const question = ref(
-    localStorage.getItem(
-        "knowledgehub.researchQuestion"
-    ) || ""
+localStorage.removeItem(
+    "knowledgehub.researchQuestion"
 )
+
+const question = ref("")
 
 const stableModeVersion = "1.7"
 
@@ -66,16 +66,6 @@ const modelState = ref("idle")
 
 let elapsedTimer = null
 let warmupTimer = null
-
-watch(
-    question,
-    value => {
-        localStorage.setItem(
-            "knowledgehub.researchQuestion",
-            value
-        )
-    }
-)
 
 watch(
     generationMode,

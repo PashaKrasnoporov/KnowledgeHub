@@ -141,6 +141,7 @@ class HealthAPIResponse(BaseModel):
     status: str
     service: str
     api_version: str
+    app_version: str
 
 
 class CSRFApiResponse(BaseModel):

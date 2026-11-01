@@ -594,3 +594,10 @@
     }
 
 }
+
+
+.document-status-badge.status-processing {
+    border-color: var(--mezha-temna);
+    background: var(--morska-pina);
+    color: var(--akvamarin-temnyi);
+}

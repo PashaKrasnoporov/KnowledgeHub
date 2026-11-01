@@ -7,3 +7,4 @@ from app.modeli.document import Document
 class DocumentSearchResult:
     document: Document
     score: float
+    snippet: str | None = None

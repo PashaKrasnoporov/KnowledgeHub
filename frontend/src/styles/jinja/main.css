@@ -280,3 +280,35 @@ h2 {
         gap: 16px;
     }
 }
+
+/* ========================================
+   V2 application shell
+   ======================================== */
+
+#app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.app-main {
+    flex: 1 0 auto;
+}
+
+.site-footer {
+    margin-top: auto;
+}
+
+.navigation a.router-link-active {
+    color: var(--tekst-svitlyi);
+    font-weight: 700;
+}
+
+.navigation a.router-link-active::after {
+    display: block;
+    height: 2px;
+    margin-top: 4px;
+    border-radius: 999px;
+    background: var(--blakytnyi-pryhlushenyi);
+    content: "";
+}

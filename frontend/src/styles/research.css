@@ -314,3 +314,26 @@
         gap: 5px;
     }
 }
+
+
+.research-advanced-details,
+.research-source-technical {
+    margin-top: 10px;
+}
+
+.research-advanced-details > summary,
+.research-source-technical > summary {
+    color: var(--akvamarin-temnyi);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.research-advanced-details .research-generation-meta,
+.research-advanced-details .research-performance-meta {
+    margin-top: 10px;
+}
+
+.research-source-technical .research-score-row {
+    margin-top: 9px;
+}

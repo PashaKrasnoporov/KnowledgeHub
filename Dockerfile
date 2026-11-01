@@ -3,6 +3,7 @@ FROM node:22-alpine AS frontend-build
 WORKDIR /frontend
 
 COPY frontend/package.json frontend/package-lock.json ./
+COPY VERSION /VERSION
 RUN npm ci
 
 COPY frontend/ ./
@@ -24,6 +25,7 @@ ENV COOKIE_SECURE=true
 
 WORKDIR /app/backend
 
+COPY VERSION /app/VERSION
 COPY backend/requirements.railway.txt /tmp/requirements.txt
 
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
