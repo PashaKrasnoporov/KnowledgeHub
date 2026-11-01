@@ -1,6 +1,6 @@
 /* =========================================================
    KNOWLEDGEHUB
-   HOME PAGE — GUEST QUICK LOCAL SEARCH
+   HOME PAGE — QUICK LOCAL SEARCH
    ========================================================= */
 
 .hero-actions {
@@ -28,89 +28,298 @@
 
 
 .guest-search {
-    display: grid;
-
-    grid-template-columns:
-        minmax(0, 0.85fr)
-        minmax(0, 1.15fr);
-
-    gap: 32px;
-
-    margin-bottom: 60px;
-    padding: 30px;
-
-    background:
-        var(--poverkhna-svitla);
+    margin-bottom: 56px;
+    padding: 32px;
 
     border:
         1px solid
         var(--mezha);
 
-    border-radius: 14px;
+    border-radius: 16px;
+
+    background:
+        var(--poverkhna-svitla);
 }
 
-.guest-search-intro h2 {
+
+.guest-search-heading {
+    display: flex;
+
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 28px;
+
+    margin-bottom: 24px;
+}
+
+.guest-search-heading > div:first-child {
+    max-width: 720px;
+}
+
+.guest-search-heading h2 {
     margin:
         6px
         0
-        14px;
+        10px;
 
-    font-size: 30px;
+    font-size:
+        clamp(
+            26px,
+            3vw,
+            34px
+        );
 }
 
-.guest-search-intro p {
-    margin:
-        0
-        0
-        12px;
+.guest-search-heading p:last-child {
+    margin: 0;
 
     color:
         var(--tekst-drugoryadnyi);
 
-    line-height: 1.65;
+    line-height: 1.6;
 }
 
-.guest-search-privacy {
+.guest-search-heading-badges {
+    display: flex;
+    flex-wrap: wrap;
+
+    justify-content: flex-end;
+
+    gap: 7px;
+}
+
+.guest-search-heading-badges span {
+    display: inline-flex;
+
+    min-height: 30px;
+
+    align-items: center;
+
     padding:
-        12px
-        14px;
+        0
+        10px;
+
+    border:
+        1px solid
+        var(--mezha);
+
+    border-radius: 999px;
 
     background:
         var(--poverkhna);
 
-    border-left:
-        3px solid
-        var(--blakytnyi-pryhlushenyi);
+    color:
+        var(--akvamarin-temnyi);
 
-    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+.guest-search-layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.45fr)
+        minmax(280px, 0.72fr);
+
+    gap: 22px;
+}
+
+
+.guest-search-workspace {
+    min-width: 0;
+
+    padding: 24px;
+
+    border:
+        1px solid
+        var(--mezha);
+
+    border-radius: 13px;
+
+    background:
+        var(--fon-osnovnyi);
+}
+
+
+.guest-search-step + .guest-search-form {
+    margin-top: 24px;
+
+    padding-top: 24px;
+
+    border-top:
+        1px solid
+        var(--mezha);
+}
+
+
+.guest-step-heading {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    margin-bottom: 13px;
+}
+
+.guest-step-number {
+    display: inline-flex;
+
+    width: 30px;
+    height: 30px;
+
+    flex:
+        0
+        0
+        30px;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        var(--morska-pina);
+
+    color:
+        var(--morskyi-hlybokyi);
+
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.guest-step-heading > div {
+    display: grid;
+
+    gap: 2px;
+}
+
+.guest-step-heading strong {
+    color:
+        var(--morskyi-hlybokyi);
 
     font-size: 14px;
 }
 
+.guest-step-heading span:last-child {
+    color:
+        var(--tekst-drugoryadnyi);
 
-.guest-search-panel {
-    display: grid;
-
-    gap: 20px;
+    font-size: 12px;
 }
 
 
-.guest-file-field {
-    display: grid;
+.guest-file-dropzone {
+    display: flex;
 
-    gap: 8px;
-}
+    min-height: 104px;
 
-.guest-file-label {
-    width: fit-content;
+    align-items: center;
+
+    gap: 15px;
 
     padding:
-        10px
-        15px;
+        16px
+        17px;
 
     border:
-        1px solid
-        var(--blakytnyi-pryhlushenyi);
+        1px dashed
+        var(--mezha-temna);
+
+    border-radius: 11px;
+
+    background:
+        var(--poverkhna-svitla);
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.15s ease,
+        background 0.15s ease,
+        transform 0.15s ease;
+}
+
+.guest-file-dropzone:hover {
+    border-color:
+        var(--akvamarin-temnyi);
+
+    background:
+        var(--poverkhna);
+
+    transform:
+        translateY(-1px);
+}
+
+.guest-file-icon {
+    display: inline-flex;
+
+    width: 46px;
+    height: 46px;
+
+    flex:
+        0
+        0
+        46px;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background:
+        var(--morska-pina);
+
+    color:
+        var(--morskyi-hlybokyi);
+
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.guest-file-copy {
+    display: grid;
+
+    min-width: 0;
+
+    flex: 1;
+
+    gap: 5px;
+}
+
+.guest-file-copy strong {
+    overflow: hidden;
+
+    color:
+        var(--tekst-osnovnyi);
+
+    font-size: 14px;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.guest-file-copy small {
+    color:
+        var(--tekst-drugoryadnyi);
+
+    font-size: 12px;
+}
+
+.guest-file-action {
+    display: inline-flex;
+
+    min-height: 38px;
+
+    flex-shrink: 0;
+
+    align-items: center;
+
+    padding:
+        0
+        13px;
 
     border-radius: 8px;
 
@@ -120,15 +329,10 @@
     color:
         var(--tekst-svitlyi);
 
-    font-weight: 600;
-
-    cursor: pointer;
+    font-size: 12px;
+    font-weight: 700;
 }
 
-.guest-file-label:hover {
-    background:
-        var(--hover-osnovnyi);
-}
 
 .guest-file-input {
     position: absolute;
@@ -141,29 +345,24 @@
 
     overflow: hidden;
 
-    clip: rect(0, 0, 0, 0);
+    clip:
+        rect(
+            0,
+            0,
+            0,
+            0
+        );
 
     white-space: nowrap;
 
     border: 0;
 }
 
-.guest-file-name {
-    color:
-        var(--tekst-drugoryadnyi);
-
-    font-size: 14px;
-}
-
 
 .guest-search-form {
     display: grid;
 
-    gap: 8px;
-}
-
-.guest-search-form label {
-    font-weight: 600;
+    gap: 0;
 }
 
 .guest-search-row {
@@ -174,21 +373,22 @@
         auto
         auto;
 
-    gap: 10px;
+    gap: 9px;
 }
 
 .guest-search-row input {
     min-width: 0;
+    min-height: 46px;
 
     padding:
-        11px
-        13px;
+        0
+        14px;
 
     border:
         1px solid
         var(--mezha-temna);
 
-    border-radius: 8px;
+    border-radius: 9px;
 
     background:
         var(--poverkhna-svitla);
@@ -210,14 +410,16 @@
 
 .guest-search-submit,
 .guest-search-reset {
-    padding:
-        11px
-        16px;
+    min-height: 46px;
 
-    border-radius: 8px;
+    padding:
+        0
+        17px;
+
+    border-radius: 9px;
 
     font: inherit;
-    font-weight: 600;
+    font-weight: 700;
 
     cursor: pointer;
 }
@@ -234,7 +436,7 @@
         var(--tekst-svitlyi);
 }
 
-.guest-search-submit:hover {
+.guest-search-submit:hover:not(:disabled) {
     background:
         var(--hover-osnovnyi);
 }
@@ -245,30 +447,173 @@
         var(--mezha-temna);
 
     background:
-        transparent;
+        var(--poverkhna-svitla);
 
     color:
         var(--tekst-osnovnyi);
 }
 
-.guest-search-reset:hover {
+.guest-search-reset:hover:not(:disabled) {
     background:
         var(--poverkhna);
 }
 
+.guest-search-submit:disabled,
+.guest-search-reset:disabled {
+    opacity: 0.55;
 
-.guest-search-results {
-    padding:
-        18px;
+    cursor: default;
+}
+
+
+.guest-search-aside {
+    display: flex;
+
+    min-width: 0;
+
+    flex-direction: column;
+
+    gap: 18px;
+
+    padding: 23px;
+
+    border:
+        1px solid
+        var(--mezha);
+
+    border-radius: 13px;
 
     background:
-        var(--fon-osnovnyi);
+        var(--poverkhna);
+}
+
+.guest-search-aside h3 {
+    margin:
+        5px
+        0
+        9px;
+
+    font-size: 21px;
+}
+
+.guest-search-aside > div:first-child > p:last-child {
+    margin: 0;
+
+    color:
+        var(--tekst-drugoryadnyi);
+
+    line-height: 1.6;
+
+    font-size: 13px;
+}
+
+
+.guest-search-facts {
+    display: grid;
+
+    gap: 8px;
+}
+
+.guest-search-facts > div {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding:
+        11px
+        12px;
+
+    border:
+        1px solid
+        var(--mezha);
+
+    border-radius: 9px;
+
+    background:
+        var(--poverkhna-svitla);
+}
+
+.guest-search-facts strong {
+    color:
+        var(--morskyi-hlybokyi);
+
+    font-size: 12px;
+}
+
+.guest-search-facts span {
+    color:
+        var(--tekst-drugoryadnyi);
+
+    font-size: 11px;
+
+    text-align: right;
+}
+
+
+.guest-search-note {
+    padding: 14px;
+
+    border-left:
+        3px solid
+        var(--blakytnyi-pryhlushenyi);
+
+    border-radius: 7px;
+
+    background:
+        var(--poverkhna-svitla);
+}
+
+.guest-search-note strong {
+    font-size: 12px;
+}
+
+.guest-search-note p {
+    margin:
+        6px
+        0
+        0;
+
+    color:
+        var(--tekst-drugoryadnyi);
+
+    font-size: 12px;
+    line-height: 1.55;
+}
+
+
+.guest-search-about {
+    margin-top: auto;
+
+    color:
+        var(--akvamarin-temnyi);
+
+    font-size: 12px;
+    font-weight: 700;
+
+    text-decoration: none;
+}
+
+.guest-search-about:hover {
+    text-decoration: underline;
+}
+
+
+.guest-search-results {
+    margin-top: 20px;
+
+    padding: 18px;
 
     border:
         1px solid
         var(--mezha);
 
     border-radius: 10px;
+
+    background:
+        var(--poverkhna-svitla);
 }
 
 .guest-search-summary {
@@ -294,8 +639,7 @@
 
     gap: 10px;
 
-    margin:
-        0;
+    margin: 0;
 
     padding-left: 24px;
 }
@@ -315,20 +659,49 @@
 }
 
 
-@media (max-width: 900px) {
+@media (max-width: 980px) {
 
-    .guest-search {
+    .guest-search-layout {
         grid-template-columns:
             1fr;
+    }
+
+    .guest-search-aside {
+        display: grid;
+
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(260px, 0.75fr);
+
+        align-items: start;
+    }
+
+    .guest-search-aside
+    .guest-search-facts {
+        grid-row:
+            span 2;
     }
 
 }
 
 
-@media (max-width: 650px) {
+@media (max-width: 720px) {
 
     .guest-search {
         padding: 22px;
+    }
+
+    .guest-search-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .guest-search-heading-badges {
+        justify-content: flex-start;
+    }
+
+    .guest-search-aside {
+        display: flex;
     }
 
     .guest-search-row {
@@ -339,6 +712,15 @@
     .guest-search-submit,
     .guest-search-reset {
         width: 100%;
+    }
+
+    .guest-file-dropzone {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .guest-file-action {
+        margin-left: 61px;
     }
 
     .guest-search-summary {

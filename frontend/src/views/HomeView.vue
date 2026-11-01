@@ -382,157 +382,295 @@ function resetLocalSearch() {
         class="guest-search"
         aria-labelledby="guest-search-title"
     >
-        <div class="guest-search-intro">
-            <p class="eyebrow">
-                QUICK LOCAL SEARCH
-            </p>
+        <header class="guest-search-heading">
+            <div>
+                <p class="eyebrow">
+                    QUICK LOCAL SEARCH
+                </p>
 
-            <h2 id="guest-search-title">
-                Швидкий пошук у локальному файлі
-            </h2>
+                <h2 id="guest-search-title">
+                    Швидкий пошук у локальному файлі
+                </h2>
 
-            <p>
-                Виберіть TXT, PDF або DOCX
-                і знайдіть потрібне слово
-                чи фразу без реєстрації.
-            </p>
-
-            <p class="guest-search-privacy">
-                Файл обробляється тільки у вашому браузері:
-                він не завантажується на сервер KnowledgeHub
-                і не зберігається в базі даних.
-            </p>
-
-            <p class="guest-search-privacy">
-                Для PDF виконується пошук у текстовому шарі.
-                Скановані PDF без текстового шару потребують OCR
-                і поки не підтримуються в гостьовому режимі.
-            </p>
-        </div>
-
-        <div class="guest-search-panel">
-            <div class="guest-file-field">
-                <label
-                    class="guest-file-label"
-                    for="guest-file-input"
-                >
-                    Вибрати файл
-                </label>
-
-                <input
-                    id="guest-file-input"
-                    class="guest-file-input"
-                    type="file"
-                    accept="
-                        .txt,
-                        text/plain,
-                        .pdf,
-                        application/pdf,
-                        .docx,
-                        application/vnd.openxmlformats-officedocument.wordprocessingml.document
-                    "
-                    @change="handleFileSelection"
-                >
-
-                <span class="guest-file-name">
-                    {{
-                        fileProcessing
-                            ? "Обробка документа..."
-                            : selectedFileLabel
-                    }}
-                </span>
-            </div>
-
-            <form
-                class="guest-search-form"
-                @submit.prevent="runLocalSearch"
-            >
-                <label for="guest-search-query">
-                    Слово або фраза
-                </label>
-
-                <div class="guest-search-row">
-                    <input
-                        id="guest-search-query"
-                        v-model="searchQuery"
-                        type="search"
-                        maxlength="120"
-                        autocomplete="off"
-                        placeholder="Наприклад: продуктивність"
-                    >
-
-                    <button
-                        class="guest-search-submit"
-                        type="submit"
-                        :disabled="searchDisabled"
-                    >
-                        {{
-                            fileProcessing
-                                ? "Обробка..."
-                                : "Знайти"
-                        }}
-                    </button>
-
-                    <button
-                        class="guest-search-reset"
-                        type="button"
-                        :disabled="fileProcessing"
-                        @click="resetLocalSearch"
-                    >
-                        Очистити
-                    </button>
-                </div>
-            </form>
-
-            <div
-                v-if="searchError"
-                class="message message-error"
-            >
-                {{ searchError }}
-            </div>
-
-            <div
-                v-if="searched"
-                class="guest-search-results"
-                aria-live="polite"
-            >
-                <div class="guest-search-summary">
-                    <strong>
-                        Знайдено збігів:
-                        {{ totalMatches }}
-                    </strong>
-
-                    <span
-                        v-if="
-                            totalMatches
-                            > resultSnippets.length
-                        "
-                    >
-                        Показано перші
-                        {{ resultSnippets.length }}
-                        фрагментів.
-                    </span>
-                </div>
-
-                <ol
-                    v-if="resultSnippets.length"
-                    class="guest-snippet-list"
-                >
-                    <li
-                        v-for="snippet in resultSnippets"
-                        :key="snippet.number"
-                    >
-                        {{ snippet.text }}
-                    </li>
-                </ol>
-
-                <p
-                    v-else
-                    class="guest-search-empty"
-                >
-                    У вибраному файлі збігів не знайдено.
+                <p>
+                    Знайдіть потрібне слово або фразу
+                    у TXT, PDF чи DOCX без завантаження
+                    документа на сервер.
                 </p>
             </div>
+
+            <div class="guest-search-heading-badges">
+                <span>
+                    TXT
+                </span>
+
+                <span>
+                    PDF
+                </span>
+
+                <span>
+                    DOCX
+                </span>
+
+                <span>
+                    ≤ 10 МБ
+                </span>
+            </div>
+        </header>
+
+        <div class="guest-search-layout">
+            <div class="guest-search-workspace">
+                <div class="guest-search-step">
+                    <div class="guest-step-heading">
+                        <span class="guest-step-number">
+                            1
+                        </span>
+
+                        <div>
+                            <strong>
+                                Оберіть документ
+                            </strong>
+
+                            <span>
+                                Файл буде прочитано
+                                безпосередньо у браузері.
+                            </span>
+                        </div>
+                    </div>
+
+                    <label
+                        class="guest-file-dropzone"
+                        for="guest-file-input"
+                    >
+                        <span class="guest-file-icon">
+                            ↑
+                        </span>
+
+                        <span class="guest-file-copy">
+                            <strong>
+                                {{
+                                    fileProcessing
+                                        ? "Обробка документа..."
+                                        : (
+                                            selectedFile
+                                                ? selectedFile.name
+                                                : "Виберіть локальний файл"
+                                        )
+                                }}
+                            </strong>
+
+                            <small>
+                                {{
+                                    selectedFile
+                                        ? selectedFileLabel
+                                        : "TXT, PDF або DOCX · максимум 10 МБ"
+                                }}
+                            </small>
+                        </span>
+
+                        <span class="guest-file-action">
+                            {{
+                                selectedFile
+                                    ? "Змінити"
+                                    : "Вибрати файл"
+                            }}
+                        </span>
+                    </label>
+
+                    <input
+                        id="guest-file-input"
+                        class="guest-file-input"
+                        type="file"
+                        accept="
+                            .txt,
+                            text/plain,
+                            .pdf,
+                            application/pdf,
+                            .docx,
+                            application/vnd.openxmlformats-officedocument.wordprocessingml.document
+                        "
+                        @change="handleFileSelection"
+                    >
+                </div>
+
+                <form
+                    class="guest-search-form"
+                    @submit.prevent="runLocalSearch"
+                >
+                    <div class="guest-step-heading">
+                        <span class="guest-step-number">
+                            2
+                        </span>
+
+                        <div>
+                            <strong>
+                                Введіть слово або фразу
+                            </strong>
+
+                            <span>
+                                Пошук не змінює
+                                і не зберігає файл.
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="guest-search-row">
+                        <input
+                            id="guest-search-query"
+                            v-model="searchQuery"
+                            type="search"
+                            maxlength="120"
+                            autocomplete="off"
+                            aria-label="Слово або фраза"
+                            placeholder="Наприклад: продуктивність"
+                        >
+
+                        <button
+                            class="guest-search-submit"
+                            type="submit"
+                            :disabled="searchDisabled"
+                        >
+                            {{
+                                fileProcessing
+                                    ? "Обробка..."
+                                    : "Знайти"
+                            }}
+                        </button>
+
+                        <button
+                            class="guest-search-reset"
+                            type="button"
+                            :disabled="fileProcessing"
+                            @click="resetLocalSearch"
+                        >
+                            Очистити
+                        </button>
+                    </div>
+                </form>
+
+                <div
+                    v-if="searchError"
+                    class="message message-error"
+                >
+                    {{ searchError }}
+                </div>
+
+                <div
+                    v-if="searched"
+                    class="guest-search-results"
+                    aria-live="polite"
+                >
+                    <div class="guest-search-summary">
+                        <strong>
+                            Знайдено збігів:
+                            {{ totalMatches }}
+                        </strong>
+
+                        <span
+                            v-if="
+                                totalMatches
+                                > resultSnippets.length
+                            "
+                        >
+                            Показано перші
+                            {{ resultSnippets.length }}
+                            фрагментів.
+                        </span>
+                    </div>
+
+                    <ol
+                        v-if="resultSnippets.length"
+                        class="guest-snippet-list"
+                    >
+                        <li
+                            v-for="snippet in resultSnippets"
+                            :key="snippet.number"
+                        >
+                            {{ snippet.text }}
+                        </li>
+                    </ol>
+
+                    <p
+                        v-else
+                        class="guest-search-empty"
+                    >
+                        У вибраному файлі
+                        збігів не знайдено.
+                    </p>
+                </div>
+            </div>
+
+            <aside class="guest-search-aside">
+                <div>
+                    <p class="eyebrow">
+                        LOCAL & PRIVATE
+                    </p>
+
+                    <h3>
+                        Ваш документ залишається у вас
+                    </h3>
+
+                    <p>
+                        Quick Local Search працює
+                        повністю на стороні браузера.
+                        Файл не потрапляє до колекцій,
+                        бази даних або серверного сховища.
+                    </p>
+                </div>
+
+                <div class="guest-search-facts">
+                    <div>
+                        <strong>
+                            TXT · PDF · DOCX
+                        </strong>
+
+                        <span>
+                            підтримувані формати
+                        </span>
+                    </div>
+
+                    <div>
+                        <strong>
+                            до 10 МБ
+                        </strong>
+
+                        <span>
+                            максимальний розмір
+                        </span>
+                    </div>
+
+                    <div>
+                        <strong>
+                            Локально
+                        </strong>
+
+                        <span>
+                            без передачі на сервер
+                        </span>
+                    </div>
+                </div>
+
+                <div class="guest-search-note">
+                    <strong>
+                        Що з PDF-сканами?
+                    </strong>
+
+                    <p>
+                        Пошук працює по текстовому шару PDF.
+                        Якщо документ складається лише
+                        зі сканованих зображень,
+                        потрібен OCR — він поки
+                        не підтримується у цьому режимі.
+                    </p>
+                </div>
+
+                <RouterLink
+                    class="guest-search-about"
+                    :to="{ name: 'about' }"
+                >
+                    Дізнатися більше про KnowledgeHub →
+                </RouterLink>
+            </aside>
         </div>
     </section>
 

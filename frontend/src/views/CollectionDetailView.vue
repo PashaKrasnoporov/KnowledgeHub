@@ -436,6 +436,13 @@ onBeforeUnmount(
 
 <template>
     <section class="collections-page">
+        <RouterLink
+            class="page-back-button"
+            :to="{ name: 'collections' }"
+        >
+            ← До колекцій
+        </RouterLink>
+
         <AppBreadcrumbs
             :items="breadcrumbs"
         />

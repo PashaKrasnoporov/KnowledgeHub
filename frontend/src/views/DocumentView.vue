@@ -614,6 +614,18 @@ onMounted(
         v-else-if="document"
         class="document-view-page"
     >
+        <RouterLink
+            class="page-back-button"
+            :to="{
+                name: 'collection-detail',
+                params: {
+                    collectionId
+                }
+            }"
+        >
+            ← До колекції
+        </RouterLink>
+
         <AppBreadcrumbs
             :items="breadcrumbs"
         />

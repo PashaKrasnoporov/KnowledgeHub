@@ -22,7 +22,7 @@ body {
 }
 
 .container {
-    width: min(1100px, 92%);
+    width: min(1240px, 94%);
     margin: 0 auto;
 }
 
@@ -311,4 +311,56 @@ h2 {
     border-radius: 999px;
     background: var(--blakytnyi-pryhlushenyi);
     content: "";
+}
+
+
+/* ========================================
+   Context navigation
+   ======================================== */
+
+.page-back-button {
+    display: inline-flex;
+
+    min-height: 40px;
+
+    align-items: center;
+
+    margin-bottom: 12px;
+
+    padding:
+        0
+        13px;
+
+    border:
+        1px solid
+        var(--mezha);
+
+    border-radius: 9px;
+
+    background:
+        var(--poverkhna-svitla);
+
+    color:
+        var(--akvamarin-temnyi);
+
+    font-size: 13px;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    transition:
+        border-color 0.15s ease,
+        background 0.15s ease,
+        transform 0.15s ease;
+}
+
+.page-back-button:hover {
+    border-color:
+        var(--mezha-temna);
+
+    background:
+        var(--poverkhna);
+
+    transform:
+        translateX(-2px);
 }
