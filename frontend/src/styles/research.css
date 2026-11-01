@@ -65,6 +65,42 @@
     line-height: 1.5;
 }
 
+.research-deployment-limit {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 12px;
+    margin: 0 0 20px;
+    padding: 14px 16px;
+    border: 1px solid var(--mezha);
+    border-radius: 10px;
+    background: var(--poverkhna-svitla);
+}
+
+.research-deployment-limit-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--mezha-temna);
+    border-radius: 50%;
+    color: var(--akvamarin-temnyi);
+    font-weight: 800;
+}
+
+.research-deployment-limit strong {
+    display: block;
+    margin: 1px 0 4px;
+    color: var(--tekst-osnovnyi);
+}
+
+.research-deployment-limit p {
+    margin: 0;
+    color: var(--tekst-drugoryadnyi);
+    font-size: 13px;
+    line-height: 1.55;
+}
+
 .research-form textarea {
     width: 100%;
     min-height: 92px;
@@ -312,6 +348,10 @@
         align-items: flex-start;
         flex-direction: column;
         gap: 5px;
+    }
+
+    .research-deployment-limit {
+        grid-template-columns: 1fr;
     }
 }
 

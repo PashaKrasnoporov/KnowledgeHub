@@ -104,6 +104,24 @@ def main() -> None:
         "Railway LLM UI capability",
     )
 
+    require(
+        panel,
+        "railwayLimited",
+        "Railway deployment limitation state",
+    )
+
+    require(
+        panel,
+        "research-deployment-limit",
+        "Railway LLM limitation notice",
+    )
+
+    require(
+        panel,
+        "Генеративна LLM недоступна у хмарній версії",
+        "Railway LLM limitation explanation",
+    )
+
     print(
         "Production parity phase 1 contracts: PASS"
     )

@@ -28,9 +28,13 @@ const deploymentProfile = (
     || "local"
 )
 
-const llmAvailable = (
+const railwayLimited = (
     deploymentProfile
-    !== "railway-ml"
+    === "railway-ml"
+)
+
+const llmAvailable = (
+    !railwayLimited
 )
 
 
@@ -279,11 +283,17 @@ onBeforeUnmount(
                     </span>
                 </div>
 
-                <p>
+                <p v-if="llmAvailable">
                     Стабільний режим відповідає швидко
                     без генеративної моделі. Локальна LLM
                     залишається окремим експериментальним
-                    режимом для подальшої оптимізації.
+                    режимом для повної локальної конфігурації.
+                </p>
+
+                <p v-else>
+                    Хмарний режим використовує семантичний
+                    та гібридний пошук і перевірений RAG
+                    без генеративної LLM.
                 </p>
             </div>
 
@@ -317,6 +327,34 @@ onBeforeUnmount(
                     </span>
                 </span>
             </span>
+        </div>
+
+        <div
+            v-if="railwayLimited"
+            class="research-deployment-limit"
+            role="status"
+        >
+            <span
+                class="research-deployment-limit-icon"
+                aria-hidden="true"
+            >
+                !
+            </span>
+
+            <div>
+                <strong>
+                    Генеративна LLM недоступна у хмарній версії
+                </strong>
+
+                <p>
+                    Функцію вимкнено через ресурсні обмеження
+                    поточного Railway-середовища. Семантичний
+                    пошук, Hybrid Search і перевірений
+                    Research/RAG залишаються доступними.
+                    Повний генеративний режим доступний
+                    у локальній конфігурації KnowledgeHub.
+                </p>
+            </div>
         </div>
 
         <form
