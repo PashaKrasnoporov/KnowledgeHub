@@ -80,6 +80,11 @@ Invoke-KHPython -PythonArgs @(
     "backend\tests\test_railway_readiness.py"
 )
 
+Invoke-KHPython -PythonArgs @(
+    "backend\tests\test_production_parity_contract.py"
+)
+
+
 try {
     $Health = Invoke-RestMethod -Uri "http://127.0.0.1:8000/api/v1/health" -Method Get -TimeoutSec 3
     Write-Host "Local API health : PASS ($($Health.app_version))" -ForegroundColor Green

@@ -5,8 +5,6 @@ from pydantic_settings import (
 
 
 class Parametry(BaseSettings):
-    # Local development can keep the five DB_* variables.
-    # Railway can use one DATABASE_URL reference from PostgreSQL.
     database_url: str | None = None
 
     db_host: str | None = None
@@ -16,15 +14,19 @@ class Parametry(BaseSettings):
     db_password: str | None = None
 
     deployment_profile: str = "local"
+
+    # Embeddings / semantic / hybrid / extractive RAG.
     ml_enabled: bool = True
+
+    # Local LLM is separated from retrieval capabilities.
+    llm_enabled: bool = True
+
     cookie_secure: bool = False
 
     rag_local_model_name: str = (
         "Qwen/Qwen2.5-1.5B-Instruct"
     )
 
-    # Stable baseline: local LLM remains experimental and concise.
-    # The recommended user path is the fast extractive research mode.
     rag_max_new_tokens: int = 96
 
     model_config = SettingsConfigDict(

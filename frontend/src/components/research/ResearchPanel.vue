@@ -23,6 +23,17 @@ const props = defineProps({
     }
 })
 
+const deploymentProfile = (
+    import.meta.env.VITE_DEPLOYMENT_PROFILE
+    || "local"
+)
+
+const llmAvailable = (
+    deploymentProfile
+    !== "railway-ml"
+)
+
+
 localStorage.removeItem(
     "knowledgehub.researchQuestion"
 )
@@ -51,6 +62,19 @@ const generationMode = ref(
         "knowledgehub.researchGenerationMode"
     ) || "extractive"
 )
+
+if (
+    !llmAvailable
+    && generationMode.value === "local"
+) {
+    generationMode.value = "extractive"
+
+    localStorage.setItem(
+        "knowledgehub.researchGenerationMode",
+        "extractive"
+    )
+}
+
 
 const responseLanguage = ref(
     localStorage.getItem(
@@ -318,7 +342,10 @@ onBeforeUnmount(
                             Швидка перевірена відповідь
                         </option>
 
-                        <option value="local">
+                        <option
+                            v-if="llmAvailable"
+                            value="local"
+                        >
                             Локальна LLM (експериментально)
                         </option>
                     </select>

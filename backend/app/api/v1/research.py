@@ -47,8 +47,21 @@ def _require_ml_enabled() -> None:
         raise HTTPException(
             status_code=503,
             detail=(
-                "Research and local LLM features are disabled "
-                "in the lightweight Railway deployment."
+                "Semantic retrieval and research "
+                "are disabled in this deployment."
+            ),
+        )
+
+
+def _require_llm_enabled() -> None:
+    _require_ml_enabled()
+
+    if not parametry.llm_enabled:
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                "Local LLM generation is disabled "
+                "for this deployment profile."
             ),
         )
 
@@ -95,7 +108,7 @@ def api_warmup_research_model(
         get_api_user
     ),
 ):
-    _require_ml_enabled()
+    _require_llm_enabled()
 
     started = perf_counter()
     already_loaded = (
@@ -170,7 +183,7 @@ def api_generate_research_answer(
         get_db_session
     ),
 ):
-    _require_ml_enabled()
+    _require_llm_enabled()
 
     total_started = perf_counter()
 
