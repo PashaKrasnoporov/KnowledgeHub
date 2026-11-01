@@ -8,12 +8,12 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 from llama_cpp import Llama
 
-MODEL_PATH = os.getenv("LLM_MODEL_PATH", "/models/qwen2.5-0.5b-instruct-q4_k_m.gguf")
-MODEL_NAME = os.getenv("LLM_MODEL_NAME", "Qwen/Qwen2.5-0.5B-Instruct")
-CONTEXT_SIZE = int(os.getenv("LLM_CONTEXT_SIZE", "2048"))
+MODEL_PATH = os.getenv("LLM_MODEL_PATH", "/models/qwen2.5-1.5b-instruct-q2_k.gguf")
+MODEL_NAME = os.getenv("LLM_MODEL_NAME", "Qwen/Qwen2.5-1.5B-Instruct")
+CONTEXT_SIZE = int(os.getenv("LLM_CONTEXT_SIZE", "1024"))
 THREADS = int(os.getenv("LLM_THREADS", "2"))
-BATCH_SIZE = int(os.getenv("LLM_BATCH_SIZE", "128"))
-MAX_NEW_TOKENS = int(os.getenv("LLM_MAX_NEW_TOKENS", "160"))
+BATCH_SIZE = int(os.getenv("LLM_BATCH_SIZE", "32"))
+MAX_NEW_TOKENS = int(os.getenv("LLM_MAX_NEW_TOKENS", "128"))
 
 
 class Message(BaseModel):

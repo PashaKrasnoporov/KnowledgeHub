@@ -25,6 +25,9 @@ def main() -> None:
     assert "n_threads=THREADS" in app
     assert "n_gpu_layers=0" in app
     assert "use_mmap=True" in app
+    assert 'LLM_CONTEXT_SIZE", "1024"' in app
+    assert 'LLM_BATCH_SIZE", "32"' in app
+    assert 'LLM_MAX_NEW_TOKENS", "128"' in app
 
     assert (
         "llama-cpp-python==0.3.23"
@@ -32,7 +35,7 @@ def main() -> None:
     )
 
     assert (
-        "Qwen/Qwen2.5-0.5B-Instruct-GGUF"
+        "Qwen/Qwen2.5-1.5B-Instruct-GGUF"
         in dockerfile
     )
 

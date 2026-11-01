@@ -104,7 +104,7 @@ def main() -> None:
     )
     require(
         llm_dockerfile,
-        "qwen2.5-0.5b-instruct-q4_k_m.gguf",
+        "qwen2.5-1.5b-instruct-q2_k.gguf",
         "Qwen GGUF model",
     )
 
