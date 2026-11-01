@@ -66,6 +66,7 @@ const {
 const favoriteVersion = ref(0)
 const onlyFavorites = ref(false)
 
+const nameFilter = ref("")
 const typeFilter = ref("all")
 const statusFilter = ref("all")
 const sortMode = ref("default")
@@ -75,6 +76,27 @@ const displayedDocuments = computed(
         let result =
             props.documents.filter(
                 document => {
+                    const normalizedName =
+                        String(
+                            document.original_name
+                            || ""
+                        ).toLocaleLowerCase(
+                            "uk-UA"
+                        )
+
+                    const normalizedFilter =
+                        nameFilter.value
+                            .trim()
+                            .toLocaleLowerCase(
+                                "uk-UA"
+                            )
+
+                    const nameMatches =
+                        !normalizedFilter
+                        || normalizedName.includes(
+                            normalizedFilter
+                        )
+
                     const typeMatches =
                         typeFilter.value === "all"
                         || documentType(document).toLowerCase()
@@ -98,7 +120,8 @@ const displayedDocuments = computed(
                         )
 
                     return (
-                        typeMatches
+                        nameMatches
+                        && typeMatches
                         && statusMatches
                         && favoriteMatches
                     )
@@ -176,7 +199,8 @@ const displayedDocuments = computed(
 
 const filtersActive = computed(
     () => (
-        typeFilter.value !== "all"
+        nameFilter.value.trim() !== ""
+        || typeFilter.value !== "all"
         || statusFilter.value !== "all"
         || sortMode.value !== "default"
         || onlyFavorites.value
@@ -185,6 +209,7 @@ const filtersActive = computed(
 
 
 function resetFilters() {
+    nameFilter.value = ""
     typeFilter.value = "all"
     statusFilter.value = "all"
     sortMode.value = "default"
@@ -459,6 +484,20 @@ function documentType(
         class="documents-filter-toolbar"
         aria-label="Фільтрування і сортування документів"
     >
+        <div class="document-filter-control document-name-filter">
+            <label for="document-name-filter">
+                Назва
+            </label>
+
+            <input
+                id="document-name-filter"
+                v-model="nameFilter"
+                type="search"
+                autocomplete="off"
+                placeholder="Пошук за назвою файла..."
+            >
+        </div>
+
         <div class="document-filter-control">
             <label for="document-type-filter">
                 Формат
@@ -903,9 +942,10 @@ function documentType(
 .documents-filter-toolbar {
     display: grid;
     grid-template-columns:
+        minmax(190px, 1.1fr)
+        minmax(130px, 0.7fr)
         minmax(150px, 0.8fr)
-        minmax(170px, 0.9fr)
-        minmax(210px, 1fr)
+        minmax(190px, 1fr)
         auto;
 
     gap: 12px;
@@ -935,7 +975,8 @@ function documentType(
     font-weight: 700;
 }
 
-.document-filter-control select {
+.document-filter-control select,
+.document-filter-control input {
     width: 100%;
     height: 42px;
 
@@ -951,7 +992,8 @@ function documentType(
     font-size: 14px;
 }
 
-.document-filter-control select:focus {
+.document-filter-control select:focus,
+.document-filter-control input:focus {
     border-color: var(--focus);
 
     outline: none;

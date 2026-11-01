@@ -144,5 +144,19 @@ class HealthAPIResponse(BaseModel):
     app_version: str
 
 
+class ReadinessChecksAPIResponse(BaseModel):
+    database: str
+    storage: str
+
+
+class ReadinessAPIResponse(BaseModel):
+    status: str
+    service: str
+    api_version: str
+    app_version: str
+    deployment_profile: str
+    checks: ReadinessChecksAPIResponse
+
+
 class CSRFApiResponse(BaseModel):
     csrf_token: str

@@ -209,6 +209,18 @@ def main() -> None:
         "Central auth-expiry handler",
     )
 
+    require(
+        app,
+        "skip-link",
+        "Keyboard skip link",
+    )
+
+    require(
+        app,
+        'id="main-content"',
+        "Main content accessibility target",
+    )
+
     # -----------------------------------------------------
     # Processing lifecycle
     # -----------------------------------------------------
@@ -239,6 +251,32 @@ def main() -> None:
         pipeline,
         '"error"',
         "Processing error status",
+    )
+
+    # -----------------------------------------------------
+    # Document filtering UX
+    # -----------------------------------------------------
+
+    documents_list = read(
+        "frontend/src/components/documents/DocumentsList.vue"
+    )
+
+    require(
+        documents_list,
+        'const nameFilter = ref("")',
+        "Document filename filter state",
+    )
+
+    require(
+        documents_list,
+        'id="document-name-filter"',
+        "Document filename filter control",
+    )
+
+    require(
+        documents_list,
+        "nameMatches",
+        "Document filename filter predicate",
     )
 
     # -----------------------------------------------------

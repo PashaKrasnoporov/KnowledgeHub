@@ -159,6 +159,36 @@ def main() -> None:
         "Unified health version",
     )
 
+    require(
+        health_source,
+        '"/health/live"',
+        "Liveness endpoint",
+    )
+
+    require(
+        health_source,
+        '"/health/ready"',
+        "Readiness endpoint",
+    )
+
+    require(
+        health_source,
+        'text("SELECT 1")',
+        "Database readiness probe",
+    )
+
+    require(
+        health_source,
+        "NamedTemporaryFile",
+        "Writable storage readiness probe",
+    )
+
+    require(
+        health_source,
+        "HTTP_503_SERVICE_UNAVAILABLE",
+        "Readiness failure status",
+    )
+
     # -----------------------------------------------------
     # Docker / Railway runtime
     # -----------------------------------------------------

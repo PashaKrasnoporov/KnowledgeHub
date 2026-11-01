@@ -66,9 +66,20 @@ onUnmounted(
 </script>
 
 <template>
+    <a
+        class="skip-link"
+        href="#main-content"
+    >
+        Перейти до основного вмісту
+    </a>
+
     <AppHeader />
 
-    <main class="container app-main">
+    <main
+        id="main-content"
+        class="container app-main"
+        tabindex="-1"
+    >
         <RouterView />
     </main>
 
