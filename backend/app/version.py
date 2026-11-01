@@ -11,5 +11,5 @@ _VERSION_FILE = (
 APP_VERSION = (
     _VERSION_FILE.read_text(encoding="utf-8").strip()
     if _VERSION_FILE.is_file()
-    else "2.0.0-rc1"
+    else "2.0.0"
 )
