@@ -15,11 +15,16 @@ class Parametry(BaseSettings):
 
     deployment_profile: str = "local"
 
-    # Embeddings / semantic / hybrid / extractive RAG.
     ml_enabled: bool = True
-
-    # Local LLM is separated from retrieval capabilities.
     llm_enabled: bool = True
+
+    llm_backend: str = "local"
+
+    llm_service_url: str = (
+        "http://knowledgehub-llm.railway.internal:8080"
+    )
+
+    llm_service_timeout_seconds: float = 120.0
 
     cookie_secure: bool = False
 

@@ -84,6 +84,11 @@ Invoke-KHPython -PythonArgs @(
     "backend\tests\test_production_parity_contract.py"
 )
 
+Invoke-KHPython -PythonArgs @(
+    "backend\tests\test_llm_service_contract.py"
+)
+
+
 
 try {
     $Health = Invoke-RestMethod -Uri "http://127.0.0.1:8000/api/v1/health" -Method Get -TimeoutSec 3

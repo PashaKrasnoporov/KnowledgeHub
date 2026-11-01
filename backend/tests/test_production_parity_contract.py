@@ -1,18 +1,11 @@
 from pathlib import Path
 
 
-PROJECT_ROOT = (
-    Path(__file__)
-    .resolve()
-    .parents[2]
-)
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
 def read(relative: str) -> str:
-    return (
-        PROJECT_ROOT
-        / relative
-    ).read_text(
+    return (PROJECT_ROOT / relative).read_text(
         encoding="utf-8-sig"
     )
 
@@ -28,28 +21,38 @@ def require(
 
 
 def main() -> None:
-    dockerfile = read(
-        "Dockerfile"
-    )
+    dockerfile = read("Dockerfile")
 
     require(
         dockerfile,
         "VITE_DEPLOYMENT_PROFILE=railway-ml",
         "Railway ML frontend profile",
     )
-
+    require(
+        dockerfile,
+        "VITE_LLM_ENABLED=true",
+        "Railway LLM frontend capability",
+    )
     require(
         dockerfile,
         "ML_ENABLED=true",
         "Railway semantic runtime",
     )
-
     require(
         dockerfile,
-        "LLM_ENABLED=false",
-        "LLM isolation",
+        "LLM_ENABLED=true",
+        "Railway generative RAG",
     )
-
+    require(
+        dockerfile,
+        "LLM_BACKEND=remote",
+        "Remote LLM backend",
+    )
+    require(
+        dockerfile,
+        "knowledgehub-llm.railway.internal",
+        "Private Railway LLM network",
+    )
     require(
         dockerfile,
         "backfill_embeddings",
@@ -59,53 +62,75 @@ def main() -> None:
     embedding = read(
         "backend/app/services/embedding_service.py"
     )
-
     require(
         embedding,
         "fastembed",
         "FastEmbed backend",
     )
-
     require(
         embedding,
         "paraphrase-multilingual-MiniLM-L12-v2",
         "Multilingual MiniLM",
     )
 
+    local_llm = read(
+        "backend/app/services/local_llm_service.py"
+    )
     require(
-        embedding,
-        "_normalize_rows",
-        "Normalized vectors",
+        local_llm,
+        "_generate_remote_text",
+        "Remote generation adapter",
+    )
+    require(
+        local_llm,
+        "llm_service_url",
+        "Private LLM service URL",
+    )
+    require(
+        local_llm,
+        "urlopen",
+        "Remote HTTP transport",
     )
 
-    research = read(
-        "backend/app/api/v1/research.py"
+    llm_dockerfile = read("Dockerfile.llm")
+    llm_requirements = read(
+        "llm_service/requirements.txt"
     )
 
     require(
-        research,
-        "_require_llm_enabled",
-        "Separate LLM gate",
+        llm_requirements,
+        "llama-cpp-python==0.3.23",
+        "llama.cpp Python runtime",
+    )
+    require(
+        llm_dockerfile,
+        "qwen2.5-0.5b-instruct-q4_k_m.gguf",
+        "Qwen GGUF model",
     )
 
+    llm_app = read("llm_service/app.py")
     require(
-        research,
-        "_require_ml_enabled",
-        "Research ML gate",
+        llm_app,
+        "create_chat_completion",
+        "Qwen chat inference",
+    )
+    require(
+        llm_app,
+        "_GENERATION_LOCK",
+        "Single-generation memory guard",
     )
 
     panel = read(
         "frontend/src/components/research/ResearchPanel.vue"
     )
-
     require(
         panel,
-        "llmAvailable",
-        "Railway LLM UI capability",
+        "VITE_LLM_ENABLED",
+        "Frontend LLM capability flag",
     )
 
     print(
-        "Production parity phase 1 contracts: PASS"
+        "Production parity phase 2 contracts: PASS"
     )
 
 

@@ -1,0 +1,24 @@
+FROM python:3.13-slim
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1
+ENV LLM_MODEL_PATH=/models/qwen2.5-0.5b-instruct-q4_k_m.gguf
+ENV LLM_MODEL_NAME=Qwen/Qwen2.5-0.5B-Instruct
+ENV LLM_CONTEXT_SIZE=2048
+ENV LLM_THREADS=2
+ENV LLM_BATCH_SIZE=128
+ENV LLM_MAX_NEW_TOKENS=160
+
+WORKDIR /app
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
+COPY llm_service/requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir --prefer-binary \
+    --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu \
+    -r /tmp/requirements.txt
+RUN mkdir -p /models \
+    && python -c "import urllib.request; urllib.request.urlretrieve('https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF/resolve/main/qwen2.5-0.5b-instruct-q4_k_m.gguf?download=true', '/models/qwen2.5-0.5b-instruct-q4_k_m.gguf')"
+COPY llm_service/ /app/llm_service/
+EXPOSE 8080
+CMD ["uvicorn", "llm_service.app:app", "--host", "0.0.0.0", "--port", "8080", "--workers", "1"]

@@ -29,8 +29,15 @@ const deploymentProfile = (
 )
 
 const llmAvailable = (
-    deploymentProfile
-    !== "railway-ml"
+    String(
+        import.meta.env.VITE_LLM_ENABLED
+        ?? (
+            deploymentProfile === "local"
+                ? "true"
+                : "false"
+        )
+    ).toLowerCase()
+    === "true"
 )
 
 
@@ -312,7 +319,7 @@ onBeforeUnmount(
                     </span>
 
                     <span>
-                        Локальна LLM прогрівається у фоні,
+                        Генеративна LLM прогрівається у фоні,
                         коли обрано режим Local LLM.
                     </span>
                 </span>
@@ -346,7 +353,7 @@ onBeforeUnmount(
                             v-if="llmAvailable"
                             value="local"
                         >
-                            Локальна LLM (експериментально)
+                            Генеративна LLM (Qwen)
                         </option>
                     </select>
                 </div>
@@ -402,7 +409,7 @@ onBeforeUnmount(
                 <p class="research-local-note">
                     {{
                         generationMode === "local"
-                            ? "Експериментальний режим: на CPU генерація може бути повільною; використовуйте його лише для окремих тестів."
+                            ? "Генеративний режим: Qwen формує відповідь на основі знайдених джерел, після чого KnowledgeHub перевіряє твердження та citations."
                             : "Рекомендований стабільний режим: швидка відповідь без LLM, сформована лише з retrieved evidence."
                     }}
                 </p>
