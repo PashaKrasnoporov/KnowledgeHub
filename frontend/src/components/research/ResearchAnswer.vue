@@ -86,6 +86,46 @@ const fallbackLabel = computed(
     )
 )
 
+
+const technicalSourceCount = computed(
+    () => Number(
+        props.result.count
+        ?? props.result.sources?.length
+        ?? 0
+    )
+)
+
+
+const technicalAnswerPointCount = computed(
+    () => Number(
+        props.result.answer_points?.length
+        ?? 0
+    )
+)
+
+
+const technicalRetrievalMode = computed(
+    () => {
+        const labels = {
+            lexical:
+                "Лексичний retrieval",
+
+            semantic:
+                "Семантичний retrieval",
+
+            hybrid:
+                "Гібридний retrieval"
+        }
+
+        return (
+            labels[
+                props.result.mode
+            ]
+            || "Пошук релевантних фрагментів"
+        )
+    }
+)
+
 async function copyAnswer() {
     const text =
         props.result.generated_answer
@@ -149,6 +189,37 @@ async function copyAnswer() {
                     <summary>
                         Розширена технічна інформація
                     </summary>
+
+
+                    <div
+                        v-if="generationMode !== 'local'"
+                        class="research-generation-meta"
+                    >
+                        <span>
+                            Режим:
+                            {{ technicalRetrievalMode }}
+                        </span>
+
+                        <span>
+                            Використано джерел:
+                            {{ technicalSourceCount }}
+                        </span>
+
+                        <span>
+                            Фрагментів відповіді:
+                            {{ technicalAnswerPointCount }}
+                        </span>
+
+                        <span>
+                            LLM: не використовується
+                        </span>
+
+                        <span>
+                            Відповідь сформована
+                            без генеративної моделі
+                            на основі retrieved evidence.
+                        </span>
+                    </div>
 
                 <div
                     v-if="result.generation_provider"

@@ -364,3 +364,53 @@ h2 {
     transform:
         translateX(-2px);
 }
+/* ========================================
+   Application viewport / sticky header
+   ======================================== */
+
+/*
+    Horizontal clipping prevents accidental
+    horizontal overflow without creating a
+    scrolling ancestor that can break
+    position: sticky.
+*/
+
+html,
+body {
+    overflow-x:
+        clip !important;
+}
+
+
+.site-header {
+    position:
+        sticky !important;
+
+    top:
+        0 !important;
+
+    z-index:
+        5000 !important;
+
+    width:
+        100%;
+
+    flex:
+        0
+        0
+        auto;
+
+    isolation:
+        isolate;
+
+    box-shadow:
+        0
+        4px
+        16px
+        rgba(
+            38,
+            60,
+            67,
+            0.10
+        );
+}

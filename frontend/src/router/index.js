@@ -129,7 +129,28 @@ const router = createRouter({
     history: createWebHistory(),
     routes,
 
-    scrollBehavior() {
+    scrollBehavior(
+        to,
+        from,
+        savedPosition
+    ) {
+        if (savedPosition) {
+            return savedPosition
+        }
+
+        /*
+            Query changes inside the same page
+            must not move the user's viewport.
+
+            Search uses router.replace() to keep
+            q/mode in the URL, so scrolling to
+            top here would feel like a page reload.
+        */
+
+        if (to.path === from.path) {
+            return false
+        }
+
         return {
             top: 0
         }

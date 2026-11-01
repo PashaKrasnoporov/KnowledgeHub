@@ -806,6 +806,61 @@ function documentType(
 <style scoped>
 .document-card {
     position: relative;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.15s ease,
+        background 0.15s ease,
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.document-card:hover {
+    border-color:
+        var(--mezha-temna);
+
+    background:
+        var(--poverkhna);
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 4px 14px
+        rgba(38, 60, 67, 0.07);
+}
+
+/*
+    Stretch the existing semantic RouterLink
+    over the entire document card.
+
+    The favorite button stays above this layer
+    and remains an independent action.
+*/
+
+.document-title-link::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 1;
+
+    border-radius: 12px;
+}
+
+.document-title-link:focus-visible {
+    outline: none;
+}
+
+.document-title-link:focus-visible::after {
+    outline:
+        2px solid
+        var(--focus);
+
+    outline-offset: 2px;
 }
 
 .document-info {
@@ -817,7 +872,7 @@ function documentType(
     top: 15px;
     right: 15px;
 
-    z-index: 2;
+    z-index: 3;
 
     width: 34px;
     height: 34px;
