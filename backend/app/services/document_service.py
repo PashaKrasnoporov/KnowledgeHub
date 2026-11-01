@@ -1,3 +1,5 @@
+import hashlib
+
 from pathlib import Path
 from uuid import uuid4
 
@@ -29,6 +31,97 @@ from app.repositories.document_repository import (
 from app.schemas.search import (
     DocumentSearchResult,
 )
+
+
+class DuplicateDocumentError(
+    Exception
+):
+    def __init__(
+        self,
+        existing_document: Document,
+    ):
+        self.existing_document = (
+            existing_document
+        )
+
+        super().__init__(
+            "Document content already exists "
+            "in this collection."
+        )
+
+
+def _sha256_file(
+    file_path: Path,
+) -> str:
+    digest = hashlib.sha256()
+
+    with file_path.open(
+        "rb"
+    ) as source:
+        while True:
+            chunk = source.read(
+                FILE_CHUNK_SIZE
+            )
+
+            if not chunk:
+                break
+
+            digest.update(
+                chunk
+            )
+
+    return digest.hexdigest()
+
+
+def _find_duplicate_document(
+    session: Session,
+    collection: Collection,
+    size_bytes: int,
+    content_sha256: str,
+) -> Document | None:
+    documents = (
+        get_documents_by_collection_id(
+            session=session,
+            collection_id=collection.id,
+        )
+    )
+
+    upload_root = (
+        UPLOAD_ROOT.resolve()
+    )
+
+    for candidate in documents:
+        if candidate.size_bytes != size_bytes:
+            continue
+
+        candidate_path = (
+            UPLOAD_ROOT
+            / candidate.storage_path
+        ).resolve()
+
+        try:
+            candidate_path.relative_to(
+                upload_root
+            )
+        except ValueError:
+            continue
+
+        if not candidate_path.is_file():
+            continue
+
+        try:
+            candidate_hash = (
+                _sha256_file(
+                    candidate_path
+                )
+            )
+        except OSError:
+            continue
+
+        if candidate_hash == content_sha256:
+            return candidate
+
+    return None
 
 
 def save_document(
@@ -113,6 +206,7 @@ def save_document(
 
     size_bytes = 0
     first_chunk = True
+    content_hasher = hashlib.sha256()
 
     try:
         with target_path.open(
@@ -134,25 +228,39 @@ def save_document(
                         extension=extension,
                         first_chunk=chunk,
                     )
-
                     first_chunk = False
 
-                size_bytes += len(
-                    chunk
-                )
+                size_bytes += len(chunk)
 
                 if size_bytes > MAX_FILE_SIZE:
                     raise DocumentTooLargeError(
                         "Максимальний розмір файла — 10 МБ."
                     )
 
-                destination.write(
-                    chunk
-                )
+                content_hasher.update(chunk)
+                destination.write(chunk)
 
         if size_bytes == 0:
             raise InvalidDocumentError(
                 "Файл порожній."
+            )
+
+        content_sha256 = (
+            content_hasher.hexdigest()
+        )
+
+        duplicate_document = (
+            _find_duplicate_document(
+                session=session,
+                collection=collection,
+                size_bytes=size_bytes,
+                content_sha256=content_sha256,
+            )
+        )
+
+        if duplicate_document is not None:
+            raise DuplicateDocumentError(
+                duplicate_document
             )
 
         extracted_text: str | None = None
@@ -175,18 +283,12 @@ def save_document(
             collection_id=collection.id,
             original_name=original_name,
             stored_name=stored_name,
-            storage_path=(
-                relative_path.as_posix()
-            ),
+            storage_path=relative_path.as_posix(),
             mime_type=mime_type,
             size_bytes=size_bytes,
             extracted_text=extracted_text,
-            processing_status=(
-                processing_status
-            ),
-            processing_error=(
-                processing_error
-            ),
+            processing_status=processing_status,
+            processing_error=processing_error,
         )
 
         add_document(
@@ -201,31 +303,20 @@ def save_document(
     except (
         InvalidDocumentError,
         DocumentTooLargeError,
+        DuplicateDocumentError,
     ):
         session.rollback()
-
-        target_path.unlink(
-            missing_ok=True
-        )
-
+        target_path.unlink(missing_ok=True)
         raise
 
     except SQLAlchemyError:
         session.rollback()
-
-        target_path.unlink(
-            missing_ok=True
-        )
-
+        target_path.unlink(missing_ok=True)
         raise
 
     except Exception:
         session.rollback()
-
-        target_path.unlink(
-            missing_ok=True
-        )
-
+        target_path.unlink(missing_ok=True)
         raise
 
     finally:

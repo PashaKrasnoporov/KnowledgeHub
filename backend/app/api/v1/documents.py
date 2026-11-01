@@ -45,6 +45,7 @@ from app.services.document_pipeline_service import (
     process_and_index_document,
 )
 from app.services.document_service import (
+    DuplicateDocumentError,
     save_document,
 )
 from app.services.document_view_service import (
@@ -98,6 +99,19 @@ def api_upload_document(
             collection=collection,
             uploaded_file=document_file,
         )
+
+    except DuplicateDocumentError as exc:
+        existing = exc.existing_document
+
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail={
+                "code": "duplicate_document",
+                "message": "Такий самий документ уже існує в цій колекції.",
+                "existing_document_id": existing.id,
+                "existing_document_name": existing.original_name,
+            },
+        ) from exc
 
     except DocumentTooLargeError as exc:
         raise HTTPException(

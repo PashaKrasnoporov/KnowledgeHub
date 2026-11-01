@@ -339,12 +339,26 @@ async function clearSearch() {
 }
 
 
-async function handleUploaded() {
+async function handleUploaded(
+    uploadedCount = 1
+) {
     clearMessages()
 
+    const count =
+        Number(
+            uploadedCount
+        ) || 1
+
     successMessage.value =
-        "Документ завантажено. "
-        + "KnowledgeHub завершує його обробку."
+        count === 1
+            ? (
+                "Документ завантажено. "
+                + "KnowledgeHub завершує його обробку."
+            )
+            : (
+                `${count} документів завантажено. `
+                + "KnowledgeHub завершує їх обробку."
+            )
 
     await refreshDocuments()
     startProcessingPolling()
@@ -600,8 +614,9 @@ onBeforeUnmount(
             <DocumentUploadDialog
                 ref="uploadDialog"
                 :collection-id="collectionId"
+                :existing-documents="documents"
+                @opened="clearMessages"
                 @uploaded="handleUploaded"
-                @error="showError"
             />
 
             <CollectionEditDialog
