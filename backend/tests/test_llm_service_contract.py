@@ -21,6 +21,7 @@ def main() -> None:
     assert '@app.post("/warmup")' in app
     assert '"/generate"' in app
     assert "n_ctx=CONTEXT_SIZE" in app
+    assert 'chat_format="chatml"' in app
     assert "n_threads=THREADS" in app
     assert "n_gpu_layers=0" in app
     assert "use_mmap=True" in app

@@ -60,6 +60,7 @@ def get_model() -> Llama:
 
         _MODEL = Llama(
             model_path=MODEL_PATH,
+            chat_format="chatml",
             n_ctx=CONTEXT_SIZE,
             n_threads=THREADS,
             n_threads_batch=THREADS,
